@@ -1471,6 +1471,20 @@ span.ofiche{cursor:pointer}
 @media (max-width:700px){.ray-grid{grid-template-columns:1fr}.ray-h .tx span{white-space:normal}}
 .strip .promo{display:none}
 @media (max-width:1320px){.strip button[data-cat="ortho"]{display:none}}
+
+/* ---------- bienvenue : fenêtre centrée, compacte ---------- */
+.wl{top:50%;left:50%;bottom:auto;right:auto;width:min(560px,calc(100vw - 32px));max-height:min(88vh,720px);border-radius:20px;overflow:hidden;transform:translate(-50%,-50%) scale(.96);opacity:0;transition:transform .28s cubic-bezier(.2,.7,.2,1),opacity .2s;box-shadow:0 30px 80px -20px rgba(3,36,68,.45)}
+.wl:not(.on){pointer-events:none;visibility:hidden}
+.wl.on{transform:translate(-50%,-50%) scale(1);opacity:1}
+.wl-h{padding:22px 24px 18px}
+.wl-h h2{font-size:21px;font-weight:600;letter-spacing:-.02em;max-width:26ch}
+.wl-b{padding:18px 24px 6px;gap:14px;justify-content:start;flex:0 1 auto}
+.wl-step{align-items:center}
+.wl-step span{display:block;margin-top:2px}
+.wl-sup{margin-top:4px;padding-top:12px}
+.wl-f{padding:14px 24px 16px;border-top:0}
+.wl-f .btn{height:46px}
+@media (max-width:700px){.wl{top:auto;bottom:0;left:0;width:100vw;max-height:92vh;border-radius:20px 20px 0 0;transform:translateY(100%);opacity:1}.wl.on{transform:none}.wl-h{padding:18px 18px 16px}.wl-b{padding:14px 18px 4px;gap:10px}.wl-f{padding:12px 18px calc(12px + env(safe-area-inset-bottom))}}
 </style>
 </head>
 <body>
