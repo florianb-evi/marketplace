@@ -916,6 +916,32 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
 .av span.logo img{max-width:100%;max-height:100%;object-fit:contain}
 .colis-h,.ord2-h,.ord{grid-template-columns:auto 1fr auto}
 .ord2-h .lg,.ord .lg,.colis-h .lg{min-width:40px}
+
+/* ---------- À suivre aujourd’hui ---------- */
+.today{background:#fff;border:1px solid var(--line);border-radius:var(--r2);padding:16px 16px 12px;display:grid;gap:8px;align-self:start;box-shadow:var(--sh)}
+.today-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:0 4px 6px}
+.today-h h2{font-size:15px;font-weight:800;letter-spacing:-.01em;margin:0}
+.today-h span{font-size:12px;color:var(--mute);font-weight:600}
+.td{position:relative;display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;align-items:start;text-align:left;padding:12px 12px 12px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;transition:border-color .2s,box-shadow .2s,transform .2s;width:100%}
+.td:hover{border-color:#c9dcf3;box-shadow:var(--sh);transform:translateY(-1px)}
+.td.new{border-color:rgba(0,119,253,.35);background:linear-gradient(90deg,rgba(0,119,253,.06),#fff 55%)}
+.td.new::before{content:"";position:absolute;left:-1px;top:14px;bottom:14px;width:3px;border-radius:3px;background:var(--p)}
+.td-ic{width:40px;height:40px;border-radius:11px;background:var(--tint,#eef5fd);color:var(--p);display:grid;place-items:center}
+.td.new .td-ic{background:var(--p);color:#fff}
+.td-ic svg{width:20px;height:20px}
+.td-tx{display:grid;gap:3px;min-width:0}
+.td-tx b{font-size:13.5px;font-weight:700;line-height:1.3;color:var(--ink)}
+.td-tx>span{font-size:12px;color:var(--mute);line-height:1.4}
+.td-tag{display:inline-flex;width:max-content;max-width:100%;align-items:center;height:20px;padding:0 8px;border-radius:999px;background:rgba(0,119,253,.1);color:var(--p)!important;font-size:11px;font-weight:700;margin-top:3px}
+.td-steps{display:flex;align-items:center;gap:4px;margin-top:5px}
+.td-steps i{width:22px;height:4px;border-radius:2px;background:#e4ebf3}
+.td-steps i.on{background:var(--p)}
+.td-steps em{font-style:normal;font-size:11px;color:var(--mute);font-weight:600;margin-left:4px}
+.td-go{grid-column:2;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--p);margin-top:4px}
+.td-go svg{width:14px;height:14px;transition:transform .2s}
+.td:hover .td-go svg{transform:translateX(3px)}
+.today-all{font-size:12.5px;font-weight:700;color:var(--p);text-decoration:none;padding:6px 4px 0;display:block}
+@media (max-width:700px){.today{padding:14px 12px 10px}.td{padding:12px}}
 </style>
 </head>
 <body>
@@ -1022,31 +1048,27 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
       </form>
       <div class="hm-ex"><span>Par exemple :</span><button type="button" data-hq="gants nitrile">gants nitrile</button><button type="button" data-hq="masques IIR">masques IIR</button><button type="button" data-hq="sutures">sutures</button><button type="button" data-hq="sachets de stérilisation">sachets de stérilisation</button><button type="button" data-hq="devis couronne">devis couronne</button></div>
     </div>
-    <div class="hm-wel-r" aria-label="En un coup d’œil">
-      <div class="glance"><b>1</b><span>commande en cours<br><em>Docteur AI · arrive jeu. 19 nov.</em></span><button type="button" data-go="orders">Suivre</button></div>
-      <div class="glance"><b>1</b><span>alerte prix déclenchée<br><em>Autoclave W&amp;H Lisa sous 4 200 €</em></span><button type="button" data-go="lists" data-tab="alerts">Voir</button></div>
-      <div class="glance"><b>2</b><span>devis reçus sur 3<br><em>Couronne zircone · 36</em></span><button type="button" data-go="lists" data-tab="quotes">Comparer</button></div>
-    </div>
-
-  </div>
-
-  <div class="hm-banner" aria-label="Sélections du moment">
-    <button class="hm-bn" data-open-p="gants-jet-100"><span><b>Gants nitrile, boîte de 100</b><span>6 partenaires comparés · le moins cher livré aujourd’hui</span><span class="pr">dès 2,95 € HT livré →</span></span><span class="pic"><img class="ph " src="https://evidentall.fr/api/marketplace/products/98807/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-glove"/></svg></span></button>
-    <button class="hm-bn" data-cat="ster"><span><b>Stérilisation : tout le rayon</b><span>Sachets, indicateurs, désinfectants · 7 références comparables</span><span class="pr">Voir le rayon →</span></span><span class="pic"><img class="ph " src="https://evidentall.fr/api/marketplace/products/99133/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-sachet"/></svg></span></button>
-    <button class="hm-bn" data-go="compare"><span><b>Autoclaves classe B</b><span>3 modèles côte à côte, installation comprise ou non</span><span class="pr">Comparer dès 3 690 € →</span></span><span class="pic"><img class="ph " src="https://evidentall.fr/api/marketplace/products/99355/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-autoclave"/></svg></span></button>
-  </div>
-
-  <!-- 2. Toutes les fonctions, à portée de main -->
-  <div class="hsec">
-    <div class="sec-h"><h2>Ce que vous pouvez faire ici</h2><span class="hint">Six accès, toujours au même endroit</span></div>
-    <div class="tiles">
-      <button class="tile" data-cat="conso"><span class="ic"><svg><use href="#i-search"/></svg></span><span class="tx"><b>Comparer un produit</b><span>Le vrai prix livré chez 8 partenaires, pour votre quantité.</span></span><span class="go"><svg><use href="#i-arrow"/></svg></span></button>
-      <button class="tile" data-go="lists" data-tab="lists"><span class="ic"><svg><use href="#i-list"/></svg></span><span class="tx"><b>Mes réassorts</b><span>3 listes · Hygiène à recommander, −2,30 € aujourd’hui.</span></span><span class="go"><svg><use href="#i-arrow"/></svg></span></button>
-      <button class="tile" data-go="orders"><span class="ic"><svg><use href="#i-truck"/></svg></span><span class="tx"><b>Mes commandes</b><span>Suivi par colis, factures par fournisseur, commander à nouveau.</span></span><span class="go"><svg><use href="#i-arrow"/></svg></span></button>
-      <button class="tile" data-go="lists" data-tab="alerts"><span class="ic"><svg><use href="#i-bell"/></svg></span><span class="tx"><b>Alertes prix</b><span>3 actives · on vous écrit quand le prix livré passe sous votre seuil.</span></span><span class="go"><svg><use href="#i-arrow"/></svg></span></button>
-      <button class="tile" data-go="quote"><span class="ic"><svg><use href="#i-tooth"/></svg></span><span class="tx"><b>Demander un devis labo</b><span>Couronnes, bridges, gouttières : plusieurs laboratoires, réponses comparées.</span></span><span class="go"><svg><use href="#i-arrow"/></svg></span></button>
-      <button class="tile" data-go="partner"><span class="ic"><svg><use href="#i-star"/></svg></span><span class="tx"><b>Les 8 partenaires</b><span>Délais constatés, conformité, conditions de port et de paiement.</span></span><span class="go"><svg><use href="#i-arrow"/></svg></span></button>
-    </div>
+    <aside class="today" aria-labelledby="todayT">
+      <div class="today-h"><h2 id="todayT">À suivre aujourd’hui</h2><span>lun. 16 nov.</span></div>
+      <button class="td" data-go="orders">
+        <span class="td-ic"><svg><use href="#i-truck"/></svg></span>
+        <span class="td-tx"><b>Votre colis Docteur AI arrive jeudi 19 nov.</b><span>6 boîtes de masques IIR · expédié hier</span>
+          <span class="td-steps" aria-label="Étape 3 sur 4 : expédié"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><em>Expédié</em></span></span>
+        <span class="td-go">Suivre le colis <svg><use href="#i-arrow"/></svg></span>
+      </button>
+      <button class="td new" data-go="lists" data-tab="alerts">
+        <span class="td-ic"><svg><use href="#i-bell"/></svg></span>
+        <span class="td-tx"><b>Prix atteint : autoclave W&amp;H Lisa à 4 090 €</b><span>110 € sous votre seuil de 4 200 € · chez Elite Ceram</span><span class="td-tag">Nouveau · bon moment pour commander</span></span>
+        <span class="td-go">Voir l’offre <svg><use href="#i-arrow"/></svg></span>
+      </button>
+      <button class="td" data-go="lists" data-tab="quotes">
+        <span class="td-ic"><svg><use href="#i-doc"/></svg></span>
+        <span class="td-tx"><b>2 devis reçus sur 3 · couronne zircone, dent 36</b><span>Meilleure offre 96 € HT (Proto Lab) · LabDent répond sous 24 h</span>
+          <span class="td-steps" aria-label="2 réponses sur 3"><i class="on"></i><i class="on"></i><i></i><em>2 / 3 réponses</em></span></span>
+        <span class="td-go">Comparer les devis <svg><use href="#i-arrow"/></svg></span>
+      </button>
+      <a class="today-all" href="#mes-listes" data-go="lists">Tout voir : listes, alertes, commandes, devis →</a>
+    </aside>
   </div>
 
   <!-- 3. Réassort rapide -->
