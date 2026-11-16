@@ -1201,8 +1201,8 @@ h1,h2,h3,.sec-h h2,.hx-sec .sec-h h2,.cp-sec h2{font-weight:600;letter-spacing:-
 @media (max-width:860px){.ft{padding:28px 0 20px}.ft-in{padding:0 16px}.ft-cols{grid-template-columns:1fr 1fr}.ft-brand{gap:10px}}
 
 /* ---------- fonctions acheteur, au bon endroit ---------- */
-.tool.acct{width:40px;min-width:40px;flex:none;padding:0}
-.tool.acct svg{width:20px;height:20px}
+.tool.acct svg{width:18px;height:18px}
+@media (max-width:860px){.top .tool.lbl.acct{display:flex}}
 .hx-quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
 .hx-quick button{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:999px;background:#fff;border:1px solid var(--line);font:inherit;font-size:13px;font-weight:600;color:var(--s);cursor:pointer;transition:border-color .2s,background .2s}
 .hx-quick button:hover{border-color:var(--p);background:var(--soft)}
@@ -1478,7 +1478,7 @@ span.ofiche{cursor:pointer}
       <button class="tool lbl" aria-label="Mes listes et alertes" data-go="lists" title="Mes listes et alertes"><svg><use href="#i-list"/></svg><span class="tlab">Mes listes</span><span class="n on" id="nlist">3</span></button>
       <button class="tool lbl" aria-label="Mes commandes" data-go="orders" title="Suivi, factures, commander à nouveau"><svg><use href="#i-truck"/></svg><span class="tlab">Mes commandes</span><span class="n on" id="nord">1</span></button>
       <button class="tool" aria-label="Favoris" title="Favoris"><svg><use href="#i-heart"/></svg><span class="n" id="nfav">0</span></button>
-      <button class="tool acct" aria-label="Mon cabinet : compte, équipe, paiement" title="Mon cabinet" data-go="account"><svg><use href="#i-user"/></svg></button>
+      <button class="tool lbl acct" aria-label="Mon cabinet : compte, équipe, paiement" title="Mon cabinet" data-go="account"><svg><use href="#i-user"/></svg><span class="tlab">Mon cabinet</span></button>
       <button class="tool lbl cartb" aria-label="Panier" data-open-cart><svg><use href="#i-cart"/></svg><span class="tlab">Panier · <b id="cartTot">0,00 €</b></span><span class="n" id="ncart">0</span></button>
     </div>
   </div>
