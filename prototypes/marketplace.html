@@ -1081,6 +1081,102 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
 .fiab .bar{display:block;height:8px;border-radius:999px;background:var(--line);overflow:hidden}
 .fiab .bar b{display:block;height:100%;background:var(--p);border-radius:999px}
 @media (max-width:700px){.fk{grid-template-columns:1fr}.fiab{grid-template-columns:auto 1fr}.fiab .bar{grid-column:1/-1}.fdl{grid-template-columns:1fr}.fdl dt{border:0;padding-bottom:0}}
+
+/* ---------- accueil v3 : visuel, peu de texte ---------- */
+.hx-hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:20px;padding:22px 0 0;align-items:stretch}
+.hx-hl{display:flex;flex-direction:column;justify-content:center}
+.hx-hl h1{font-size:clamp(24px,2.5vw,30px);letter-spacing:-.02em}
+.hx-sub{font-size:15px;color:var(--ink2);margin:6px 0 0}
+.hx-sub b{color:var(--s)}
+.hx-hl .hm-search{margin-top:18px}
+.hx-hl .hm-ex{margin-top:12px}
+.hx-promo{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:8px;background:linear-gradient(135deg,var(--s) 0%,var(--p) 100%);color:#fff;border-radius:20px;padding:22px 20px;text-decoration:none;overflow:hidden;min-height:210px;box-shadow:0 10px 30px rgba(3,36,68,.18);transition:transform .25s,box-shadow .25s}
+.hx-promo:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(3,36,68,.24)}
+.hx-promo-t{display:flex;flex-direction:column;gap:6px;justify-content:center;min-width:0}
+.hx-kick{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--a)}
+.hx-promo b{font-size:20px;line-height:1.2;letter-spacing:-.01em}
+.hx-promo-s{font-size:12.5px;color:rgba(255,255,255,.8)}
+.hx-promo-cta{margin-top:6px;display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--s);font-weight:700;font-size:13px;padding:9px 14px;border-radius:999px;width:max-content}
+.hx-promo-cta svg{width:14px;height:14px}
+.hx-promo-img{display:flex;align-items:center;justify-content:center;background:#fff;border-radius:16px;padding:10px;align-self:center;height:150px}
+.hx-promo-img img{max-width:100%;max-height:100%;object-fit:contain}
+.hx-promo-img svg{width:70%;height:70%;color:var(--p)}
+.hx-status{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.hx-status button{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:13px;color:var(--ink2);text-align:left;cursor:pointer;min-width:0;transition:border-color .2s,box-shadow .2s}
+.hx-status button:hover{border-color:var(--p);box-shadow:var(--sh)}
+.hx-status button>svg:first-child{width:18px;height:18px;color:var(--p);flex:none}
+.hx-status button span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hx-status button b{color:var(--ink)}
+.hx-status .c{width:14px;height:14px;color:var(--mute);transform:rotate(-90deg);flex:none}
+.hx-status .new{border-color:var(--p);background:#eef5fd}
+.hx-sec .sec-h{margin-bottom:12px}
+.hx-sec .sec-h h2{font-size:19px}
+.hx-cats{display:grid;grid-template-columns:repeat(8,1fr);gap:10px}
+.hx-cat{display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:0;padding:0;cursor:pointer;font:inherit;color:var(--ink)}
+.hx-cat .ic{width:100%;aspect-ratio:1;max-width:120px;border-radius:18px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:12px;transition:border-color .2s,transform .2s,box-shadow .2s}
+.hx-cat .ic img{max-width:100%;max-height:100%;object-fit:contain}
+.hx-cat .ic svg{width:40%;height:40%;color:var(--p)}
+.hx-cat:hover .ic{border-color:var(--p);transform:translateY(-2px);box-shadow:var(--sh)}
+.hx-cat b{font-size:13px;font-weight:600;text-align:center}
+.hx-res-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.hx-re{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;align-items:center}
+.hx-reimg{display:flex;align-items:center;justify-content:center;width:96px;height:96px;border-radius:12px;background:#fff;border:1px solid var(--line);overflow:hidden;padding:6px}
+.hx-reimg img{max-width:100%;max-height:100%;object-fit:contain}
+.hx-reimg svg{width:50%;height:50%;color:var(--p)}
+.hx-reb{display:flex;flex-direction:column;gap:4px;min-width:0}
+.hx-reb>a{font-weight:700;font-size:14px;color:var(--ink);text-decoration:none;line-height:1.3}
+.hx-reb>a:hover{color:var(--p);text-decoration:underline}
+.hx-res{font-size:12px;color:var(--mute)}
+.hx-res b{color:var(--ink)}
+.hx-rea{display:flex;gap:6px;margin-top:6px}
+.hx-rea .btn{height:34px;font-size:12px;padding:0 12px}
+.hx-rea .btn.p{flex:1;justify-content:center}
+.hx-prow{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.hx-p{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+.hx-p:hover{transform:translateY(-3px);box-shadow:var(--sh2,var(--sh))}
+.hx-pimg{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;padding:14px;border-bottom:1px solid var(--line)}
+.hx-pimg img{max-width:100%;max-height:100%;object-fit:contain}
+.hx-pimg svg{width:45%;height:45%;color:var(--p)}
+.hx-badge{position:absolute;top:10px;left:10px;background:var(--p);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
+.hx-fav{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;background:#fff;border:1px solid var(--line);display:grid;place-items:center;color:var(--mute);cursor:pointer}
+.hx-fav svg{width:15px;height:15px}
+.hx-fav:hover,.hx-fav.on{color:var(--p);border-color:var(--p)}
+.hx-pb{padding:10px 12px 12px;display:flex;flex-direction:column;gap:3px}
+.hx-pb>a{font-size:13px;font-weight:600;color:var(--ink);text-decoration:none;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em}
+.hx-pb>a:hover{color:var(--p)}
+.hx-pr{display:flex;align-items:baseline;gap:4px;margin-top:2px}
+.hx-pr b{font-size:17px;font-weight:800;letter-spacing:-.01em}
+.hx-pr span{font-size:11.5px;color:var(--mute)}
+.hx-ps{font-size:11.5px;color:var(--p);font-weight:600}
+.hx-how{margin-top:34px;padding:18px 20px;background:#fff;border:1px solid var(--line);border-radius:16px}
+.hx-how-g{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.hx-how-g>div{display:grid;grid-template-columns:36px 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center}
+.hx-how-g svg{grid-row:1/3;width:36px;height:36px;padding:8px;border-radius:10px;background:#eef5fd;color:var(--p)}
+.hx-how-g b{font-size:13.5px}
+.hx-how-g span{font-size:12px;color:var(--mute)}
+.hx-how .how-sup{margin-top:12px;text-align:center}
+.bnav{display:none}
+@media (max-width:1100px){.hx-prow{grid-template-columns:repeat(3,1fr)}.hx-cats{grid-template-columns:repeat(4,1fr)}.hx-how-g{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:1000px){.hx-hero{grid-template-columns:1fr}.hx-promo{min-height:0}.hx-res-row{grid-template-columns:1fr}.hx-status{grid-template-columns:1fr;gap:6px}}
+@media (max-width:860px){
+  .hx-hero{padding-top:12px}.hx-hl h1{font-size:22px}.hx-sub{font-size:14px}
+  .hx-promo{grid-template-columns:minmax(0,1fr) 110px;padding:16px}.hx-promo b{font-size:17px}.hx-promo-img{height:110px}
+  .hx-cats{display:flex;overflow-x:auto;gap:12px;padding:2px 0 8px;scrollbar-width:none;scroll-snap-type:x mandatory}
+  .hx-cats::-webkit-scrollbar{display:none}
+  .hx-cat{flex:0 0 76px;scroll-snap-align:start}.hx-cat .ic{width:72px;height:72px;border-radius:16px;padding:10px}.hx-cat b{font-size:12px}
+  .hx-prow{display:flex;overflow-x:auto;gap:10px;padding:2px 0 8px;scrollbar-width:none;scroll-snap-type:x mandatory}
+  .hx-prow::-webkit-scrollbar{display:none}
+  .hx-p{flex:0 0 160px;scroll-snap-align:start}
+  .hx-re{grid-template-columns:72px 1fr;padding:10px}.hx-reimg{width:72px;height:72px}
+  .hx-how-g{grid-template-columns:1fr;gap:12px}
+  main.wrap{padding-bottom:86px}
+  .top .tool.lbl:not(.cartb){display:none}
+  .bnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:60;background:#fff;border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -6px 24px rgba(3,36,68,.08)}
+  .bnav button{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;padding:6px 2px;font:inherit;font-size:10.5px;font-weight:600;color:var(--mute);cursor:pointer;min-height:48px}
+  .bnav button svg{width:22px;height:22px}
+  .bnav button.on{color:var(--p)}
+  .bnav button i{position:absolute;top:2px;left:calc(50% + 6px);min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--p);color:#fff;font-style:normal;font-size:10px;font-weight:700;display:grid;place-items:center}
+}
 </style>
 </head>
 <body>
@@ -1174,84 +1270,83 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
 
 <!-- ========== HOME ========== -->
 <section class="view on" id="view-home">
-  <!-- 1. Qui je suis, où je suis, quoi faire -->
-  <div class="hm-wel">
-    <div class="hm-wel-l">
-      <h1>Bonjour, cabinet des Lilas.</h1><p class="hm-vp">Comparez le <b>prix livré</b> chez 8 fournisseurs dentaires, commandez en une fois, recommandez en un clic.</p>
+  <div class="hx-hero">
+    <div class="hx-hl">
+      <h1>Bonjour, cabinet des Lilas.</h1>
+      <p class="hx-sub">Le bon produit, au meilleur <b>prix livré</b>, chez 8 fournisseurs dentaires.</p>
       <form class="hm-search" role="search" onsubmit="return false" data-home-search>
         <svg><use href="#i-search"/></svg>
         <label class="sr" for="hq">Rechercher un produit, une marque, une catégorie</label>
-        <input id="hq" type="search" placeholder="Un produit, une marque, une catégorie…" autocomplete="off">
-        <button class="btn p" type="submit">Comparer les prix <svg><use href="#i-arrow"/></svg></button>
+        <input id="hq" type="search" placeholder="Gants nitrile, masques IIR, sutures…" autocomplete="off">
+        <button class="btn p" type="submit">Comparer <svg><use href="#i-arrow"/></svg></button>
       </form>
-      <div class="hm-ex"><span>Par exemple :</span><button type="button" data-hq="gants nitrile">gants nitrile</button><button type="button" data-hq="masques IIR">masques IIR</button><button type="button" data-hq="sutures">sutures</button><button type="button" data-hq="sachets de stérilisation">sachets de stérilisation</button><button type="button" data-hq="devis couronne">devis couronne</button></div>
-      <ol class="hm-steps" aria-label="Comment ça marche, en trois étapes">
-        <li><i>1</i><div><b>Cherchez</b><span>un produit, une marque, un rayon</span></div></li>
-        <li><i>2</i><div><b>Comparez le prix livré</b><span>8 fournisseurs, port et remises inclus</span></div></li>
-        <li><i>3</i><div><b>Commandez en une fois</b><span>un panier, une facture par fournisseur</span></div></li>
-      </ol>
+      <div class="hm-ex"><button type="button" data-hq="gants nitrile">Gants nitrile</button><button type="button" data-hq="masques IIR">Masques IIR</button><button type="button" data-hq="sutures">Sutures</button><button type="button" data-hq="sachets de stérilisation">Sachets de stérilisation</button><button type="button" data-hq="devis couronne">Devis couronne</button></div>
     </div>
-    <aside class="today" aria-labelledby="todayT">
-      <div class="today-h"><h2 id="todayT">En cours</h2><a href="#mes-listes" data-go="orders">Tout voir →</a></div>
-      <button class="td" data-go="orders"><span class="td-ic"><svg><use href="#i-truck"/></svg></span><span class="td-tx"><b>Colis Docteur AI · arrive jeu. 19 nov.</b><span>6 boîtes de masques IIR · expédié</span></span><svg class="td-ch"><use href="#i-chev"/></svg></button>
-      <button class="td new" data-go="lists" data-tab="alerts"><span class="td-ic"><svg><use href="#i-bell"/></svg></span><span class="td-tx"><b>Prix atteint · autoclave W&amp;H Lisa 4 090 €</b><span>110 € sous votre seuil · Elite Ceram</span></span><svg class="td-ch"><use href="#i-chev"/></svg></button>
-      <button class="td" data-go="lists" data-tab="quotes"><span class="td-ic"><svg><use href="#i-doc"/></svg></span><span class="td-tx"><b>Devis couronne zircone · 2 réponses sur 3</b><span>Meilleure offre 96 € HT · 1 labo en attente</span></span><svg class="td-ch"><use href="#i-chev"/></svg></button>
-    </aside>
+    <a class="hx-promo" href="#produit-gants-jet-100" data-open-p="gants-jet-100">
+      <div class="hx-promo-t"><span class="hx-kick">Meilleur prix de la semaine</span><b>Gants nitrile<br>dès 2,95 € la boîte, livrés</b><span class="hx-promo-s">−17 % sur 6 mois · 6 fournisseurs comparés</span><span class="hx-promo-cta">Voir les offres <svg><use href="#i-arrow"/></svg></span></div>
+      <span class="hx-promo-img"><img class="ph" src="https://evidentall.fr/api/marketplace/products/98807/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-glove"/></svg></span>
+    </a>
   </div>
 
-  <!-- 3. Réassort rapide -->
-  <div class="hsec">
-    <div class="sec-h"><h2>À recommander bientôt</h2><button type="button" class="lnk" data-go="lists">Toutes mes listes →</button></div>
-    <div class="re-row">
-      <div class="re-c"><button type="button" class="tp" data-open-p="gants-jet-100" title="Voir la fiche produit"><span class="th"><img class="ph " src="https://evidentall.fr/api/marketplace/products/98807/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-glove"/></svg></span><b>Gants nitrile · boîte de 100</b><svg class="tp-ch"><use href="#i-chev"/></svg></button><div class="meta">10 boîtes toutes les 5 semaines · dernier : 24 sept. · aujourd’hui <span class="money" data-v="2.95">2,95 €</span> livré</div><div class="re-acts"><button class="btn p" data-cart="Elite Ceram" data-pid="gants-jet-100" data-pname="Gants d’examen nitrile non poudrés · boîte de 100" data-unit="2.95" data-qty="10">Recommander 10 <svg><use href="#i-cart"/></svg></button><button class="btn g" data-open-p="gants-jet-100">Voir les 6 offres</button></div></div>
-      <div class="re-c"><button type="button" class="tp" data-open-p="masque-3p" title="Voir la fiche produit"><span class="th"><img class="ph " src="https://evidentall.fr/api/marketplace/products/53279/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-mask"/></svg></span><b>Masques IIR · boîte de 50</b><svg class="tp-ch"><use href="#i-chev"/></svg></button><div class="meta">6 boîtes toutes les 3 semaines · dernier : 2 nov. · aujourd’hui <span class="money" data-v="1.66">1,66 €</span> livré</div><div class="re-acts"><button class="btn p" data-cart="Docteur AI" data-pid="masque-3p" data-pname="Masque chirurgical 3 plis type IIR · boîte de 50" data-unit="1.66" data-qty="6">Recommander 6 <svg><use href="#i-cart"/></svg></button><button class="btn g" data-open-p="masque-3p">Voir les 4 offres</button></div></div>
-      <div class="re-c"><button type="button" class="tp" data-open-p="sachets-90" title="Voir la fiche produit"><span class="th"><img class="ph " src="https://evidentall.fr/api/marketplace/products/99133/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-sachet"/></svg></span><b>Sachets 90 × 230 · boîte de 200</b><svg class="tp-ch"><use href="#i-chev"/></svg></button><div class="meta">4 boîtes toutes les 6 semaines · dernier : 29 oct. · aujourd’hui <span class="money" data-v="8.95">8,95 €</span> livré</div><div class="re-acts"><button class="btn p" data-cart="Docteur Strong" data-pid="sachets-90" data-pname="Sachets de stérilisation 90 × 230 · boîte de 200" data-unit="8.95" data-qty="4">Recommander 4 <svg><use href="#i-cart"/></svg></button><button class="btn g" data-cat="ster">Voir la catégorie</button></div></div>
-    </div>
+  <div class="hx-status" aria-label="En cours">
+    <button type="button" data-go="orders"><svg><use href="#i-truck"/></svg><span><b>Colis Docteur AI</b> arrive jeudi</span><svg class="c"><use href="#i-chev"/></svg></button>
+    <button type="button" class="new" data-go="lists" data-tab="alerts"><svg><use href="#i-bell"/></svg><span><b>Prix atteint</b> autoclave Lisa · 4 090 €</span><svg class="c"><use href="#i-chev"/></svg></button>
+    <button type="button" data-go="lists" data-tab="quotes"><svg><use href="#i-doc"/></svg><span><b>Devis couronne</b> 2 réponses sur 3</span><svg class="c"><use href="#i-chev"/></svg></button>
   </div>
 
-  <div class="hsec">
-    <div class="sec-h"><h2>Parcourir par catégorie</h2><span class="hint">Catégories unifiées Evidentall · comptes en stock</span></div>
-    <div class="cats">
-      <button class="cat" data-cat="conso"><span class="ic"><img class="ph " src="https://evidentall.fr/api/marketplace/products/98807/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-cat-conso"/></svg></span><span><b>Consommables &amp; hygiène</b><span>Gants, masques, champs, bavettes · 2 418</span></span></button>
-      <button class="cat" data-cat="ster"><span class="ic"><img class="ph " src="https://evidentall.fr/api/marketplace/products/99133/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-cat-ster"/></svg></span><span><b>Stérilisation</b><span>Sachets, cassettes, désinfectants · 1 102</span></span></button>
-      <button class="cat" data-cat="chir"><span class="ic"><img class="ph " src="https://evidentall.fr/api/marketplace/products/102467/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-cat-chir"/></svg></span><span><b>Chirurgie &amp; implantologie</b><span>Sutures, lames, kits · 1 870</span></span></button>
-      <button class="cat" data-cat="endo"><span class="ic"><svg><use href="#i-cat-endo"/></svg></span><span><b>Endodontie</b><span>Limes, bourre-pâte, irrigation · 2 206</span></span></button>
-      <button class="cat" data-cat="proth"><span class="ic"><img class="ph " src="https://evidentall.fr/api/marketplace/products/74876/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-cat-proth"/></svg></span><span><b>Prothèse &amp; laboratoire</b><span>Empreintes, cires, résines · 3 540</span></span></button>
-      <button class="cat" data-cat="ortho"><span class="ic"><svg><use href="#i-cat-ortho"/></svg></span><span><b>Orthodontie</b><span>Brackets, arcs, aligneurs · 980</span></span></button>
-      <button class="cat" data-cat="imag"><span class="ic"><svg><use href="#i-cat-imag"/></svg></span><span><b>Imagerie &amp; numérique</b><span>Capteurs, scanners, films · 312</span></span></button>
-      <button class="cat" data-cat="equip"><span class="ic"><img class="ph " src="https://evidentall.fr/api/marketplace/products/99355/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-cat-equip"/></svg></span><span><b>Équipement &amp; instruments</b><span>Fauteuils, turbines, instruments · 4 115</span></span></button>
+  <div class="hsec hx-sec">
+    <div class="sec-h"><h2>Rayons</h2><button type="button" class="lnk" data-cat="conso">Tout le catalogue →</button></div>
+    <div class="hx-cats">
+      <button class="hx-cat" data-cat="conso"><span class="ic"><img class="ph" src="https://evidentall.fr/api/marketplace/products/98807/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-cat-conso"/></svg></span><b>Consommables</b></button>
+      <button class="hx-cat" data-cat="ster"><span class="ic"><img class="ph" src="https://evidentall.fr/api/marketplace/products/99133/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-cat-ster"/></svg></span><b>Stérilisation</b></button>
+      <button class="hx-cat" data-cat="chir"><span class="ic"><img class="ph" src="https://evidentall.fr/api/marketplace/products/102467/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-cat-chir"/></svg></span><b>Chirurgie</b></button>
+      <button class="hx-cat" data-cat="endo"><span class="ic"><svg><use href="#i-cat-endo"/></svg></span><b>Endodontie</b></button>
+      <button class="hx-cat" data-cat="proth"><span class="ic"><img class="ph" src="https://evidentall.fr/api/marketplace/products/74876/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-cat-proth"/></svg></span><b>Prothèse</b></button>
+      <button class="hx-cat" data-cat="ortho"><span class="ic"><svg><use href="#i-cat-ortho"/></svg></span><b>Orthodontie</b></button>
+      <button class="hx-cat" data-cat="imag"><span class="ic"><svg><use href="#i-cat-imag"/></svg></span><b>Imagerie</b></button>
+      <button class="hx-cat" data-cat="equip"><span class="ic"><img class="ph" src="https://evidentall.fr/api/marketplace/products/99355/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-cat-equip"/></svg></span><b>Équipement</b></button>
     </div>
   </div>
 
-  <div class="hsec">
-    <div class="sec-h"><h2>Chez plusieurs partenaires</h2><span class="hint">Même référence, jusqu’à 6 prix · écart = ce que vous économisez</span></div>
-    <div class="multi">
-      <button class="mp" data-open-p="gants-jet-100"><span class="th"><img class="ph " src="https://evidentall.fr/api/marketplace/products/98807/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-glove"/></svg></span><span><b>Gants nitrile non poudrés · boîte de 100</b><span class="rg"><b class="money" data-v="3.02">3,02 €</b><span>à <span class="money" data-v="3.60">3,60 €</span> livré</span></span><span class="bar"><i style="width:84%"></i></span><span class="np">6 partenaires · écart 0,58 €</span></span></button>
-      <button class="mp" data-open-p="masque-3p"><span class="th"><img class="ph " src="https://evidentall.fr/api/marketplace/products/53279/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-mask"/></svg></span><span><b>Masque chirurgical IIR · boîte de 50</b><span class="rg"><b class="money" data-v="1.66">1,66 €</b><span>à <span class="money" data-v="2.10">2,10 €</span> livré</span></span><span class="bar"><i style="width:79%"></i></span><span class="np">4 partenaires · écart 0,44 €</span></span></button>
-      <button class="mp" data-open-p="pgcl"><span class="th"><img class="ph " src="https://evidentall.fr/api/marketplace/products/102467/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-suture"/></svg></span><span><b>Fil de suture PGCL 4-0 · boîte de 12</b><span class="rg"><b class="money" data-v="34.50">34,50 €</b><span>à <span class="money" data-v="41.20">41,20 €</span> livré</span></span><span class="bar"><i style="width:84%"></i></span><span class="np">3 partenaires · écart 6,70 €</span></span></button>
+  <div class="hsec hx-sec">
+    <div class="sec-h"><h2>Vos réassorts</h2><button type="button" class="lnk" data-go="lists">Mes listes →</button></div>
+    <div class="hx-res-row">
+      <article class="hx-re"><a class="hx-reimg" href="#produit-gants-jet-100" data-open-p="gants-jet-100" aria-label="Gants nitrile · boîte de 100"><img class="ph" src="https://evidentall.fr/api/marketplace/products/98807/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-glove"/></svg></a><div class="hx-reb"><a href="#produit-gants-jet-100" data-open-p="gants-jet-100">Gants nitrile · boîte de 100</a><span class="hx-res">10 boîtes · <b class="money" data-v="2.95">2,95 €</b> livré · Elite Ceram</span><div class="hx-rea"><button class="btn p" data-cart="Elite Ceram" data-pid="gants-jet-100" data-pname="Gants nitrile · boîte de 100" data-unit="2.95" data-qty="10">Recommander 10 <svg><use href="#i-cart"/></svg></button><button class="btn g" data-open-p="gants-jet-100">6 offres</button></div></div></article>
+      <article class="hx-re"><a class="hx-reimg" href="#produit-masque-3p" data-open-p="masque-3p" aria-label="Masques IIR · boîte de 50"><img class="ph" src="https://evidentall.fr/api/marketplace/products/53279/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-mask"/></svg></a><div class="hx-reb"><a href="#produit-masque-3p" data-open-p="masque-3p">Masques IIR · boîte de 50</a><span class="hx-res">6 boîtes · <b class="money" data-v="1.66">1,66 €</b> livré · Docteur AI</span><div class="hx-rea"><button class="btn p" data-cart="Docteur AI" data-pid="masque-3p" data-pname="Masques IIR · boîte de 50" data-unit="1.66" data-qty="6">Recommander 6 <svg><use href="#i-cart"/></svg></button><button class="btn g" data-open-p="masque-3p">4 offres</button></div></div></article>
+      <article class="hx-re"><a class="hx-reimg" href="#produit-sachets-90" data-open-p="sachets-90" aria-label="Sachets 90 × 230 · boîte de 200"><img class="ph" src="https://evidentall.fr/api/marketplace/products/99133/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-sachet"/></svg></a><div class="hx-reb"><a href="#produit-sachets-90" data-open-p="sachets-90">Sachets 90 × 230 · boîte de 200</a><span class="hx-res">4 boîtes · <b class="money" data-v="8.95">8,95 €</b> livré · Docteur Strong</span><div class="hx-rea"><button class="btn p" data-cart="Docteur Strong" data-pid="sachets-90" data-pname="Sachets 90 × 230 · boîte de 200" data-unit="8.95" data-qty="4">Recommander 4 <svg><use href="#i-cart"/></svg></button><button class="btn g" data-open-p="sachets-90">4 offres</button></div></div></article>
     </div>
   </div>
 
-  <div class="hsec">
-    <div class="sec-h"><h2>Prix en baisse cette semaine</h2><span class="hint">Sur les références que vous achetez</span></div>
-    <div class="re-row">
-      <div class="re-c"><button type="button" class="tp" data-open-p="gants-jet-100" title="Voir la fiche produit"><span class="th"><img class="ph " src="https://evidentall.fr/api/marketplace/products/98807/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-glove"/></svg></span><b>Gants nitrile · boîte de 100</b><svg class="tp-ch"><use href="#i-chev"/></svg></button><div class="meta">Elite Ceram · <span class="money" data-v="3.02">3,02 €</span> livré · <span class="delta">−17 % vs moyenne 6 mois</span></div><button class="btn p" data-open-p="gants-jet-100">Voir les 6 offres <svg><use href="#i-arrow"/></svg></button></div>
-      <div class="re-c"><button type="button" class="tp" data-open-p="masque-3p" title="Voir la fiche produit"><span class="th"><img class="ph " src="https://evidentall.fr/api/marketplace/products/53279/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-mask"/></svg></span><b>Masques IIR · boîte de 50</b><svg class="tp-ch"><use href="#i-chev"/></svg></button><div class="meta">Docteur AI · <span class="money" data-v="1.66">1,66 €</span> livré dès 60 € · <span class="delta">−9 %</span></div><button class="btn g" data-open-p="masque-3p">Voir les 4 offres <svg><use href="#i-arrow"/></svg></button></div>
-      <div class="re-c"><button type="button" class="tp" data-open-p="pgcl" title="Voir la fiche produit"><span class="th"><img class="ph " src="https://evidentall.fr/api/marketplace/products/102467/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-suture"/></svg></span><b>Fil de suture PGCL 4-0 · boîte de 12</b><svg class="tp-ch"><use href="#i-chev"/></svg></button><div class="meta">Elite Ceram · <span class="money" data-v="36.00">36,00 €</span> port offert · <span class="delta">−6 %</span></div><button class="btn g" data-open-p="pgcl">Voir les 3 offres <svg><use href="#i-arrow"/></svg></button></div>
+  <div class="hsec hx-sec">
+    <div class="sec-h"><h2>Meilleurs prix du jour</h2><button type="button" class="lnk" data-cat="conso">Voir tout →</button></div>
+    <div class="hx-prow">
+      <article class="hx-p"><a class="hx-pimg" href="#produit-gants-jet-100" data-open-p="gants-jet-100" aria-label="Gants nitrile non poudrés · 100"><span class="hx-badge">−17 %</span><img class="ph" src="https://evidentall.fr/api/marketplace/products/98807/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-glove"/></svg></a><button class="hx-fav" type="button" aria-label="Ajouter aux favoris" data-fav><svg><use href="#i-heart"/></svg></button><div class="hx-pb"><a href="#produit-gants-jet-100" data-open-p="gants-jet-100">Gants nitrile non poudrés · 100</a><div class="hx-pr"><b class="money" data-v="3.02">3,02 €</b><span>livré</span></div><span class="hx-ps">6 offres · −17 %</span></div></article>
+      <article class="hx-p"><a class="hx-pimg" href="#produit-masque-3p" data-open-p="masque-3p" aria-label="Masque chirurgical IIR · 50"><span class="hx-badge">−9 %</span><img class="ph" src="https://evidentall.fr/api/marketplace/products/53279/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-mask"/></svg></a><button class="hx-fav" type="button" aria-label="Ajouter aux favoris" data-fav><svg><use href="#i-heart"/></svg></button><div class="hx-pb"><a href="#produit-masque-3p" data-open-p="masque-3p">Masque chirurgical IIR · 50</a><div class="hx-pr"><b class="money" data-v="1.66">1,66 €</b><span>livré</span></div><span class="hx-ps">4 offres · −9 %</span></div></article>
+      <article class="hx-p"><a class="hx-pimg" href="#produit-pgcl" data-open-p="pgcl" aria-label="Fil de suture PGCL 4-0 · 12"><img class="ph" src="https://evidentall.fr/api/marketplace/products/102467/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-suture"/></svg></a><button class="hx-fav" type="button" aria-label="Ajouter aux favoris" data-fav><svg><use href="#i-heart"/></svg></button><div class="hx-pb"><a href="#produit-pgcl" data-open-p="pgcl">Fil de suture PGCL 4-0 · 12</a><div class="hx-pr"><b class="money" data-v="34.50">34,50 €</b><span>livré</span></div><span class="hx-ps">3 offres · port offert</span></div></article>
+      <article class="hx-p"><a class="hx-pimg" href="#produit-bavette" data-open-p="bavette" aria-label="Bavettes patient 2 plis · 500"><img class="ph" src="https://evidentall.fr/api/marketplace/products/75827/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-box"/></svg></a><button class="hx-fav" type="button" aria-label="Ajouter aux favoris" data-fav><svg><use href="#i-heart"/></svg></button><div class="hx-pb"><a href="#produit-bavette" data-open-p="bavette">Bavettes patient 2 plis · 500</a><div class="hx-pr"><b class="money" data-v="18.40">18,40 €</b><span>livré</span></div><span class="hx-ps">5 offres</span></div></article>
+      <article class="hx-p"><a class="hx-pimg" href="#produit-desinf-surf" data-open-p="desinf-surf" aria-label="Désinfectant surfaces 5 L"><img class="ph" src="https://evidentall.fr/api/marketplace/products/95501/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-box"/></svg></a><button class="hx-fav" type="button" aria-label="Ajouter aux favoris" data-fav><svg><use href="#i-heart"/></svg></button><div class="hx-pb"><a href="#produit-desinf-surf" data-open-p="desinf-surf">Désinfectant surfaces 5 L</a><div class="hx-pr"><b class="money" data-v="24.90">24,90 €</b><span>livré</span></div><span class="hx-ps">4 offres</span></div></article>
+      <article class="hx-p"><a class="hx-pimg" href="#produit-lames-15" data-open-p="lames-15" aria-label="Lames de bistouri n° 15 · 100"><img class="ph" src="https://evidentall.fr/api/marketplace/products/97769/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#i-box"/></svg></a><button class="hx-fav" type="button" aria-label="Ajouter aux favoris" data-fav><svg><use href="#i-heart"/></svg></button><div class="hx-pb"><a href="#produit-lames-15" data-open-p="lames-15">Lames de bistouri n° 15 · 100</a><div class="hx-pr"><b class="money" data-v="9.80">9,80 €</b><span>livré</span></div><span class="hx-ps">4 offres</span></div></article>
     </div>
   </div>
 
-  <div class="hsec how">
-    <div class="sec-h"><h2>Comment ça marche</h2><span class="hint">Tout est inclus pour les cabinets · pas d’abonnement, pas de commission</span></div>
-    <div class="how-g">
-      <div class="how-s"><i>1</i><b>Cherchez une référence</b><span>Par produit, marque ou catégorie. Les tailles et couleurs sont regroupées sur une seule fiche.</span></div>
-      <div class="how-s"><i>2</i><b>Comparez le prix livré</b><span>Catalogue + remise de quantité + port, pour votre adresse. Le classement est écrit noir sur blanc.</span></div>
-      <div class="how-s"><i>3</i><b>Commandez en une fois</b><span>Un panier, un paiement, une facture par fournisseur, un suivi par colis.</span></div>
-      <div class="how-s"><i>4</i><b>Recommandez en un clic</b><span>Listes de réassort, alertes prix, historique : la deuxième commande prend trente secondes.</span></div>
+  <div class="hsec hx-sec hx-how">
+    <div class="hx-how-g">
+      <div><svg><use href="#i-search"/></svg><b>Cherchez</b><span>un produit, une marque ou un rayon</span></div>
+      <div><svg><use href="#i-tag"/></svg><b>Comparez le prix livré</b><span>port et remises de quantité inclus</span></div>
+      <div><svg><use href="#i-cart"/></svg><b>Commandez en une fois</b><span>un panier, une facture par fournisseur</span></div>
+      <div><svg><use href="#i-redo"/></svg><b>Recommandez en un clic</b><span>listes, alertes prix, historique</span></div>
     </div>
-    <p class="how-sup">Vous êtes fournisseur ou laboratoire ? <a href="#partenaires-rejoindre" data-toast="Prototype : page partenaires du site vitrine">Rejoindre les partenaires →</a></p>
+    <p class="how-sup">Fournisseur ou laboratoire ? <a href="#partenaires-rejoindre" data-toast="Prototype : page partenaires du site vitrine">Rejoindre les partenaires →</a></p>
   </div>
 </section>
+
+<nav class="bnav" aria-label="Navigation principale">
+  <button type="button" class="on" data-go="home"><svg><use href="#i-home"/></svg><span>Accueil</span></button>
+  <button type="button" data-cat="conso"><svg><use href="#i-cat-conso"/></svg><span>Rayons</span></button>
+  <button type="button" data-go="cart"><svg><use href="#i-cart"/></svg><span>Panier</span><i id="bnavN">12</i></button>
+  <button type="button" data-go="orders"><svg><use href="#i-truck"/></svg><span>Commandes</span></button>
+  <button type="button" data-go="lists"><svg><use href="#i-list"/></svg><span>Listes</span></button>
+</nav>
 
 <!-- ========== CATEGORY ========== -->
 <section class="view" id="view-cat">
@@ -1606,8 +1701,9 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
 
   /* views */
   const HASH={'view-home':'accueil','view-results':'recherche','view-sheet':'produit','view-cat':'categorie','view-quote':'devis-travaux','view-cart':'panier','view-ship':'livraison','view-pay':'paiement','view-done':'confirmation','view-lists':'mes-listes','view-compare':'comparer-autoclaves','view-partner':'partenaire-elite-ceram'};
+  function bnavSync(id){document.querySelectorAll('.bnav button').forEach(b=>{const k=b.dataset.go||('cat');b.classList.toggle('on',(id==='view-home'&&k==='home')||(id==='view-cat'&&!b.dataset.go)||(id==='view-cart'&&k==='cart')||(id==='view-lists'&&k==='lists'))})}
   const hashFor=id=>id==='view-sheet'?'produit-'+(window.__curPid||'gants-jet-100'):id==='view-cat'?'categorie-'+(window.__curCat||'conso'):HASH[id];
-  const show=(id,noHash)=>{$$('.view').forEach(v=>v.classList.toggle('on',v.id===id));document.body.classList.toggle('home-on',id==='view-home');window.scrollTo({top:0,behavior:'smooth'});const h='#'+hashFor(id);if(!noHash&&location.hash!==h){try{history.pushState(null,'',h)}catch(e){location.hash=h}}};
+  const show=(id,noHash)=>{$$('.view').forEach(v=>v.classList.toggle('on',v.id===id));document.body.classList.toggle('home-on',id==='view-home');if(typeof bnavSync==='function')bnavSync(id);window.scrollTo({top:0,behavior:'smooth'});const h='#'+hashFor(id);if(!noHash&&location.hash!==h){try{history.pushState(null,'',h)}catch(e){location.hash=h}}};
   const byHash=()=>{const h=location.hash.slice(1);if(h.startsWith('produit-')&&window.__openProduct){window.__openProduct(h.slice(8),true);return}if(h.startsWith('categorie-')&&window.__openCat){window.__openCat(h.slice(10),true);return}const id=Object.keys(HASH).find(k=>HASH[k]===h)||'view-home';show(id,true)};
   window.addEventListener('hashchange',byHash);window.addEventListener('popstate',byHash);
 
@@ -1643,7 +1739,7 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
   const totals=()=>{const g=groups();let items=0,port=0;Object.entries(g).forEach(([s,l])=>{items+=subHT(l);port+=portHT(s,l)});const ht=r2(items+port);return{items:r2(items),port:r2(port),ht,tva:r2(ht*TVA),ttc:r2(ht*(1+TVA)),n:cart.reduce((a,l)=>a+l.qty,0),g}};
   const dateFr=days=>{const d=new Date();d.setDate(d.getDate()+days+(d.getDay()>=5?2:0));return d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})};
 
-  function bump(){const t=totals();const el=$('#ncart');el.textContent=t.n;el.classList.toggle('on',t.n>0);const ct=$('#cartTot');if(ct)ct.textContent=t.n?disp(t.items):'Vide';const no=$('#nord');if(no)no.classList.add('on');$('#mcCount').textContent=t.n?'· '+t.n+' article'+(t.n>1?'s':''):''}
+  function bump(){const t=totals();const el=$('#ncart');el.textContent=t.n;el.classList.toggle('on',t.n>0);const ct=$('#cartTot');if(ct)ct.textContent=t.n?disp(t.items):'Vide';const bn=$('#bnavN');if(bn){bn.textContent=t.n;bn.hidden=!t.n}const no=$('#nord');if(no)no.classList.add('on');$('#mcCount').textContent=t.n?'· '+t.n+' article'+(t.n>1?'s':''):''}
   function lineHTML(l,i){const IMGS=window.IMGS||{},IMGBASE=window.IMGBASE||'';const ico=(window.PRODS&&PRODS[l.pid]&&PRODS[l.pid].ico)||(window.PICO&&PICO[l.pid])||'i-box';let warn='';if(l.priceFrom&&l.priceFrom!==l.unit)warn=`<div class="warnbox"><svg><use href="#i-warn"/></svg><div><b>Le prix a changé depuis votre ajout</b>${disp(l.priceFrom)} → ${disp(l.unit)} la boîte chez ${l.sup}.<div class="acts"><button type="button" data-accept-price>Accepter le nouveau prix</button><button type="button" data-rm>Retirer</button></div></div></div>`;if(l.stockMax&&l.qty>l.stockMax)warn=`<div class="warnbox"><svg><use href="#i-warn"/></svg><div><b>Plus que ${l.stockMax} en stock chez ${l.sup}</b>Vous en demandez ${l.qty}.<div class="acts"><button type="button" class="p" data-reduce="${l.stockMax}">Réduire à ${l.stockMax}</button><button type="button" data-split="${l.stockMax}">Prendre le reste chez Docteur Strong (+0,18 €/boîte)</button></div></div></div>`;return `<div class="line" data-i="${i}"><div class="th">${IMGS[l.pid]?`<img class="ph" src="${IMGBASE}${IMGS[l.pid]}/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#${ico}"/></svg>`:`<svg><use href="#${ico}"/></svg>`}</div><div><div class="nm">${l.name}</div><div class="sp">${l.size?'Taille '+l.size+' · ':''}${disp(l.unit)} <span class="taxlbl">${tax.toUpperCase()}</span> / ${l.unitLab||'boîte'}</div><div class="ctl"><span class="qty"><button type="button" data-q="-1" aria-label="Moins">−</button><span>${l.qty}</span><button type="button" data-q="1" aria-label="Plus">+</button></span><button type="button" class="rm" data-rm>Retirer</button></div>${warn}</div><div class="pr">${disp(l.unit*l.qty)}</div></div>`}
   function renderMini(added){const b=$('#mcBody');b.innerHTML=(added?`<div class="mc-added"><svg><use href="#i-check"/></svg>${added}</div>`:'')+(cart.length?cart.map((l,i)=>lineHTML(l,i)).join(''):'<div class="empty">Votre panier est vide.</div>');$('#mcSub').textContent=disp(totals().items);$$('.taxlbl').forEach(e=>e.textContent=tax.toUpperCase())}
   function openMini(added){renderMini(added);$('#mc').classList.add('on');$('#mcBg').classList.add('on');$('#mc').setAttribute('aria-hidden','false')}
