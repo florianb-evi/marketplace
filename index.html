@@ -1537,6 +1537,16 @@ span.ofiche{cursor:pointer}
 .oc-f .acts{display:flex;gap:8px;flex-wrap:wrap}
 .oc-f .acts .btn{height:34px;font-size:12px;padding:0 12px}
 @media (max-width:860px){.okpi{grid-template-columns:1fr}.oc-h{grid-template-columns:40px minmax(0,1fr) auto}.ost{grid-column:1/-1;justify-self:start}.oc-f .acts .btn{flex:1 1 45%;justify-content:center}.ol .nm{white-space:normal}}
+
+/* ---------- largeur : on utilise l’écran jusqu’à 1600 px ---------- */
+:root{--maxw:1600px}
+.top-in,.ft-in,.cmptray-in{max-width:var(--maxw)}
+.wrap,.strip-in{max-width:calc(var(--maxw) - 40px)}
+.top-in{padding:0 28px}.wrap{padding-left:28px;padding-right:28px}.strip-in{padding:0 28px}.ft-in{padding:0 28px}
+.search{max-width:640px}
+@media (min-width:1500px){.pgrid{grid-template-columns:repeat(4,1fr)}}
+@media (min-width:1900px){.pgrid{grid-template-columns:repeat(5,1fr)}.hx-prow{grid-template-columns:repeat(6,1fr)}}
+@media (max-width:860px){.top-in,.wrap,.strip-in,.ft-in{padding-left:16px;padding-right:16px}}
 </style>
 </head>
 <body>
