@@ -1485,6 +1485,58 @@ span.ofiche{cursor:pointer}
 .wl-f{padding:14px 24px 16px;border-top:0}
 .wl-f .btn{height:46px}
 @media (max-width:700px){.wl{top:auto;bottom:0;left:0;width:100vw;max-height:92vh;border-radius:20px 20px 0 0;transform:translateY(100%);opacity:1}.wl.on{transform:none}.wl-h{padding:18px 18px 16px}.wl-b{padding:14px 18px 4px;gap:10px}.wl-f{padding:12px 18px calc(12px + env(safe-area-inset-bottom))}}
+
+/* ---------- mes commandes ---------- */
+.cat-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.cat-h>.btn{height:40px;text-decoration:none;flex:none}
+.okpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.kp{display:grid;grid-template-columns:36px auto 1fr;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;font:inherit;text-align:left;cursor:pointer;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.kp:hover{border-color:var(--p);box-shadow:var(--sh)}
+.kp svg{width:36px;height:36px;padding:8px;border-radius:10px;background:var(--tint);color:var(--p)}
+.kp b{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.kp span{font-size:12.5px;color:var(--ink2)}
+.kp.warn svg{background:var(--warn-bg);color:var(--warn-ink)}
+.ofilt{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:0 0 12px}
+.ofilt [role=tab]{height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font:inherit;font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.ofilt [role=tab] i{font-style:normal;font-size:11px;color:var(--mute)}
+.ofilt [role=tab][aria-pressed=true]{background:var(--s);color:#fff;border-color:var(--s)}
+.ofilt [role=tab][aria-pressed=true] i{color:rgba(255,255,255,.7)}
+.ofilt .oexp{margin-left:auto;font-size:12.5px}
+.oc{background:#fff;border:1px solid var(--line);border-radius:var(--r2);box-shadow:var(--sh);overflow:hidden}
+.oc-h{display:grid;grid-template-columns:40px minmax(0,1fr) auto auto;gap:12px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.oc-h .lg{width:40px;height:40px;border-radius:11px;background:var(--s);color:#fff;display:grid;place-items:center;font-weight:800;font-size:12px}
+.oc-t{display:grid;gap:1px;min-width:0}
+.oc-t b{font-size:15px}
+.oc-t span{font-size:12px;color:var(--mute)}
+.ost{font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;white-space:nowrap;background:var(--soft);color:var(--ink2);border:1px solid var(--line)}
+.ost.ok{background:var(--tint);color:var(--p);border-color:var(--line)}
+.ost.go{background:var(--s);color:#fff;border-color:var(--s)}
+.ost.late{background:var(--warn-bg);color:var(--warn-ink);border-color:var(--warn-line)}
+.oc-tot{text-align:right}
+.oc-tot b{display:block;font-size:17px;font-weight:800;letter-spacing:-.01em}
+.oc-tot small{font-size:11.5px;color:var(--mute)}
+.oc-lines{display:grid;gap:6px;padding:12px 18px 4px}
+.ol{display:grid;grid-template-columns:40px auto minmax(0,1fr) 14px;gap:10px;align-items:center;text-decoration:none;color:var(--ink);padding:6px 8px;border-radius:10px;margin:0 -8px}
+.ol:hover{background:var(--soft)}
+.ol .th{width:40px;height:40px;border-radius:9px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:3px;background:#fff}
+.ol .th img{max-width:100%;max-height:100%;object-fit:contain}
+.ol .th svg{width:50%;height:50%;color:var(--p)}
+.ol .q{font-size:13px;font-weight:800;color:var(--s)}
+.ol .nm{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ol .ch{width:14px;height:14px;color:var(--mute);transform:rotate(-90deg)}
+.oprog{list-style:none;margin:10px 18px 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.oprog li{display:grid;gap:6px;font-size:11.5px;color:var(--mute);text-align:center}
+.oprog li i{display:block;height:6px;border-radius:999px;background:var(--line)}
+.oprog li.done i,.oprog li.now i{background:var(--p)}
+.oprog li.now{color:var(--p);font-weight:700}
+.oprog li.now i{box-shadow:0 0 0 3px rgba(0,119,253,.18)}
+.oprog li.late i{background:var(--warn)}
+.oprog li.late{color:var(--warn-ink)}
+.oc-f{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 18px 14px;font-size:12.5px;color:var(--ink2)}
+.oc-f .warnt{color:var(--warn-ink)}
+.oc-f .acts{display:flex;gap:8px;flex-wrap:wrap}
+.oc-f .acts .btn{height:34px;font-size:12px;padding:0 12px}
+@media (max-width:860px){.okpi{grid-template-columns:1fr}.oc-h{grid-template-columns:40px minmax(0,1fr) auto}.ost{grid-column:1/-1;justify-self:start}.oc-f .acts .btn{flex:1 1 45%;justify-content:center}.ol .nm{white-space:normal}}
 </style>
 </head>
 <body>
@@ -1758,19 +1810,27 @@ span.ofiche{cursor:pointer}
 
 <!-- ========== LISTS & ALERTS ========== -->
 <section class="view" id="view-lists">
-  <nav class="crumb" aria-label="Fil d’Ariane"><a href="#accueil" data-go="home">Marketplace</a> <span>›</span> <b>Mes listes &amp; alertes</b></nav>
-  <div class="cat-h"><h1>Mes listes &amp; alertes <small>Cabinet dentaire des Lilas · partagées avec 3 membres</small></h1></div>
-  <div class="tabs" role="tablist"><button type="button" role="tab" aria-pressed="true" data-ltab="lists">Listes de réassort</button><button type="button" role="tab" aria-pressed="false" data-ltab="alerts">Alertes prix <span id="alN" class="mute"></span></button><button type="button" role="tab" aria-pressed="false" data-ltab="orders">Commandes <span class="mute" id="ordN"></span></button><button type="button" role="tab" aria-pressed="false" data-ltab="quotes">Devis <span class="mute" id="qtsN"></span></button></div>
+  <nav class="crumb" aria-label="Fil d’Ariane"><a href="#accueil" data-go="home">Marketplace</a> <span>›</span> <b>Mes listes</b></nav>
+  <div class="cat-h"><h1>Mes listes <small>Réassorts, alertes prix et devis · Cabinet dentaire des Lilas · partagées avec 3 membres</small></h1><a class="btn o" href="#mes-commandes" data-go="orders"><svg><use href="#i-truck"/></svg> Mes commandes</a></div>
+  <div class="tabs" role="tablist"><button type="button" role="tab" aria-pressed="true" data-ltab="lists">Listes de réassort</button><button type="button" role="tab" aria-pressed="false" data-ltab="alerts">Alertes prix <span id="alN" class="mute"></span></button><button type="button" role="tab" aria-pressed="false" data-ltab="quotes">Devis <span class="mute" id="qtsN"></span></button></div>
   <div id="ltab-lists" class="lists">
     <div class="lnav" id="lnav"></div>
     <div class="ldet" id="ldet"></div>
   </div>
-  <div id="ltab-orders" hidden><p class="mute" style="font-size:13px;margin-bottom:12px">Une commande = un colis = une facture, par fournisseur. Le suivi vient du transporteur de chaque partenaire.</p><div class="orders" id="ordersBox"></div></div>
   <div id="ltab-quotes" hidden><p class="mute" style="font-size:13px;margin-bottom:12px">Vos demandes de devis aux laboratoires et leurs réponses.</p><div class="orders" id="quotesBox"></div></div>
   <div id="ltab-alerts" hidden>
     <p class="mute" style="font-size:13px;margin-bottom:12px">On vous écrit dès que le meilleur prix livré passe sous votre seuil. Les alertes sont liées au cabinet, pas à l’appareil.</p>
     <div class="alerts" id="alerts"></div>
   </div>
+</section>
+
+<!-- ========== MES COMMANDES ========== -->
+<section class="view" id="view-orders">
+  <nav class="crumb" aria-label="Fil d’Ariane"><a href="#accueil" data-go="home">Marketplace</a> <span>›</span> <b>Mes commandes</b></nav>
+  <div class="cat-h"><h1>Mes commandes <small>Une commande = un colis = une facture, par fournisseur · suivi transporteur de chaque partenaire</small></h1><a class="btn o" href="#mes-listes" data-go="lists"><svg><use href="#i-list"/></svg> Mes listes</a></div>
+  <div class="okpi" id="oKpi"></div>
+  <div class="ofilt" id="oFilt" role="tablist"></div>
+  <div class="orders" id="ordersBox"></div>
 </section>
 
 <!-- ========== EQUIPMENT COMPARE ========== -->
@@ -2113,8 +2173,8 @@ span.ofiche{cursor:pointer}
   applyTax();
 
   /* views */
-  const HASH={'view-home':'accueil','view-results':'recherche','view-sheet':'produit','view-cat':'categorie','view-quote':'devis-travaux','view-cart':'panier','view-ship':'livraison','view-pay':'paiement','view-done':'confirmation','view-lists':'mes-listes','view-account':'mon-cabinet','view-cmp':'ma-comparaison','view-rayons':'rayons','view-compare':'comparer-autoclaves','view-partner':'partenaire-elite-ceram'};
-  function bnavSync(id){document.querySelectorAll('.bnav button').forEach(b=>{const k=b.dataset.go||('cat');b.classList.toggle('on',(id==='view-home'&&k==='home')||((id==='view-cat'||id==='view-rayons'||id==='view-sheet')&&k==='rayons')||(id==='view-cart'&&k==='cart')||(id==='view-lists'&&k==='lists'))})}
+  const HASH={'view-home':'accueil','view-results':'recherche','view-sheet':'produit','view-cat':'categorie','view-quote':'devis-travaux','view-cart':'panier','view-ship':'livraison','view-pay':'paiement','view-done':'confirmation','view-lists':'mes-listes','view-orders':'mes-commandes','view-account':'mon-cabinet','view-cmp':'ma-comparaison','view-rayons':'rayons','view-compare':'comparer-autoclaves','view-partner':'partenaire-elite-ceram'};
+  function bnavSync(id){document.querySelectorAll('.bnav button').forEach(b=>{const k=b.dataset.go||('cat');b.classList.toggle('on',(id==='view-home'&&k==='home')||((id==='view-cat'||id==='view-rayons'||id==='view-sheet')&&k==='rayons')||(id==='view-cart'&&k==='cart')||(id==='view-orders'&&k==='orders')||(id==='view-lists'&&k==='lists'))})}
   const hashFor=id=>id==='view-sheet'?'produit-'+(window.__curPid||'gants-jet-100'):id==='view-cat'?'categorie-'+(window.__curCat||'conso'):HASH[id];
   const show=(id,noHash)=>{$$('.view').forEach(v=>v.classList.toggle('on',v.id===id));document.body.classList.toggle('home-on',id==='view-home');if(typeof bnavSync==='function')bnavSync(id);if(id==='view-rayons'&&typeof renderRayons==='function')renderRayons();if(typeof cmpSync==='function')setTimeout(cmpSync,0);window.scrollTo({top:0,behavior:'smooth'});const h='#'+hashFor(id);if(!noHash&&location.hash!==h){try{history.pushState(null,'',h)}catch(e){location.hash=h}}};
   const byHash=()=>{const h=location.hash.slice(1);if(h.startsWith('produit-')&&window.__openProduct){window.__openProduct(h.slice(8),true);return}if(h.startsWith('categorie-')&&window.__openCat){window.__openCat(h.slice(10),true);return}const id=Object.keys(HASH).find(k=>HASH[k]===h)||'view-home';show(id,true)};
@@ -2177,8 +2237,8 @@ span.ofiche{cursor:pointer}
   $('[data-edit-addr]').addEventListener('click',()=>{$('#addrForm').hidden=false;$('#addrView').hidden=true});
   $('[data-save-addr]').addEventListener('click',()=>{$('#addrView b').textContent=$('#f-cab').value+' · '+$('#f-nom').value;$('#addrView span').innerHTML=$('#f-adr').value+'<br>'+$('#f-cp').value+' '+$('#f-ville').value+'<br>'+$('#f-tel').value+($('#f-note').value?'<br><em>'+$('#f-note').value+'</em>':'');$('#addrForm').hidden=true;$('#addrView').hidden=false;renderPay();toast('Adresse enregistrée')});
   /* navigation in tunnel */
-  const VIEW={home:'view-home',results:'view-cat',sheet:'view-sheet',cat:'view-cat',cart:'view-cart',ship:'view-ship',pay:'view-pay',done:'view-done',lists:'view-lists',orders:'view-lists',account:'view-account',cmp:'view-cmp',rayons:'view-rayons',quote:'view-quote',compare:'view-compare',partner:'view-partner'};
-  document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(!g)return;e.preventDefault();const k=g.dataset.go;if((k==='ship'||k==='pay')&&!cart.length){toast('Votre panier est vide');return}closeMini();renderAll();if(window.__showTab){if(g.dataset.tab)window.__showTab(g.dataset.tab);else if(k==='orders')window.__showTab('orders');else if(k==='lists')window.__showTab('lists')}show(VIEW[k])});
+  const VIEW={home:'view-home',results:'view-cat',sheet:'view-sheet',cat:'view-cat',cart:'view-cart',ship:'view-ship',pay:'view-pay',done:'view-done',lists:'view-lists',orders:'view-orders',account:'view-account',cmp:'view-cmp',rayons:'view-rayons',quote:'view-quote',compare:'view-compare',partner:'view-partner'};
+  document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(!g)return;e.preventDefault();const k=g.dataset.go;if((k==='ship'||k==='pay')&&!cart.length){toast('Votre panier est vide');return}closeMini();renderAll();if(window.__showTab){if(g.dataset.tab)window.__showTab(g.dataset.tab);else if(k==='lists')window.__showTab('lists')}show(VIEW[k])});
   $$('[data-open-cart]').forEach(b=>b.addEventListener('click',()=>{renderAll();show('view-cart')}));
   /* pay */
   $('#payBtn').addEventListener('click',()=>{if(!$('#cgv').checked){$('#cgvErr').classList.add('on');$('#cgv').focus();return}$('#cgvErr').classList.remove('on');const pend=cart.find(l=>(l.priceFrom&&l.priceFrom!==l.unit)||(l.stockMax&&l.qty>l.stockMax));let eb=$('#payErr');if(!eb){eb=document.createElement('div');eb.id='payErr';$('#recap3').after(eb)}if(pend){eb.innerHTML=`<div class="errbox"><svg><use href="#i-warn"/></svg><div><b>Votre panier a changé</b>Un prix ou un stock a évolué depuis votre ajout. Vérifiez-le avant de payer.<div class="acts"><button type="button" class="p" data-go="cart">Revoir le panier</button></div></div></div>`;return}const pm=document.querySelector('input[name=pay]:checked')?.value;if(pm==='vir'){eb.innerHTML=`<div class="errbox"><svg><use href="#i-warn"/></svg><div><b>Virement à 30 jours indisponible pour l’instant</b>La vérification de votre cabinet est en cours (24 à 48 h). Vous pouvez payer par carte ou SEPA maintenant, ou garder ce panier et revenir.<div class="acts"><button type="button" class="p" data-pay-cb>Payer par carte</button><button type="button" data-toast="Panier enregistré · on vous écrit dès que le virement est disponible">Garder le panier</button></div></div></div>`;return}eb.innerHTML='';const t=totals();const n=Date.now().toString().slice(-5);$('#doneOrders').innerHTML=Object.entries(t.g).map(([sup,l],i)=>{const s=SUP[sup];return `<div class="ord"><div class="lg ${s.cls}">${s.k}</div><div><b>${sup} · n° EV-${n}-${i+1}</b><span>${l.reduce((a,x)=>a+x.qty,0)} article${l.reduce((a,x)=>a+x.qty,0)>1?'s':''} · ${fmt(r2((subHT(l)+portHT(sup,l))*(1+TVA)))} TTC · livraison estimée ${dateFr(ship[sup]==='exp'&&s.express?s.express.days:s.days)}</span></div><span class="st">Confirmée</span></div>`}).join('');cart=[];bump();show('view-done')});
@@ -2471,16 +2531,25 @@ span.ofiche{cursor:pointer}
 
   /* ---------- v6 : commandes & devis ---------- */
   const ORDERS=[
-    {n:'EV-48211-1',sup:'Elite Ceram',k:'EC',cls:'c',date:'12 nov.',items:'10 × Gants nitrile · boîte de 100',ttc:35.40,step:3,eta:'livré le 14 nov.',inv:true},
-    {n:'EV-48211-2',sup:'Docteur AI',k:'DA',cls:'b',date:'12 nov.',items:'6 × Masques IIR · boîte de 50',ttc:17.83,step:2,eta:'arrivée prévue jeu. 19 nov.',inv:false},
-    {n:'EV-47002-1',sup:'GACD',k:'GA',cls:'a',date:'29 oct.',items:'4 × Sachets 90 × 230 · 1 × Indicateurs classe 5',ttc:68.16,step:3,eta:'livré le 3 nov.',inv:true},
-    {n:'EV-46310-1',sup:'Dental Good Deal',k:'DG',cls:'a',date:'15 oct.',items:'20 × Gants nitrile · boîte de 100',ttc:58.80,step:3,eta:'livré le 22 nov. · 2 j de retard',inv:true,late:true}
+    {n:'EV-48211-1',sup:'Elite Ceram',k:'EC',cls:'c',date:'12 nov.',items:'10 × Gants nitrile · boîte de 100',lines:[{pid:'gants-jet-100',q:10,n:'Gants d’examen nitrile non poudrés · boîte de 100'}],ttc:35.40,step:3,eta:'livré le 14 nov.',when:'14 nov.',inv:true,track:'EC-7781-FR'},
+    {n:'EV-48211-2',sup:'Docteur AI',k:'DA',cls:'b',date:'12 nov.',items:'6 × Masques IIR · boîte de 50',lines:[{pid:'masque-3p',q:6,n:'Masque chirurgical 3 plis type IIR · boîte de 50'}],ttc:17.83,step:2,eta:'arrivée prévue jeu. 19 nov.',when:'jeu. 19 nov.',inv:false,track:'1Z-99A-DA'},
+    {n:'EV-47002-1',sup:'GACD',k:'GA',cls:'a',date:'29 oct.',items:'4 × Sachets 90 × 230 · 1 × Indicateurs classe 5',lines:[{pid:'sachets-90',q:4,n:'Sachets de stérilisation 90 × 230 · boîte de 200'},{pid:'indic-5',q:1,n:'Indicateurs classe 5 · boîte de 250'}],ttc:68.16,step:3,eta:'livré le 3 nov.',when:'3 nov.',inv:true,track:'GA-55120'},
+    {n:'EV-46310-1',sup:'Dental Good Deal',k:'DG',cls:'a',date:'15 oct.',items:'20 × Gants nitrile · boîte de 100',lines:[{pid:'gants-jet-100',q:20,n:'Gants d’examen nitrile non poudrés · boîte de 100'}],ttc:58.80,step:3,eta:'livré le 22 oct. · 2 j de retard',when:'22 oct.',inv:true,late:true,track:'DG-0921'}
   ];
   const QUOTES=[{n:'DV-1032',date:'10 nov.',what:'Couronne zircone · 36 · A2',labs:3,answers:[{lab:'Céram Design',price:118,delay:'5 j'},{lab:'Proto Lab',price:96,delay:'6 j'}],status:'2 réponses sur 3'}];
-  function renderOrders(){$('#ordN').textContent='('+ORDERS.length+')';$('#qtsN').textContent='('+QUOTES.length+')';const steps=['Confirmée','Préparée','Expédiée','Livrée'];$('#ordersBox').innerHTML=ORDERS.map(o=>`<div class="ord2"><div class="ord2-h"><div class="lg ${o.cls}">${o.k}</div><div><b>${o.sup} · n° ${o.n}</b><span>Commandé le ${o.date} · ${o.items}</span></div><div class="tot">TTC<b>${fmt(o.ttc)}</b></div></div><div class="tl">${steps.map((s,i)=>`<div class="${i<=o.step?'done':''} ${i===o.step?'now':''}">${s}${i===o.step?`<small>${o.eta}</small>`:''}</div>`).join('')}</div><div class="ord2-b"><span>${o.late?'<span style="color:#b45309;font-weight:700">Retard signalé au partenaire · geste commercial en cours</span>':o.step===3?'Commande terminée':'Suivi transporteur disponible'}</span><div class="acts">${o.inv?'<button class="btn o" data-toast="Facture '+o.n+' téléchargée (PDF)"><svg><use href="#i-doc"/></svg> Facture</button>':'<button class="btn o" data-toast="La facture arrive à l’expédition">Facture à venir</button>'}<button class="btn g" data-reorder="${o.n}"><svg><use href="#i-redo"/></svg> Commander à nouveau</button>${o.step>=2?'<button class="btn o" data-toast="Prototype : signalement (manquant, abîmé, erreur) transmis au partenaire">Signaler un problème</button>':''}</div></div></div>`).join('');$('#quotesBox').innerHTML=QUOTES.map(q=>`<div class="ord2"><div class="ord2-h"><div class="lg" style="background:#0a3e78">DV</div><div><b>${q.what} · n° ${q.n}</b><span>Envoyé le ${q.date} à ${q.labs} laboratoires · ${q.status}</span></div><div class="tot">Meilleure offre<b>${fmt(Math.min(...q.answers.map(a=>a.price)))}</b></div></div><div class="ord2-b" style="display:grid;gap:8px">${q.answers.map(a=>`<div style="display:flex;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 12px"><span><b>${a.lab}</b> · délai ${a.delay}</span><span style="display:flex;gap:10px;align-items:center"><b>${fmt(a.price)}</b> HT<button class="btn p" style="height:32px;font-size:12px" data-toast="Devis ${a.lab} accepté · fiche de travail envoyée">Accepter</button></span></div>`).join('')}<span class="mute" style="font-size:12px">En attente : LabDent Express (réponse sous 24 h).</span></div></div>`).join('')}
+  let oFilter='all';
+  const oStatus=o=>o.late?{k:'late',t:'Livrée avec retard · '+o.when}:o.step===3?{k:'ok',t:'Livrée le '+o.when}:o.step===2?{k:'go',t:'En transit · arrive '+o.when}:o.step===1?{k:'prep',t:'En préparation'}:{k:'conf',t:'Confirmée'};
+  function renderOrders(){const ordN=$('#ordN');if(ordN)ordN.textContent='('+ORDERS.length+')';$('#qtsN').textContent='('+QUOTES.length+')';const steps=['Confirmée','Préparée','Expédiée','Livrée'];
+    const inProg=ORDERS.filter(o=>o.step<3),late=ORDERS.filter(o=>o.late),tot30=ORDERS.reduce((a,o)=>a+o.ttc,0);
+    const kpi=$('#oKpi');if(kpi)kpi.innerHTML=`<button type="button" class="kp" data-ofilt="go"><svg><use href="#i-truck"/></svg><b>${inProg.length}</b><span>en cours${inProg[0]?' · arrive '+inProg[0].when:''}</span></button><button type="button" class="kp" data-ofilt="all"><svg><use href="#i-doc"/></svg><b>${ORDERS.length}</b><span>commandes · ${fmt(tot30)} TTC sur 30 jours</span></button><button type="button" class="kp ${late.length?'warn':''}" data-ofilt="late"><svg><use href="#i-info"/></svg><b>${late.length}</b><span>incident${late.length>1?'s':''} signalé${late.length>1?'s':''}</span></button>`;
+    const filt=$('#oFilt');if(filt){const F=[['all','Toutes',ORDERS.length],['go','En cours',inProg.length],['ok','Livrées',ORDERS.filter(o=>o.step===3).length],['late','Incidents',late.length]];filt.innerHTML=F.map(([k,l,n])=>`<button type="button" role="tab" aria-pressed="${oFilter===k}" data-ofilt="${k}">${l} <i>${n}</i></button>`).join('')+`<button type="button" class="lnk oexp" data-toast="Export comptable (CSV) généré">Export comptable</button>`}
+    const list=ORDERS.filter(o=>oFilter==='all'||(oFilter==='go'&&o.step<3)||(oFilter==='ok'&&o.step===3)||(oFilter==='late'&&o.late));
+    $('#ordersBox').innerHTML=list.length?list.map(o=>{const st=oStatus(o);return `<article class="oc"><header class="oc-h"><span class="lg ${o.cls}">${o.k}</span><div class="oc-t"><b>${o.sup}</b><span>n° ${o.n} · commandé le ${o.date}</span></div><span class="ost ${st.k}">${st.t}</span><div class="oc-tot"><b>${fmt(o.ttc)}</b><small>TTC · ${o.lines.reduce((a,l)=>a+l.q,0)} articles</small></div></header><div class="oc-lines">${o.lines.map(l=>`<a class="ol" href="#produit-${l.pid}" data-open-p="${l.pid}"><span class="th">${IMGS[l.pid]?`<img src="${IMGBASE}${IMGS[l.pid]}/image" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#${PICO[l.pid]||'i-box'}"/></svg>`:`<svg><use href="#${PICO[l.pid]||'i-box'}"/></svg>`}</span><span class="q">${l.q} ×</span><span class="nm">${l.n}</span><svg class="ch"><use href="#i-chev"/></svg></a>`).join('')}</div><ol class="oprog" aria-label="Avancement">${steps.map((sx,i)=>`<li class="${i<o.step?'done':''} ${i===o.step?'now':''} ${o.late&&i===3?'late':''}"><i></i><span>${sx}</span></li>`).join('')}</ol><footer class="oc-f"><span class="oc-note">${o.late?'<b class="warnt">Retard signalé au partenaire · geste commercial en cours</b>':o.step<3?'Suivi transporteur <b>'+o.track+'</b>':'Commande terminée'}</span><div class="acts">${o.step<3?'<button class="btn o" data-toast="Prototype : suivi transporteur '+o.track+'"><svg><use href="#i-truck"/></svg> Suivre le colis</button>':''}${o.inv?'<button class="btn o" data-toast="Facture '+o.n+' téléchargée (PDF)"><svg><use href="#i-doc"/></svg> Facture</button>':'<button class="btn o" data-toast="La facture arrive à l’expédition">Facture à venir</button>'}<button class="btn g" data-reorder="${o.n}"><svg><use href="#i-redo"/></svg> Commander à nouveau</button>${o.step>=2?'<button class="btn o" data-toast="Prototype : signalement (manquant, abîmé, erreur) transmis au partenaire">Signaler un problème</button>':''}</div></footer></article>`}).join(''):`<div class="cmp-empty"><svg><use href="#i-truck"/></svg><b>Aucune commande dans ce filtre</b><span>Changez de filtre ou passez votre première commande.</span></div>`;
+    $('#quotesBox').innerHTML=QUOTES.map(q=>`<div class="ord2"><div class="ord2-h"><div class="lg" style="background:#0a3e78">DV</div><div><b>${q.what} · n° ${q.n}</b><span>Envoyé le ${q.date} à ${q.labs} laboratoires · ${q.status}</span></div><div class="tot">Meilleure offre<b>${fmt(Math.min(...q.answers.map(a=>a.price)))}</b></div></div><div class="ord2-b" style="display:grid;gap:8px">${q.answers.map(a=>`<div style="display:flex;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 12px"><span><b>${a.lab}</b> · délai ${a.delay}</span><span style="display:flex;gap:10px;align-items:center"><b>${fmt(a.price)}</b> HT<button class="btn p" style="height:32px;font-size:12px" data-toast="Devis ${a.lab} accepté · fiche de travail envoyée">Accepter</button></span></div>`).join('')}<span class="mute" style="font-size:12px">En attente : LabDent Express (réponse sous 24 h).</span></div></div>`).join('')}
   document.addEventListener('click',e=>{const r=e.target.closest('[data-reorder]');if(!r)return;const o=ORDERS.find(x=>x.n===r.dataset.reorder);if(o.n.startsWith('EV-48211-1')||o.n.startsWith('EV-46310')){cart.push({pid:'gants-jet-100',name:'Gants d’examen nitrile non poudrés · boîte de 100',sup:'Elite Ceram',unit:2.95,qty:10,size:'M',unitLab:'boîte'})}else if(o.n==='EV-48211-2'){cart.push({pid:'masque-3p',name:'Masque chirurgical 3 plis type IIR · boîte de 50',sup:'Docteur AI',unit:1.66,qty:6,size:null,unitLab:'boîte'})}else{cart.push({pid:'sachets-90',name:'Sachets de stérilisation 90 × 230 · boîte de 200',sup:'GACD',unit:8.95,qty:4,size:null,unitLab:'boîte'})}renderAll();openMini('Commande '+o.n+' remise au panier, au meilleur prix du jour')});
-  window.__showTab=k=>{$$('[data-ltab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ltab===k)));['lists','alerts','orders','quotes'].forEach(t=>{$('#ltab-'+t).hidden=t!==k})};
+  window.__showTab=k=>{$$('[data-ltab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ltab===k)));['lists','alerts','quotes'].forEach(t=>{const el=$('#ltab-'+t);if(el)el.hidden=t!==k})};
   renderOrders();
+  document.addEventListener('click',e=>{const f=e.target.closest('[data-ofilt]');if(f){oFilter=f.dataset.ofilt;renderOrders()}});
 
   /* devis */
   const TEETH=[18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28,48,47,46,45,44,43,42,41,31,32,33,34,35,36,37,38];const tsel=new Set([36]);

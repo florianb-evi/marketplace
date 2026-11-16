@@ -1,6 +1,6 @@
 import asyncio
 from playwright.async_api import async_playwright
-U='file://'+__import__('os').path.abspath('index.html')+''
+U='file:///home/claude/marketplace/index.html'
 async def main():
     async with async_playwright() as p:
         b=await p.chromium.launch()
@@ -14,9 +14,9 @@ async def main():
             # product gants via home
             await pg.click('[data-open-p=gants-jet-100]');await pg.wait_for_timeout(500)
             res['sheet']=await ov();res['hash']=await pg.evaluate('location.hash')
-            first=await pg.evaluate("document.querySelector('.orow .owho b').textContent")
+            first=await pg.evaluate("document.querySelector('.orow .oname').textContent.trim().split(' ').slice(0,2).join(' ')")
             await pg.fill('#cpQin','25');await pg.dispatch_event('#cpQin','change');await pg.wait_for_timeout(600)
-            first25=await pg.evaluate("document.querySelector('.orow .owho b').textContent")
+            first25=await pg.evaluate("document.querySelector('.orow .oname').textContent.trim().split(' ').slice(0,2).join(' ')")
             await pg.screenshot(path=f'v6-sheet-{name}.png',full_page=True)
             # add from reco card
             await pg.click('.ans.reco .cta');await pg.wait_for_timeout(400);await pg.keyboard.press('Escape')
@@ -54,7 +54,7 @@ async def main():
             await pg.click('[data-pay-cb]');await pg.click('#payBtn');await pg.wait_for_timeout(500)
             res['done']=await pg.evaluate("document.querySelector('.view.on').id")
             await pg.click('#view-done [data-go=orders]');await pg.wait_for_timeout(400)
-            res['orders']=str(await pg.evaluate("document.querySelectorAll('#ordersBox .ord2').length"))+' tab hidden? '+str(await pg.evaluate("document.getElementById('ltab-orders').hidden"))
+            res['orders']=str(await pg.evaluate("document.querySelectorAll('#ordersBox .oc').length"))+' view '+str(await pg.evaluate("document.querySelector('.view.on').id"))
             await pg.screenshot(path=f'v6-orders-{name}.png',full_page=True)
             await pg.click('[data-reorder="EV-48211-2"]');await pg.wait_for_timeout(300);await pg.keyboard.press('Escape')
             # quote
