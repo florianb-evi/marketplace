@@ -1547,6 +1547,16 @@ span.ofiche{cursor:pointer}
 @media (min-width:1500px){.pgrid{grid-template-columns:repeat(4,1fr)}}
 @media (min-width:1900px){.pgrid{grid-template-columns:repeat(5,1fr)}.hx-prow{grid-template-columns:repeat(6,1fr)}}
 @media (max-width:860px){.top-in,.wrap,.strip-in,.ft-in{padding-left:16px;padding-right:16px}}
+
+/* ---------- recherche en haut de page (hors accueil) ---------- */
+.pgs-on .top .tools{margin-left:auto}
+.pgs{margin:0 0 16px}
+.pgs .search{display:flex;height:52px;max-width:900px;margin:0;border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);padding-left:16px}
+.pgs .search svg{width:20px;height:20px;color:var(--p)}
+.pgs .search input{font-size:15px}
+.pgs .search button{height:40px;padding:0 18px;border-radius:10px}
+.pgs .sug{top:calc(100% + 6px)}
+@media (max-width:860px){.pgs{margin-bottom:12px}.pgs .search{height:46px}.pgs .search button{height:36px;padding:0 12px}}
 </style>
 </head>
 <body>
@@ -1639,6 +1649,7 @@ span.ofiche{cursor:pointer}
 </nav>
 
 <main class="wrap">
+<div class="pgs" id="pgs" hidden></div>
 
 
 <!-- ========== HOME ========== -->
@@ -2186,7 +2197,7 @@ span.ofiche{cursor:pointer}
   const HASH={'view-home':'accueil','view-results':'recherche','view-sheet':'produit','view-cat':'categorie','view-quote':'devis-travaux','view-cart':'panier','view-ship':'livraison','view-pay':'paiement','view-done':'confirmation','view-lists':'mes-listes','view-orders':'mes-commandes','view-account':'mon-cabinet','view-cmp':'ma-comparaison','view-rayons':'rayons','view-compare':'comparer-autoclaves','view-partner':'partenaire-elite-ceram'};
   function bnavSync(id){document.querySelectorAll('.bnav button').forEach(b=>{const k=b.dataset.go||('cat');b.classList.toggle('on',(id==='view-home'&&k==='home')||((id==='view-cat'||id==='view-rayons'||id==='view-sheet')&&k==='rayons')||(id==='view-cart'&&k==='cart')||(id==='view-orders'&&k==='orders')||(id==='view-lists'&&k==='lists'))})}
   const hashFor=id=>id==='view-sheet'?'produit-'+(window.__curPid||'gants-jet-100'):id==='view-cat'?'categorie-'+(window.__curCat||'conso'):HASH[id];
-  const show=(id,noHash)=>{$$('.view').forEach(v=>v.classList.toggle('on',v.id===id));document.body.classList.toggle('home-on',id==='view-home');if(typeof bnavSync==='function')bnavSync(id);if(id==='view-rayons'&&typeof renderRayons==='function')renderRayons();if(typeof cmpSync==='function')setTimeout(cmpSync,0);window.scrollTo({top:0,behavior:'smooth'});const h='#'+hashFor(id);if(!noHash&&location.hash!==h){try{history.pushState(null,'',h)}catch(e){location.hash=h}}};
+  const show=(id,noHash)=>{$$('.view').forEach(v=>v.classList.toggle('on',v.id===id));document.body.classList.toggle('home-on',id==='view-home');if(typeof bnavSync==='function')bnavSync(id);{const f=document.querySelector('form.search'),slot=document.getElementById('pgs');if(f&&slot){const inPage=!['view-home','view-cart','view-ship','view-pay','view-done'].includes(id);if(inPage&&f.parentElement!==slot)slot.appendChild(f);slot.hidden=!inPage;document.body.classList.toggle('pgs-on',inPage)}}if(id==='view-rayons'&&typeof renderRayons==='function')renderRayons();if(typeof cmpSync==='function')setTimeout(cmpSync,0);window.scrollTo({top:0,behavior:'smooth'});const h='#'+hashFor(id);if(!noHash&&location.hash!==h){try{history.pushState(null,'',h)}catch(e){location.hash=h}}};
   const byHash=()=>{const h=location.hash.slice(1);if(h.startsWith('produit-')&&window.__openProduct){window.__openProduct(h.slice(8),true);return}if(h.startsWith('categorie-')&&window.__openCat){window.__openCat(h.slice(10),true);return}const id=Object.keys(HASH).find(k=>HASH[k]===h)||'view-home';show(id,true)};
   window.addEventListener('hashchange',byHash);window.addEventListener('popstate',byHash);
 
