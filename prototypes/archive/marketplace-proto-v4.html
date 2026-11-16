@@ -1,0 +1,1398 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evidentall · Marketplace — prototype v4 (listes, alertes, comparateur matériel, partenaire)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p:#0077fd;--a:#50c3ff;--s:#032444;
+  --ink:#0b1220;--ink2:#3a4656;--mute:#6b7786;
+  --line:#e3e9f1;--bg:#f5f8fc;--card:#fff;
+  --ok:#0077fd;
+  --r:14px;--r2:22px;
+  --sh:0 1px 2px rgba(3,36,68,.05),0 10px 30px -14px rgba(3,36,68,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{font-family:Montserrat,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input{font:inherit}
+a{color:inherit;text-decoration:none}
+svg{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:0;z-index:40;background:var(--s);color:#fff}
+.top-in{max-width:1240px;margin:0 auto;padding:0 20px;height:66px;display:flex;align-items:center;gap:14px}
+.home{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);font-weight:600;font-size:13px;white-space:nowrap;transition:background .2s,transform .2s}
+.home:hover{background:rgba(255,255,255,.16);transform:translateX(-2px)}
+.home svg{width:18px;height:18px}
+.brand{display:flex;align-items:baseline;gap:8px;margin-left:6px;white-space:nowrap}
+.brand b{font-weight:800;font-size:20px;letter-spacing:-.02em}
+.brand b i{font-style:normal;color:var(--a)}
+.brand span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);font-weight:600}
+.search{flex:1;display:flex;align-items:center;height:44px;background:#fff;border-radius:12px;padding:0 6px 0 14px;color:var(--ink);min-width:0;margin-left:10px}
+.search svg{width:18px;height:18px;color:var(--mute);flex:none}
+.search input{flex:1;border:0;outline:0;height:100%;padding:0 10px;min-width:0;font-weight:500}
+.search input::placeholder{color:#9aa6b4}
+.search button{height:34px;padding:0 14px;border-radius:9px;background:var(--p);color:#fff;font-weight:700;font-size:13px}
+.tools{display:flex;gap:6px}
+.tool{position:relative;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}
+.tool svg{width:19px;height:19px}
+.tool .n{position:absolute;top:-6px;right:-6px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--a);color:var(--s);font-size:11px;font-weight:800;display:grid;place-items:center;transform:scale(0);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.tool .n.on{transform:scale(1)}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1240px;margin:0 auto;padding:22px 20px 80px}
+.crumb{font-size:13px;color:var(--mute);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.crumb b{color:var(--ink);font-weight:600}
+.view{display:none}.view.on{display:block}
+
+/* ---------- results header ---------- */
+.rh{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:14px 0 18px;flex-wrap:wrap}
+.rh h1{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.rh h1 small{display:block;font-size:14px;color:var(--mute);font-weight:500;margin-top:4px}
+.seg{display:inline-flex;background:#e8eef6;border-radius:999px;padding:3px;position:relative}
+.seg button{position:relative;z-index:1;height:32px;padding:0 16px;border-radius:999px;font-weight:700;font-size:13px;color:var(--ink2);transition:color .2s}
+.seg button[aria-pressed=true]{color:#fff}
+.seg::before{content:"";position:absolute;top:3px;left:3px;width:calc(50% - 3px);height:32px;border-radius:999px;background:var(--s);transition:transform .25s cubic-bezier(.4,0,.2,1)}
+.seg.ttc::before{transform:translateX(100%)}
+.seg-wrap{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--mute)}
+
+/* radar */
+.radar{background:linear-gradient(135deg,var(--s),#0a3e78);color:#fff;border-radius:var(--r2);padding:20px 22px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-bottom:20px}
+.radar .t{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--a);font-weight:700}
+.radar h2{font-size:18px;font-weight:700;margin:4px 0 12px}
+.rng{position:relative;height:8px;border-radius:4px;background:rgba(255,255,255,.14);margin:22px 0 8px}
+.rng i{position:absolute;top:0;bottom:0;border-radius:4px;background:linear-gradient(90deg,var(--a),var(--p))}
+.rng b{position:absolute;top:-24px;transform:translateX(-50%);font-size:12px;font-weight:700;white-space:nowrap}
+.rng em{position:absolute;top:-4px;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--p);transform:translateX(-50%);box-shadow:0 0 0 4px rgba(80,195,255,.25)}
+.rng-l{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.65)}
+.radar .note{font-size:13px;color:rgba(255,255,255,.85);max-width:560px}
+.radar .k{display:flex;flex-direction:column;align-items:flex-end;gap:4px;text-align:right}
+.radar .k b{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.radar .k span{font-size:12px;color:rgba(255,255,255,.7)}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:11px;font-weight:700}
+.pill.good{background:rgba(80,195,255,.18);color:#dff4ff}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(3,36,68,.05),0 24px 40px -18px rgba(0,119,253,.35)}
+.card .img{position:relative;aspect-ratio:4/3;background:linear-gradient(160deg,#eef4fb,#dfe9f6);display:grid;place-items:center}
+.card .img svg{width:46%;height:auto}
+.card .fav{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:10px;background:#fff;display:grid;place-items:center;color:var(--mute);box-shadow:var(--sh)}
+.card .fav svg{width:17px;height:17px}
+.card .fav.on{color:var(--p)}
+.card .fav.on svg{fill:var(--p)}
+.tag{position:absolute;left:12px;top:12px;height:26px;padding:0 10px;border-radius:8px;background:var(--s);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px}
+.tag.alt{background:#fff;color:var(--p)}
+.card .bd{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card h3{font-size:15px;font-weight:700;line-height:1.3}
+.card .meta{font-size:12px;color:var(--mute);display:flex;gap:10px;flex-wrap:wrap}
+.card .meta i{font-style:normal;display:inline-flex;align-items:center;gap:4px}
+.card .meta svg{width:13px;height:13px}
+.pr{display:flex;align-items:baseline;gap:6px;margin-top:auto}
+.pr small{font-size:12px;color:var(--mute);font-weight:600}
+.pr b{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.pr .u{font-size:12px;color:var(--mute)}
+.pr .tax{font-size:11px;color:var(--mute);font-weight:600}
+.pt{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink2)}
+.av{display:flex}
+.av span{width:22px;height:22px;border-radius:50%;border:2px solid #fff;background:var(--s);color:#fff;font-size:9px;font-weight:800;display:grid;place-items:center;margin-left:-6px}
+.av span:first-child{margin:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;font-weight:700;font-size:14px;transition:transform .2s,box-shadow .2s,background .2s}
+.btn svg{width:16px;height:16px}
+.btn.p{background:var(--p);color:#fff;box-shadow:0 8px 20px -10px rgba(0,119,253,.7)}
+.btn.p:hover{background:#0068e0;transform:translateY(-1px)}
+.btn.g{background:#eef4fb;color:var(--s)}
+.btn.g:hover{background:#e2ebf7}
+.btn.o{border:1.5px solid var(--line);color:var(--s)}
+.btn.o:hover{border-color:var(--p);color:var(--p)}
+.btn.w{width:100%}
+.card .act{display:flex;gap:8px}
+.card .act .btn{flex:1;height:40px;font-size:13px}
+
+/* ---------- sheet ---------- */
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--p);font-weight:700;font-size:13px;margin-bottom:14px}
+.back svg{width:16px;height:16px}
+.sheet{display:grid;grid-template-columns:1fr 360px;gap:22px;align-items:start}
+.hero{background:#fff;border:1px solid var(--line);border-radius:var(--r2);padding:22px;display:grid;grid-template-columns:220px 1fr;gap:22px;box-shadow:var(--sh)}
+.hero .img{aspect-ratio:1;border-radius:16px;background:linear-gradient(160deg,#eef4fb,#dfe9f6);display:grid;place-items:center}
+.hero .img svg{width:60%}
+.hero h1{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.hero .sub{color:var(--mute);font-size:13px;margin:6px 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.chip{height:28px;padding:0 10px;border-radius:8px;background:#eef4fb;color:var(--s);font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.chip.sel{background:var(--s);color:#fff}
+.hero .row{display:flex;gap:8px;flex-wrap:wrap}
+.hero .row .btn{height:40px;font-size:13px}
+
+.sec{margin-top:22px}
+.sec-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.sec-h h2{font-size:18px;font-weight:800;letter-spacing:-.01em}
+.sec-h .hint{font-size:12px;color:var(--mute)}
+.sort{display:inline-flex;gap:4px;background:#e8eef6;padding:3px;border-radius:10px}
+.sort button{height:30px;padding:0 12px;border-radius:8px;font-size:12px;font-weight:700;color:var(--ink2)}
+.sort button[aria-pressed=true]{background:#fff;color:var(--s);box-shadow:var(--sh)}
+
+.offers{display:flex;flex-direction:column;gap:10px}
+.of{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;grid-template-columns:44px 1fr auto auto;gap:14px;align-items:center;transition:border-color .2s,box-shadow .2s;position:relative}
+.of:hover{border-color:#c9dcf3;box-shadow:var(--sh)}
+.of.best{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,119,253,.12)}
+.of.best::before{content:"Meilleur prix livré";position:absolute;top:-11px;left:14px;height:22px;padding:0 10px;border-radius:999px;background:var(--p);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center}
+.of .lg{width:44px;height:44px;border-radius:12px;background:var(--s);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
+.of .lg.a{background:#0a3e78}.of .lg.b{background:#0f5fb8}.of .lg.c{background:#1d4e89}
+.of .who b{display:block;font-size:14px;font-weight:700}
+.of .who span{font-size:12px;color:var(--mute);display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.of .who span i{font-style:normal;display:inline-flex;align-items:center;gap:4px}
+.of .who span svg{width:12px;height:12px}
+.of .pz{text-align:right;min-width:150px}
+.of .pz b{font-size:19px;font-weight:800;letter-spacing:-.02em;display:block}
+.of .pz small{font-size:11px;color:var(--mute);display:block;font-weight:600}
+.of .pz .d{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:700;margin-top:4px;background:#eef4fb;color:var(--ink2)}
+.of .pz .d.z{background:rgba(0,119,253,.1);color:var(--p)}
+.of .btn{height:40px;padding:0 14px;font-size:13px}
+.of .btn .sr{display:none}
+.of.best .btn{background:var(--p);color:#fff}
+.why{margin-top:10px;font-size:12px;color:var(--mute);display:flex;gap:6px;align-items:flex-start}
+.why svg{width:14px;height:14px;flex:none;margin-top:2px;color:var(--p)}
+.why button{color:var(--p);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+
+/* side */
+.side{display:flex;flex-direction:column;gap:14px;position:sticky;top:84px}
+.box{background:#fff;border:1px solid var(--line);border-radius:var(--r2);padding:18px;box-shadow:var(--sh)}
+.box .t{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);font-weight:700;margin-bottom:8px}
+.best-box{background:linear-gradient(135deg,var(--s),#0a3e78);color:#fff;border:0}
+.best-box .t{color:var(--a)}
+.best-box .big{display:flex;align-items:baseline;gap:6px}
+.best-box .big b{font-size:34px;font-weight:800;letter-spacing:-.03em}
+.best-box .big span{font-size:12px;color:rgba(255,255,255,.7)}
+.best-box p{font-size:13px;color:rgba(255,255,255,.85);margin:4px 0 12px}
+.best-box .btn{background:#fff;color:var(--s);width:100%}
+.best-box .btn:hover{background:#eaf4ff}
+.best-box .sv{margin-top:10px;font-size:12px;color:var(--a);font-weight:700;display:block;line-height:1.5}
+.best-box .sv svg{width:14px;height:14px;display:inline-block;vertical-align:-2px;margin-right:4px}
+.chart{margin:4px 0 6px}
+.chart svg{width:100%;height:auto}
+.verdict{display:flex;align-items:center;gap:10px;background:#eef4fb;border-radius:12px;padding:10px 12px;font-size:12px;color:var(--ink2)}
+.verdict b{display:block;color:var(--s);font-size:13px}
+.verdict .bl{width:34px;height:34px;border-radius:10px;background:var(--p);color:#fff;display:grid;place-items:center;flex:none}
+.verdict .bl svg{width:18px;height:18px}
+.alert{display:flex;gap:8px;margin-top:8px}
+.alert .f{flex:1;display:flex;align-items:center;border:1.5px solid var(--line);border-radius:10px;height:42px;padding:0 10px;gap:6px;min-width:0}
+.alert .f:focus-within{border-color:var(--p)}
+.alert .f span{font-size:12px;color:var(--mute);font-weight:600;white-space:nowrap}
+.alert input{border:0;outline:0;width:100%;min-width:0;font-weight:700}
+.alert .btn{height:42px;padding:0 14px;font-size:13px}
+.ok{font-size:12px;color:var(--p);font-weight:600;margin-top:8px;display:none}
+.ok.on{display:block}
+.re{display:flex;align-items:center;gap:12px}
+.re .ic{width:40px;height:40px;border-radius:12px;background:#eef4fb;color:var(--p);display:grid;place-items:center;flex:none}
+.re .ic svg{width:20px;height:20px}
+.re b{font-size:13px;display:block}.re span{font-size:12px;color:var(--mute)}
+.re .btn{margin-left:auto;height:36px;padding:0 12px;font-size:12px}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--s);color:#fff;padding:12px 16px 12px 14px;border-radius:14px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:10px;box-shadow:0 20px 40px -14px rgba(3,36,68,.5);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:50;max-width:calc(100vw - 32px)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast .d{width:26px;height:26px;border-radius:8px;background:var(--p);display:grid;place-items:center;flex:none}
+.toast svg{width:15px;height:15px}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(10px);animation:rv .5s cubic-bezier(.2,.7,.2,1) forwards}
+.rv:nth-child(2){animation-delay:.06s}.rv:nth-child(3){animation-delay:.12s}
+@keyframes rv{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .sheet{grid-template-columns:1fr}
+  .side{position:static}
+}
+@media (max-width:700px){
+  .top-in{height:auto;padding:10px 14px;flex-wrap:wrap;gap:8px}
+  .brand span{display:none}
+  .brand{margin-left:auto}
+  .tools{order:3}
+  .search{order:4;flex:1 0 100%;margin:0;height:42px}
+  .home{padding:0 12px 0 10px}
+  .home .lbl{display:none}
+  .wrap{padding:16px 14px 60px}
+  .rh h1{font-size:21px}
+  .radar{grid-template-columns:1fr;padding:18px}
+  .radar .k{align-items:flex-start;text-align:left;flex-direction:row;align-items:baseline;gap:10px}
+  .grid{grid-template-columns:1fr}
+  .hero{grid-template-columns:1fr;padding:16px}
+  .hero .img{max-width:200px;margin:0 auto}
+  .of{grid-template-columns:40px 1fr;row-gap:10px;padding:14px}
+  .of .pz{grid-column:1/3;text-align:left;display:flex;align-items:baseline;gap:10px;min-width:0;flex-wrap:wrap}
+  .of .pz b{white-space:nowrap;font-size:20px}
+  .of .pz .d{flex-basis:100%;width:max-content}
+  .of .pz b{display:inline}.of .pz small{display:inline}
+  .of .btn{grid-column:1/3;width:100%}
+  .of .lg{width:40px;height:40px;font-size:12px}
+  .of.best::before{left:12px}
+}
+
+/* ---------- v2 : mini-panier, tunnel ---------- */
+.mc-bg{position:fixed;inset:0;background:rgba(3,36,68,.35);opacity:0;pointer-events:none;transition:opacity .25s;z-index:60}
+.mc-bg.on{opacity:1;pointer-events:auto}
+.mc{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);background:#fff;z-index:61;transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 60px -30px rgba(3,36,68,.5)}
+.mc.on{transform:none}
+.mc-h{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}
+.mc-h b{font-size:16px;font-weight:800}
+.mc-h button{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--mute)}
+.mc-h button:hover{background:#eef4fb;color:var(--s)}
+.mc-h svg{width:18px;height:18px}
+.mc-b{flex:1;overflow:auto;padding:14px 20px;display:flex;flex-direction:column;gap:10px}
+.mc-f{padding:16px 20px;border-top:1px solid var(--line);display:grid;gap:10px}
+.mc-f .row{display:flex;justify-content:space-between;font-size:14px}
+.mc-f .row b{font-size:16px}
+.mc-f .btn{height:46px}
+.mc-added{background:#eef4fb;border-radius:12px;padding:10px 12px;font-size:13px;color:var(--s);display:flex;gap:8px;align-items:center}
+.mc-added svg{width:16px;height:16px;color:var(--p)}
+.line{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.line:last-child{border-bottom:0}
+.line .th{width:44px;height:44px;border-radius:10px;background:linear-gradient(160deg,#eef4fb,#dfe9f6);display:grid;place-items:center}
+.line .th svg{width:28px;height:28px}
+.line .nm{font-size:13px;font-weight:600;line-height:1.3}
+.line .sp{font-size:12px;color:var(--mute);margin-top:2px}
+.line .pr{font-size:14px;font-weight:800;text-align:right;white-space:nowrap}
+.qty{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:10px;height:34px}
+.qty button{width:32px;height:100%;font-size:18px;color:var(--s);font-weight:600}
+.qty button:hover{background:#eef4fb}
+.qty span{min-width:28px;text-align:center;font-weight:700;font-size:13px}
+.line .ctl{display:flex;align-items:center;gap:8px;margin-top:6px}
+.line .rm{font-size:12px;color:var(--mute);text-decoration:underline;text-underline-offset:2px}
+.line .rm:hover{color:#c62828}
+
+/* steps */
+.steps{display:flex;gap:6px;align-items:center;margin:4px 0 18px;flex-wrap:wrap}
+.stp{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--mute)}
+.stp i{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800}
+.stp.on{color:var(--s)}.stp.on i{background:var(--s);border-color:var(--s);color:#fff}
+.stp.done{color:var(--p)}.stp.done i{background:var(--p);border-color:var(--p);color:#fff}
+.stp.done i svg{width:14px;height:14px}
+.sep{width:36px;height:2px;background:var(--line);margin:0 2px}
+.sep.done{background:var(--p)}
+.ck{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:22px;align-items:start}
+.ck h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+.ck .sub{color:var(--mute);font-size:13px;margin-bottom:16px}
+.colis{background:#fff;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;margin-bottom:14px;box-shadow:var(--sh)}
+.colis-h{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:#fafcfe}
+.colis-h .lg{width:40px;height:40px;border-radius:11px;background:var(--s);color:#fff;display:grid;place-items:center;font-weight:800;font-size:12px}
+.colis-h b{display:block;font-size:14px}
+.colis-h span{font-size:12px;color:var(--mute);display:flex;gap:10px;flex-wrap:wrap}
+.colis-h span i{font-style:normal;display:inline-flex;align-items:center;gap:4px}
+.colis-h span svg{width:12px;height:12px}
+.colis-h .tot{text-align:right;font-size:12px;color:var(--mute)}
+.colis-h .tot b{font-size:15px}
+.colis-b{padding:4px 18px}
+.colis-f{padding:10px 18px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--mute);border-top:1px solid var(--line)}
+.nudge{display:inline-flex;align-items:center;gap:8px;background:#eef4fb;color:var(--s);border-radius:10px;padding:8px 10px;font-size:12px;font-weight:600}
+.nudge svg{width:14px;height:14px;color:var(--p)}
+.nudge.ok{background:rgba(0,119,253,.08);color:var(--p)}
+.rec{position:sticky;top:84px}
+.rec .box{padding:20px}
+.rec .t{margin-bottom:12px}
+.rec .row{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;color:var(--ink2)}
+.rec .row.tot{border-top:1px solid var(--line);margin-top:6px;padding-top:12px;color:var(--ink);font-weight:800;font-size:17px}
+.rec .row.tot small{font-size:12px;color:var(--mute);font-weight:600;display:block}
+.rec .btn{width:100%;height:50px;margin-top:12px;font-size:15px}
+.rec .fine{font-size:12px;color:var(--mute);margin-top:10px;line-height:1.5}
+.rec .fine b{color:var(--s)}
+.trust{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:11.5px;color:var(--mute)}
+.trust i{font-style:normal;display:inline-flex;align-items:center;gap:5px}
+.trust svg{width:13px;height:13px;color:var(--p)}
+.empty{background:#fff;border:1px dashed var(--line);border-radius:var(--r2);padding:40px;text-align:center;color:var(--mute)}
+.empty .btn{margin-top:14px}
+
+/* forms */
+.fld{display:grid;gap:6px}
+.fld label{font-size:12px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em}
+.fld input,.fld textarea{font:inherit;border:1.5px solid var(--line);border-radius:10px;height:44px;padding:0 12px;outline:0;background:#fff;font-weight:500}
+.fld textarea{height:auto;padding:10px 12px;resize:vertical}
+.fld input:focus,.fld textarea:focus{border-color:var(--p)}
+.frm{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.frm .full{grid-column:1/-1}
+.card-opt{display:grid;grid-template-columns:22px 1fr auto;gap:12px;align-items:center;border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;background:#fff;transition:border-color .2s,box-shadow .2s}
+.card-opt:hover{border-color:#c9dcf3}
+.card-opt.sel{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,119,253,.12)}
+.card-opt input{accent-color:var(--p);width:18px;height:18px;margin:0}
+.card-opt b{display:block;font-size:14px}
+.card-opt span{font-size:12px;color:var(--mute)}
+.card-opt .pr{font-weight:800;font-size:14px;white-space:nowrap}
+.opts{display:grid;gap:8px}
+.addr{background:#fff;border:1px solid var(--line);border-radius:var(--r2);padding:18px;display:grid;gap:12px;box-shadow:var(--sh);margin-bottom:14px}
+.addr h3{font-size:15px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+.addr h3 button{font-size:12px;color:var(--p);font-weight:700}
+.addr .who{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start}
+.addr .who .ic{width:40px;height:40px;border-radius:11px;background:#eef4fb;color:var(--p);display:grid;place-items:center}
+.addr .who svg{width:20px;height:20px}
+.addr .who b{font-size:14px;display:block}
+.addr .who span{font-size:13px;color:var(--ink2);line-height:1.5}
+.recap-l{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:13px;color:var(--ink2);padding:6px 0;border-bottom:1px solid var(--line)}
+.recap-l:last-child{border-bottom:0}
+.recap-l b{color:var(--ink)}
+.recap-l .d{grid-column:1/-1;font-size:12px;color:var(--mute)}
+.cgv{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink2);margin-top:12px}
+.cgv input{margin-top:3px;accent-color:var(--p);width:18px;height:18px}
+.err{font-size:12px;color:#c62828;font-weight:600;display:none;margin-top:6px}
+.err.on{display:block}
+
+/* done */
+.dn{max-width:720px;margin:20px auto;text-align:center;display:grid;gap:18px}
+.dn .big{width:72px;height:72px;border-radius:50%;background:var(--p);color:#fff;display:grid;place-items:center;margin:0 auto;box-shadow:0 16px 36px -14px rgba(0,119,253,.8)}
+.dn .big svg{width:34px;height:34px}
+.dn h1{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.dn p{color:var(--ink2);font-size:14px;max-width:52ch;margin:0 auto}
+.dn .orders{display:grid;gap:10px;text-align:left;margin-top:6px}
+.ord{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 18px;display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;box-shadow:var(--sh)}
+.ord .lg{width:40px;height:40px;border-radius:11px;background:var(--s);color:#fff;display:grid;place-items:center;font-weight:800;font-size:12px}
+.ord b{font-size:14px;display:block}.ord span{font-size:12px;color:var(--mute)}
+.ord .st{font-size:12px;font-weight:700;color:var(--p);background:rgba(0,119,253,.08);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.dn .acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.acct{background:linear-gradient(135deg,var(--s),#0a3e78);color:#fff;border-radius:18px;padding:20px;text-align:left;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+.acct b{display:block;font-size:15px}.acct span{font-size:13px;color:rgba(255,255,255,.8)}
+.acct .btn{background:#fff;color:var(--s);height:42px;white-space:nowrap}
+
+@media (max-width:1000px){.ck{grid-template-columns:1fr}.rec{position:static}}
+@media (max-width:700px){
+  .colis-h{grid-template-columns:40px 1fr}.colis-h .tot{grid-column:1/-1;text-align:left;display:flex;gap:8px;align-items:baseline}
+  .frm{grid-template-columns:1fr}.steps{gap:4px}.sep{width:18px}.stp span{display:none}.stp.on span{display:inline}
+  .acct{grid-template-columns:1fr}.line{grid-template-columns:44px 1fr}.line .pr{grid-column:2;text-align:left}
+}
+
+/* ---------- v3 : accueil, catégories, recherche ---------- */
+.hm-hero{background:linear-gradient(135deg,var(--s),#0a3e78);color:#fff;border-radius:var(--r2);padding:34px 32px 30px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:28px;align-items:center;margin-top:4px}
+.hm-hero h1{font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.hm-hero p{color:rgba(255,255,255,.82);font-size:14px;margin-top:10px;max-width:46ch}
+.hm-hero .kpi{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.hm-hero .kpi span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:8px 12px;font-size:12px;font-weight:600}
+.hm-hero .kpi b{display:block;font-size:18px;font-weight:800;letter-spacing:-.02em}
+.hm-hero .quick{background:#fff;color:var(--ink);border-radius:16px;padding:16px;display:grid;gap:10px}
+.hm-hero .quick .t{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);font-weight:700}
+.qrow{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;padding:8px;border-radius:10px;border:1px solid var(--line);text-align:left;width:100%}
+.qrow:hover{border-color:var(--p);background:#f7fbff}
+.qrow .ic{width:36px;height:36px;border-radius:9px;background:#eef4fb;display:grid;place-items:center}
+.qrow .ic svg{width:22px;height:22px}
+.qrow b{font-size:13px;display:block}.qrow span{font-size:11.5px;color:var(--mute)}
+.qrow .pr{font-size:13px;font-weight:800;white-space:nowrap}
+.hsec{margin-top:26px}
+.hsec .sec-h h2{font-size:18px}
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.cat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;text-align:left;transition:transform .2s,box-shadow .2s,border-color .2s}
+.cat:hover{transform:translateY(-2px);border-color:#c9dcf3;box-shadow:var(--sh)}
+.cat .ic{width:44px;height:44px;border-radius:12px;background:#eef4fb;color:var(--p);display:grid;place-items:center}
+.cat .ic svg{width:24px;height:24px}
+.cat b{font-size:14px;display:block;line-height:1.25}.cat span{font-size:12px;color:var(--mute)}
+.cat.dis{opacity:.55}
+.multi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.mp{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:start;text-align:left}
+.mp .th{width:56px;height:56px;border-radius:12px;background:linear-gradient(160deg,#eef4fb,#dfe9f6);display:grid;place-items:center}
+.mp .th svg{width:36px;height:36px}
+.mp b{font-size:13px;display:block;line-height:1.3}
+.mp .rg{display:flex;align-items:baseline;gap:6px;margin-top:6px}
+.mp .rg b{font-size:17px;letter-spacing:-.02em}
+.mp .rg span{font-size:11.5px;color:var(--mute)}
+.mp .bar{height:4px;border-radius:2px;background:#e8eef6;margin-top:8px;position:relative}
+.mp .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:2px;background:linear-gradient(90deg,var(--a),var(--p))}
+.mp .np{font-size:11.5px;color:var(--p);font-weight:700;margin-top:6px}
+.re-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.re-c{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;gap:8px}
+.re-c .tp{display:flex;gap:10px;align-items:center}
+.re-c .th{width:40px;height:40px;border-radius:10px;background:linear-gradient(160deg,#eef4fb,#dfe9f6);display:grid;place-items:center;flex:none}
+.re-c .th svg{width:26px;height:26px}
+.re-c b{font-size:13px;line-height:1.3}
+.re-c .meta{font-size:11.5px;color:var(--mute)}
+.re-c .btn{height:36px;font-size:12px}
+.re-c .delta{font-size:11.5px;font-weight:700;color:var(--p)}
+
+/* welcome panel (left) */
+.wl-bg{position:fixed;inset:0;background:rgba(3,36,68,.35);z-index:70;opacity:0;pointer-events:none;transition:opacity .25s}
+.wl-bg.on{opacity:1;pointer-events:auto}
+.wl{position:fixed;top:0;left:0;bottom:0;width:min(440px,100vw);background:#fff;z-index:71;transform:translateX(-100%);transition:transform .3s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column;box-shadow:20px 0 60px -30px rgba(3,36,68,.5)}
+.wl.on{transform:none}
+.wl-h{background:linear-gradient(135deg,var(--s),#0a3e78);color:#fff;padding:22px 22px 20px;position:relative}
+.wl-h .eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--a);font-weight:700}
+.wl-h h2{font-size:20px;font-weight:800;margin-top:6px;line-height:1.2}
+.wl-h p{font-size:13px;color:rgba(255,255,255,.82);margin-top:8px}
+.wl-h button{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center}
+.wl-h button svg{width:16px;height:16px}
+.wl-b{padding:18px 22px;display:grid;gap:12px;overflow:auto;flex:1}
+.wl-step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
+.wl-step i{width:34px;height:34px;border-radius:10px;background:#eef4fb;color:var(--p);display:grid;place-items:center;font-style:normal;font-weight:800;font-size:14px}
+.wl-step b{font-size:14px;display:block}.wl-step span{font-size:12.5px;color:var(--ink2);line-height:1.5}
+.wl-f{padding:16px 22px;border-top:1px solid var(--line);display:grid;gap:8px}
+.wl-f .btn{height:44px}
+.wl-f small{font-size:11.5px;color:var(--mute);text-align:center}
+.wl-sup{font-size:12px;color:var(--mute);border-top:1px dashed var(--line);padding-top:12px}
+.wl-sup a{color:var(--p);font-weight:700}
+
+/* search suggestions */
+.search{position:relative}
+.sug{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border-radius:14px;box-shadow:0 20px 50px -20px rgba(3,36,68,.45);border:1px solid var(--line);padding:6px;display:none;z-index:45;color:var(--ink)}
+.sug.on{display:block}
+.sug .g{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);font-weight:700;padding:8px 10px 4px}
+.sug button{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;width:100%;text-align:left;padding:8px 10px;border-radius:9px;font-size:13px}
+.sug button:hover,.sug button.k{background:#eef4fb}
+.sug button svg{width:16px;height:16px;color:var(--mute)}
+.sug button em{font-style:normal;font-weight:700;color:var(--p)}
+.sug button .n{font-size:11.5px;color:var(--mute)}
+.sug mark{background:none;color:var(--ink);font-weight:800}
+
+/* category page */
+.cat-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:12px 0 16px;flex-wrap:wrap}
+.cat-h h1{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.cat-h h1 small{display:block;font-size:13px;color:var(--mute);font-weight:500;margin-top:4px}
+.sub-cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.sub-cats button{height:34px;padding:0 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12.5px;font-weight:600;color:var(--ink2)}
+.sub-cats button[aria-pressed=true]{background:var(--s);color:#fff;border-color:var(--s)}
+.sub-cats button span{color:var(--mute);font-weight:500;margin-left:4px}
+.sub-cats button[aria-pressed=true] span{color:rgba(255,255,255,.7)}
+.catg{display:grid;grid-template-columns:260px minmax(0,1fr);gap:20px;align-items:start}
+.fac{background:#fff;border:1px solid var(--line);border-radius:var(--r2);padding:16px;display:grid;gap:16px;position:sticky;top:84px}
+.fac h3{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);font-weight:700;display:flex;justify-content:space-between}
+.fac h3 button{font-size:11px;color:var(--p);text-transform:none;letter-spacing:0;font-weight:700}
+.fac .grp{display:grid;gap:6px}
+.fac .grp+.grp{margin-top:14px}
+.fac .grp h4{font-size:12.5px;font-weight:700;color:var(--ink)}
+.fo{display:grid;grid-template-columns:18px 1fr auto;gap:8px;align-items:center;font-size:13px;color:var(--ink2);padding:4px 2px;border-radius:6px;cursor:pointer}
+.fo:hover{background:#f7fbff}
+.fo input{accent-color:var(--p);width:16px;height:16px;margin:0}
+.fo .n{font-size:11.5px;color:var(--mute);font-variant-numeric:tabular-nums}
+.fo.dis{opacity:.45;cursor:default}
+.fac .more{font-size:12px;color:var(--p);font-weight:700;text-align:left}
+.fac-sm{display:none}
+.catbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.chips-a{display:flex;gap:6px;flex-wrap:wrap}
+.chips-a button{height:28px;padding:0 10px;border-radius:999px;background:var(--s);color:#fff;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.chips-a button svg{width:12px;height:12px}
+.chips-a .clr{background:none;color:var(--p)}
+.sortsel{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--mute)}
+.sortsel select{font:inherit;font-weight:600;color:var(--ink);border:1.5px solid var(--line);border-radius:10px;height:36px;padding:0 10px;background:#fff}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.pc{background:#fff;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s;position:relative}
+.pc:hover{transform:translateY(-3px)}
+.pc .img{aspect-ratio:5/3;background:linear-gradient(160deg,#eef4fb,#dfe9f6);display:grid;place-items:center;position:relative}
+.pc .img svg{width:38%;height:auto}
+.pc .st{position:absolute;left:12px;top:12px;height:24px;padding:0 9px;border-radius:7px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:5px;background:#fff;color:var(--s)}
+.pc .st::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--p)}
+.pc .st.low::before{background:#b45309}.pc .st.out{color:var(--mute)}.pc .st.out::before{background:#9aa6b4}
+.pc .fav{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:10px;background:#fff;display:grid;place-items:center;color:var(--mute);opacity:0;transition:opacity .2s}
+.pc:hover .fav,.pc .fav.on,.pc .fav:focus-visible{opacity:1}
+.pc .fav svg{width:16px;height:16px}.pc .fav.on{color:var(--p)}.pc .fav.on svg{fill:var(--p)}
+.pc .bd{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.pc h3{font-size:14px;font-weight:700;line-height:1.35}
+.pc .pk{font-size:12px;color:var(--mute)}
+.pc .pk b{color:var(--ink2);font-weight:600}
+.pc .pr{margin-top:auto;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.pc .pr small{font-size:11px;color:var(--mute);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.pc .pr b{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.pc .pr .u{font-size:11.5px;color:var(--mute)}
+.pc .np{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink2)}
+.pc .btn{height:40px;font-size:13px;width:100%}
+.pc.out .btn{background:#eef4fb;color:var(--mute)}
+.more-row{display:flex;justify-content:center;margin-top:18px}
+.more-row .btn{min-width:240px}
+.drawer-bg{position:fixed;inset:0;background:rgba(3,36,68,.35);z-index:60;opacity:0;pointer-events:none;transition:opacity .25s}
+.drawer-bg.on{opacity:1;pointer-events:auto}
+@media (max-width:1000px){.cats{grid-template-columns:repeat(2,1fr)}.multi,.re-row{grid-template-columns:repeat(2,1fr)}.pgrid{grid-template-columns:repeat(2,1fr)}.hm-hero{grid-template-columns:1fr}.catg{grid-template-columns:1fr}
+  .fac{position:fixed;left:0;right:0;bottom:0;top:auto;max-height:80vh;overflow:auto;border-radius:20px 20px 0 0;z-index:61;transform:translateY(100%);visibility:hidden;transition:transform .3s cubic-bezier(.2,.7,.2,1),visibility 0s .3s}
+  .fac.on{transform:none;visibility:visible;transition:transform .3s cubic-bezier(.2,.7,.2,1)}.fac-sm{display:inline-flex}
+}
+@media (max-width:700px){.pgrid{grid-template-columns:1fr}.multi,.re-row,.cats{grid-template-columns:1fr}.hm-hero{padding:22px 18px}.cat{padding:12px}.catbar{align-items:stretch}.sortsel{justify-content:space-between}}
+
+/* ---------- v4 : listes, alertes, comparateur matériel, partenaire ---------- */
+.tabs{display:inline-flex;gap:4px;background:#e8eef6;padding:3px;border-radius:12px;margin:8px 0 18px}
+.tabs button{height:36px;padding:0 16px;border-radius:9px;font-size:13px;font-weight:700;color:var(--ink2)}
+.tabs button[aria-pressed=true]{background:#fff;color:var(--s);box-shadow:var(--sh)}
+.lists{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start}
+.lnav{display:grid;gap:8px}
+.lcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;grid-template-columns:36px 1fr;gap:2px 12px;text-align:left;transition:border-color .2s,box-shadow .2s}
+.lcard:hover{border-color:#c9dcf3;box-shadow:var(--sh)}
+.lcard.sel{border-color:var(--p);box-shadow:0 0 0 3px rgba(0,119,253,.12)}
+.lcard b{font-size:14px;grid-column:2}.lcard .n{font-size:12px;color:var(--mute);grid-column:2}.lcard .ic{grid-row:1/3;grid-column:1;width:36px;height:36px;border-radius:10px;background:#eef4fb;color:var(--p);display:grid;place-items:center;align-self:center}
+.lcard .ic svg{width:18px;height:18px}
+.lnew{border:1.5px dashed var(--line);border-radius:16px;padding:12px;font-size:13px;font-weight:700;color:var(--p);display:flex;gap:8px;align-items:center;justify-content:center}
+.lnew svg{width:16px;height:16px}
+.ldet{background:#fff;border:1px solid var(--line);border-radius:var(--r2);box-shadow:var(--sh);overflow:hidden}
+.ldet-h{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.ldet-h h2{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.ldet-h p{font-size:12.5px;color:var(--mute);margin-top:3px}
+.ldet-h .acts{display:flex;gap:8px;flex-wrap:wrap}
+.ldet-h .btn{height:40px;font-size:13px}
+.lsum{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.lsum div{padding:12px 20px;border-right:1px solid var(--line)}
+.lsum div:last-child{border-right:0}
+.lsum small{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:700}
+.lsum b{font-size:18px;font-weight:800;letter-spacing:-.02em}
+.lsum b.good{color:var(--p)}
+.ll{display:grid;grid-template-columns:44px minmax(0,1.4fr) 110px 150px 150px auto;gap:12px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line);font-size:13px}
+.ll:last-child{border-bottom:0}
+.ll.head{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:700;background:#fafcfe;padding:8px 20px}
+.ll .th{width:44px;height:44px;border-radius:10px;background:linear-gradient(160deg,#eef4fb,#dfe9f6);display:grid;place-items:center}
+.ll .th svg{width:26px;height:26px}
+.ll .nm b{display:block;font-size:13px;line-height:1.3}
+.ll .nm span{font-size:11.5px;color:var(--mute)}
+.ll .last{color:var(--mute)}
+.ll .best b{display:block;font-size:14px}
+.ll .best span{font-size:11.5px;color:var(--mute)}
+.ll .delta{font-size:11.5px;font-weight:700;color:var(--p)}
+.ll .delta.up{color:#b45309}
+.ll .btn{height:36px;font-size:12px;padding:0 12px}
+.ll .rm{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--mute)}
+.ll .rm:hover{background:#fdecec;color:#c62828}
+.ll .rm svg{width:15px;height:15px}
+.alerts{display:grid;gap:10px}
+.al{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;grid-template-columns:40px minmax(0,1fr) auto auto;gap:12px;align-items:center;box-shadow:var(--sh)}
+.al .ic{width:40px;height:40px;border-radius:11px;background:#eef4fb;color:var(--p);display:grid;place-items:center}
+.al .ic svg{width:18px;height:18px}
+.al b{display:block;font-size:13.5px;overflow-wrap:anywhere}.al span{font-size:12px;color:var(--mute)}
+.al .gauge{min-width:170px}
+.al .gauge small{display:flex;justify-content:space-between;gap:8px;font-size:10.5px;color:var(--mute);margin-bottom:3px}
+.al .gauge small span{white-space:nowrap}
+.al .gauge .bar{height:6px;border-radius:3px;background:#e8eef6;position:relative}
+.al .gauge .bar i{position:absolute;top:0;bottom:0;left:0;border-radius:3px;background:linear-gradient(90deg,var(--p),var(--a))}
+.al .gauge .bar em{position:absolute;top:-3px;width:2px;height:12px;background:var(--s)}
+.al .st{font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px;background:#eef4fb;color:var(--s);white-space:nowrap}
+.al .st.hit{background:rgba(0,119,253,.1);color:var(--p)}
+.al .rm{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--mute)}
+.al .rm svg{width:15px;height:15px}
+
+/* compare equipment */
+.cmp-h{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:12px 0 14px}
+.cmp-h h1{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.cmp-h p{font-size:13px;color:var(--mute);margin-top:4px;max-width:60ch}
+.cmp-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r2);background:#fff;box-shadow:var(--sh)}
+.cmp{border-collapse:separate;border-spacing:0;width:100%;min-width:760px;font-size:13px}
+.cmp th,.cmp td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+.cmp th:first-child,.cmp td:first-child{width:190px;background:#fafcfe;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);font-weight:700;position:sticky;left:0;z-index:1}
+.cmp thead th{background:#fff;border-bottom:2px solid var(--line);vertical-align:bottom}
+.cmp .prod{display:grid;gap:8px;min-width:200px}
+.cmp .prod .th{height:96px;border-radius:12px;background:linear-gradient(160deg,#eef4fb,#dfe9f6);display:grid;place-items:center;position:relative}
+.cmp .prod .th svg{width:64px;height:64px}
+.cmp .prod .th .x{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:7px;background:#fff;display:grid;place-items:center;color:var(--mute)}
+.cmp .prod .th .x svg{width:13px;height:13px}
+.cmp .prod b{font-size:14px;font-weight:700;line-height:1.3;text-transform:none;letter-spacing:0}
+.cmp .prod span{font-size:12px;color:var(--mute);font-weight:500;text-transform:none;letter-spacing:0}
+.cmp td.best{background:rgba(0,119,253,.06);font-weight:700;color:var(--s)}
+.cmp td .tag-b{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--p);margin-left:6px}
+.cmp td.price b{font-size:20px;font-weight:800;letter-spacing:-.02em;display:block}
+.cmp td.price span{font-size:12px;color:var(--mute);display:block}
+.cmp td .btn{height:40px;width:100%;font-size:13px;margin-top:8px}
+.cmp tr.sec td{background:#fafcfe;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:var(--s);padding:8px 16px}
+.cmp .ok{color:var(--p);font-weight:700;display:inline;font-size:13px;margin:0}
+.cmp .ko{color:var(--mute)}
+.cmp-add{display:grid;gap:8px;min-width:200px;border:1.5px dashed var(--line);border-radius:12px;padding:14px;text-align:center;color:var(--mute);font-size:12px;font-weight:600}
+.cmp-add .btn{height:36px;font-size:12px}
+.cmp-note{font-size:12px;color:var(--mute);margin-top:10px;display:flex;gap:6px;align-items:flex-start}
+.cmp-note svg{width:14px;height:14px;color:var(--p);flex:none;margin-top:2px}
+.cmp-only{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink2)}
+.cmp-only input{accent-color:var(--p);width:16px;height:16px}
+
+/* partner */
+.pt-hero{background:#fff;border:1px solid var(--line);border-radius:var(--r2);padding:22px;display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:18px;align-items:center;box-shadow:var(--sh)}
+.pt-hero .lg{width:72px;height:72px;border-radius:18px;background:var(--s);color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
+.pt-hero h1{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.pt-hero p{font-size:13px;color:var(--mute);margin-top:4px}
+.pt-hero .facts{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
+.pt-hero .facts span{font-size:12.5px;color:var(--ink2);display:inline-flex;align-items:center;gap:6px}
+.pt-hero .facts svg{width:14px;height:14px;color:var(--p)}
+.pt-hero .acts{display:grid;gap:8px}
+.pt-hero .acts .btn{height:40px;font-size:13px}
+.pt-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.pt-k{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.pt-k small{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:700}
+.pt-k b{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.pt-k span{font-size:12px;color:var(--mute);display:block}
+.pt-k .stars{color:var(--p);display:inline-flex;gap:1px;vertical-align:-2px}
+.pt-k .stars svg{width:14px;height:14px;fill:currentColor}
+.pt-cond{background:#fff;border:1px solid var(--line);border-radius:var(--r2);padding:18px 20px;margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pt-cond div{font-size:13px;color:var(--ink2)}
+.pt-cond b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:700;margin-bottom:4px}
+.pt-cats{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pt-cats button{height:34px;padding:0 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12.5px;font-weight:600;color:var(--ink2)}
+.pt-cats button span{color:var(--mute);margin-left:4px;font-weight:500}
+@media (max-width:1000px){.lists{grid-template-columns:1fr}.lsum{grid-template-columns:1fr 1fr 1fr}.pt-kpis{grid-template-columns:repeat(2,1fr)}.pt-cond{grid-template-columns:1fr}.pt-hero{grid-template-columns:56px 1fr}.pt-hero .acts{grid-column:1/-1;grid-template-columns:1fr 1fr}.pt-hero .lg{width:56px;height:56px;font-size:18px}}
+@media (max-width:700px){.ll{grid-template-columns:44px 1fr auto;row-gap:6px}.ll.head{display:none}.ll .last{display:none}.ll .best{grid-column:2}.ll .btn{grid-column:2}.ll .rm{grid-column:3;grid-row:1}.lsum{grid-template-columns:1fr}.lsum div{border-right:0;border-bottom:1px solid var(--line)}.al{grid-template-columns:40px minmax(0,1fr) auto auto;gap:8px}.al>div{min-width:0}.al .gauge{min-width:0}.al b{white-space:normal}.cmp thead th{position:static}.tabs{width:100%}.tabs button{flex:1;padding:0 8px}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10.5V20h14v-9.5"/><path d="M10 20v-5h4v5"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.4 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10Z"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.5l2 11h10l2-7H7"/><circle cx="9.5" cy="19" r="1.3"/><circle cx="16.5" cy="19" r="1.3"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+
+  <symbol id="i-cat-conso" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M7 20V9l-3-4c-.6-.8 0-2 1-2h14c1 0 1.6 1.2 1 2l-3 4v11"/><path d="M7 13h10"/></symbol>
+  <symbol id="i-cat-chir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 20 9-9"/><path d="m13 11 5-5a2.1 2.1 0 0 0-3-3l-5 5"/><path d="M12 8l4 4"/><circle cx="18" cy="18" r="2.5"/></symbol>
+  <symbol id="i-cat-endo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M8 7l4-2 4 2M8 12l4-2 4 2M8 17l4-2 4 2"/></symbol>
+  <symbol id="i-cat-proth" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3C8 3 5 6 5 10c0 3 2 4 2 8 0 1.5 1 2.5 2 2.5s1.5-1 2-3c.3-1 1.7-1 2 0 .5 2 1 3 2 3s2-1 2-2.5c0-4 2-5 2-8 0-4-3-7-7-7Z"/></symbol>
+  <symbol id="i-cat-imag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-cat-ortho" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12c0-4 3.6-7 8-7s8 3 8 7"/><path d="M4 12h16"/><path d="M6 12v3M10 12v3M14 12v3M18 12v3"/></symbol>
+  <symbol id="i-cat-equip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6 20v-6a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v6"/><path d="M12 11V4"/><path d="M9 4h6"/></symbol>
+  <symbol id="i-cat-ster" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M7 4h10"/></symbol>
+  <symbol id="i-mask" viewBox="0 0 120 120" fill="none"><path d="M20 45c0-6 5-10 10-10h60c5 0 10 4 10 10v22c0 10-20 25-40 25S20 77 20 67V45Z" fill="#fff" stroke="#0077fd" stroke-width="4"/><path d="M20 50H6M20 62H6M100 50h14M100 62h14" stroke="#50c3ff" stroke-width="4" stroke-linecap="round"/><path d="M30 52h60M30 62h60M30 72h60" stroke="#50c3ff" stroke-width="3" stroke-linecap="round"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+
+  <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m4 6 1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></symbol>
+  <symbol id="i-autoclave" viewBox="0 0 120 120" fill="none"><rect x="14" y="26" width="92" height="68" rx="12" fill="#fff" stroke="#0077fd" stroke-width="4"/><circle cx="48" cy="60" r="20" stroke="#0077fd" stroke-width="4"/><circle cx="48" cy="60" r="9" fill="#50c3ff"/><rect x="78" y="42" width="16" height="6" rx="3" fill="#50c3ff"/><rect x="78" y="56" width="16" height="6" rx="3" fill="#50c3ff"/><rect x="78" y="70" width="10" height="6" rx="3" fill="#032444"/></symbol>
+  <symbol id="i-star-o" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.8-4.4 4.3 1.1 6.1L12 17l-5.5 2.8 1.1-6.1L3.2 9.4l6.1-.8L12 3Z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15L6 16Z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l6 6 4-4 6 6"/><path d="M15 15h5v-5"/></symbol>
+  <symbol id="i-redo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v5h-5"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="m12 3 2.7 5.6 6.1.8-4.4 4.3 1.1 6.1L12 17l-5.5 2.8 1.1-6.1L3.2 9.4l6.1-.8L12 3Z"/></symbol>
+  <symbol id="i-glove" viewBox="0 0 120 120" fill="none"><path d="M38 108V62L28 40c-2-4 1-8 5-8s6 2 7 5l8 16V22c0-4 3-7 7-7s7 3 7 7v30-38c0-4 3-7 7-7s7 3 7 7v38V28c0-4 3-7 7-7s7 3 7 7v30-20c0-4 3-7 7-7s7 3 7 7v40c0 16-10 30-28 30H38Z" fill="#fff" stroke="#0077fd" stroke-width="4" stroke-linejoin="round"/><path d="M38 86h56" stroke="#50c3ff" stroke-width="4" stroke-linecap="round"/></symbol>
+  <symbol id="i-glove-dark" viewBox="0 0 120 120" fill="none"><path d="M38 108V62L28 40c-2-4 1-8 5-8s6 2 7 5l8 16V22c0-4 3-7 7-7s7 3 7 7v30-38c0-4 3-7 7-7s7 3 7 7v38V28c0-4 3-7 7-7s7 3 7 7v30-20c0-4 3-7 7-7s7 3 7 7v40c0 16-10 30-28 30H38Z" fill="#032444" stroke="#032444" stroke-width="4" stroke-linejoin="round"/><path d="M38 86h56" stroke="#50c3ff" stroke-width="4" stroke-linecap="round"/></symbol>
+  <symbol id="i-glove-long" viewBox="0 0 120 120" fill="none"><path d="M38 116V62L28 40c-2-4 1-8 5-8s6 2 7 5l8 16V22c0-4 3-7 7-7s7 3 7 7v30-38c0-4 3-7 7-7s7 3 7 7v38V28c0-4 3-7 7-7s7 3 7 7v30-20c0-4 3-7 7-7s7 3 7 7v48c0 16-10 30-28 30H38Z" fill="#fff" stroke="#0077fd" stroke-width="4" stroke-linejoin="round"/><path d="M38 86h56M38 100h56" stroke="#50c3ff" stroke-width="4" stroke-linecap="round"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="top-in">
+    <a class="home" href="#accueil" data-go="home" title="Accueil du marketplace"><svg><use href="#i-home"/></svg><span class="lbl">Accueil</span></a>
+    <div class="brand"><b>evident<i>all</i></b><span>Marketplace</span></div>
+    <form class="search" role="search" onsubmit="return false">
+      <svg><use href="#i-search"/></svg>
+      <input id="q" type="search" value="" placeholder="Produit, marque, catégorie… ex. gants nitrile" aria-label="Rechercher un produit" autocomplete="off">
+      <button type="submit">Rechercher</button>
+      <div class="sug" id="sug" role="listbox"></div>
+    </form>
+    <div class="tools">
+      <button class="tool" aria-label="Mes listes" data-go="lists" title="Mes listes et alertes"><svg><use href="#i-list"/></svg><span class="n" id="nlist">3</span></button>
+      <button class="tool" aria-label="Favoris"><svg><use href="#i-heart"/></svg><span class="n" id="nfav">0</span></button>
+      <button class="tool" aria-label="Panier" data-open-cart><svg><use href="#i-cart"/></svg><span class="n" id="ncart">0</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+
+<!-- ========== HOME ========== -->
+<section class="view on" id="view-home">
+  <div class="hm-hero">
+    <div>
+      <h1>Le bon produit, au bon prix livré, chez le bon partenaire.</h1>
+      <p>Evidentall compare pour vous les offres de 8 partenaires sur une même référence : prix catalogue, frais de port, délai. Vous commandez en une fois, chaque fournisseur vous facture.</p>
+      <div class="kpi"><span><b>2 340</b>produits comparables chez 2 partenaires ou plus</span><span><b>−14 %</b>d’économie moyenne constatée</span><span><b>8</b>partenaires · 1 panier</span></div>
+    </div>
+    <div class="quick">
+      <button type="button" class="t" data-go="lists" style="text-align:left;display:flex;justify-content:space-between;align-items:center;width:100%">Vos réassorts · cabinet des Lilas <span style="color:var(--p);letter-spacing:0;text-transform:none;font-size:12px">Toutes mes listes →</span></button>
+      <button class="qrow" data-go="sheet"><span class="ic"><svg><use href="#i-glove"/></svg></span><span><b>Gants nitrile · boîte de 100</b><span>10 boîtes toutes les 5 semaines · dernier : 24 sept.</span></span><span class="pr"><span class="money" data-v="3.02">3,02 €</span> <span class="taxlbl" style="font-size:10px;color:var(--mute)">HT</span></span></button>
+      <button class="qrow" data-toast="Prototype : fiche masques à venir"><span class="ic"><svg><use href="#i-mask"/></svg></span><span><b>Masques IIR · boîte de 50</b><span>6 boîtes toutes les 3 semaines · dernier : 2 nov.</span></span><span class="pr"><span class="money" data-v="1.66">1,66 €</span> <span class="taxlbl" style="font-size:10px;color:var(--mute)">HT</span></span></button>
+      <button class="btn p" data-cart="Elite Ceram" data-pid="gants-jet-100" data-pname="Gants d’examen nitrile non poudrés · boîte de 100" data-unit="3.02" data-qty="10" style="height:40px;font-size:13px">Recommander les gants au meilleur prix du jour <svg><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+
+  <div class="hsec">
+    <div class="sec-h"><h2>Parcourir par catégorie</h2><span class="hint">Catégories unifiées Evidentall · comptes en stock</span></div>
+    <div class="cats">
+      <button class="cat" data-cat="conso"><span class="ic"><svg><use href="#i-cat-conso"/></svg></span><span><b>Consommables &amp; hygiène</b><span>Gants, masques, champs, bavettes · 2 418</span></span></button>
+      <button class="cat" data-cat="ster"><span class="ic"><svg><use href="#i-cat-ster"/></svg></span><span><b>Stérilisation</b><span>Sachets, cassettes, désinfectants · 1 102</span></span></button>
+      <button class="cat" data-cat="chir"><span class="ic"><svg><use href="#i-cat-chir"/></svg></span><span><b>Chirurgie &amp; implantologie</b><span>Sutures, lames, kits · 1 870</span></span></button>
+      <button class="cat" data-cat="endo"><span class="ic"><svg><use href="#i-cat-endo"/></svg></span><span><b>Endodontie</b><span>Limes, bourre-pâte, irrigation · 2 206</span></span></button>
+      <button class="cat" data-cat="proth"><span class="ic"><svg><use href="#i-cat-proth"/></svg></span><span><b>Prothèse &amp; laboratoire</b><span>Empreintes, cires, résines · 3 540</span></span></button>
+      <button class="cat" data-cat="ortho"><span class="ic"><svg><use href="#i-cat-ortho"/></svg></span><span><b>Orthodontie</b><span>Brackets, arcs, aligneurs · 980</span></span></button>
+      <button class="cat" data-cat="imag"><span class="ic"><svg><use href="#i-cat-imag"/></svg></span><span><b>Imagerie &amp; numérique</b><span>Capteurs, scanners, films · 312</span></span></button>
+      <button class="cat" data-cat="equip"><span class="ic"><svg><use href="#i-cat-equip"/></svg></span><span><b>Équipement &amp; instruments</b><span>Fauteuils, turbines, instruments · 4 115</span></span></button>
+    </div>
+  </div>
+
+  <div class="hsec">
+    <div class="sec-h"><h2>Chez plusieurs partenaires</h2><span class="hint">Même référence, jusqu’à 6 prix · écart = ce que vous économisez</span></div>
+    <div class="multi">
+      <button class="mp" data-go="sheet"><span class="th"><svg><use href="#i-glove"/></svg></span><span><b>Gants nitrile non poudrés · boîte de 100</b><span class="rg"><b class="money" data-v="3.02">3,02 €</b><span>à <span class="money" data-v="3.60">3,60 €</span> livré</span></span><span class="bar"><i style="width:84%"></i></span><span class="np">6 partenaires · écart 0,58 €</span></span></button>
+      <button class="mp" data-toast="Prototype : fiche Papier à articuler"><span class="th"><svg><use href="#i-box"/></svg></span><span><b>Papier à articuler · bleu/rouge 200 µ</b><span class="rg"><b class="money" data-v="5.55">5,55 €</b><span>à <span class="money" data-v="11.76">11,76 €</span> livré</span></span><span class="bar"><i style="width:47%"></i></span><span class="np">6 partenaires · écart 6,21 €</span></span></button>
+      <button class="mp" data-toast="Prototype : fiche Root ZX Mini"><span class="th"><svg><use href="#i-cat-endo"/></svg></span><span><b>Localisateur d’apex Root ZX Mini</b><span class="rg"><b class="money" data-v="947.90">947,90 €</b><span>à <span class="money" data-v="1099.00">1 099,00 €</span> livré</span></span><span class="bar"><i style="width:86%"></i></span><span class="np">6 partenaires · écart 151,10 €</span></span></button>
+    </div>
+  </div>
+
+  <div class="hsec">
+    <div class="sec-h"><h2>Prix en baisse cette semaine</h2><span class="hint">Sur les références que vous achetez</span></div>
+    <div class="re-row">
+      <div class="re-c"><div class="tp"><span class="th"><svg><use href="#i-glove"/></svg></span><b>Gants nitrile · boîte de 100</b></div><div class="meta">Elite Ceram · <span class="money" data-v="3.02">3,02 €</span> livré · <span class="delta">−17 % vs moyenne 6 mois</span></div><button class="btn p" data-go="sheet">Voir les 6 offres <svg><use href="#i-arrow"/></svg></button></div>
+      <div class="re-c"><div class="tp"><span class="th"><svg><use href="#i-mask"/></svg></span><b>Masques IIR · boîte de 50</b></div><div class="meta">Docteur AI · <span class="money" data-v="1.66">1,66 €</span> livré dès 60 € · <span class="delta">−9 %</span></div><button class="btn g" data-toast="Prototype : fiche masques à venir">Voir les 4 offres <svg><use href="#i-arrow"/></svg></button></div>
+      <div class="re-c"><div class="tp"><span class="th"><svg><use href="#i-box"/></svg></span><b>Fil de suture PGCL 4-0 · boîte de 12</b></div><div class="meta">Elite Ceram · <span class="money" data-v="36.00">36,00 €</span> port offert · <span class="delta">−6 %</span></div><button class="btn g" data-toast="Prototype : fiche sutures à venir">Voir les 2 offres <svg><use href="#i-arrow"/></svg></button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CATEGORY ========== -->
+<section class="view" id="view-cat">
+  <nav class="crumb" aria-label="Fil d’Ariane"><a href="#accueil" data-go="home">Marketplace</a> <span>›</span> <b id="catName">Consommables &amp; hygiène</b></nav>
+  <div class="cat-h"><h1 id="catTitle">Consommables &amp; hygiène <small id="catCount">—</small></h1>
+    <div class="seg-wrap"><span>Afficher les prix</span><div class="seg seg2" role="group" aria-label="Affichage HT ou TTC"><button type="button" data-tax="ht" aria-pressed="true">HT</button><button type="button" data-tax="ttc" aria-pressed="false">TTC</button></div></div>
+  </div>
+  <div class="sub-cats" id="subCats"></div>
+  <div class="catg">
+    <aside class="fac" id="fac" aria-label="Filtres">
+      <h3>Filtres <button type="button" data-clear-f>Tout effacer</button></h3>
+      <div id="facBody"></div>
+      <button class="btn p fac-sm" data-close-f style="height:42px">Voir les résultats</button>
+    </aside>
+    <div>
+      <div class="catbar">
+        <div class="chips-a" id="chipsA"></div>
+        <div class="sortsel"><button class="btn o fac-sm" data-open-f style="height:36px;font-size:12px;padding:0 12px"><svg><use href="#i-sliders"/></svg> Filtres <span id="facN"></span></button><label for="sortSel">Trier</label><select id="sortSel"><option value="rel">Pertinence</option><option value="liv">Prix livré croissant</option><option value="unit">Prix unitaire croissant</option><option value="delay">Délai le plus court</option><option value="np">Le plus de partenaires</option></select></div>
+      </div>
+      <div class="pgrid" id="pgrid"></div>
+      <div class="more-row" id="moreRow"></div>
+    </div>
+  </div>
+  <div class="drawer-bg" id="facBg"></div>
+</section>
+
+
+<!-- ========== LISTS & ALERTS ========== -->
+<section class="view" id="view-lists">
+  <nav class="crumb" aria-label="Fil d’Ariane"><a href="#accueil" data-go="home">Marketplace</a> <span>›</span> <b>Mes listes &amp; alertes</b></nav>
+  <div class="cat-h"><h1>Mes listes &amp; alertes <small>Cabinet dentaire des Lilas · partagées avec 3 membres</small></h1></div>
+  <div class="tabs" role="tablist"><button type="button" role="tab" aria-pressed="true" data-ltab="lists">Listes de réassort</button><button type="button" role="tab" aria-pressed="false" data-ltab="alerts">Alertes prix <span id="alN" class="mute"></span></button></div>
+  <div id="ltab-lists" class="lists">
+    <div class="lnav" id="lnav"></div>
+    <div class="ldet" id="ldet"></div>
+  </div>
+  <div id="ltab-alerts" hidden>
+    <p class="mute" style="font-size:13px;margin-bottom:12px">On vous écrit dès que le meilleur prix livré passe sous votre seuil. Les alertes sont liées au cabinet, pas à l’appareil.</p>
+    <div class="alerts" id="alerts"></div>
+  </div>
+</section>
+
+<!-- ========== EQUIPMENT COMPARE ========== -->
+<section class="view" id="view-compare">
+  <nav class="crumb" aria-label="Fil d’Ariane"><a href="#accueil" data-go="home">Marketplace</a> <span>›</span> <span>Équipement &amp; instruments</span> <span>›</span> <b>Autoclaves classe B</b></nav>
+  <div class="cmp-h"><div><h1>Comparer 3 autoclaves classe B</h1><p>Le comparateur côte à côte ne s’applique qu’au matériel, et uniquement entre produits de la même sous-catégorie. Les meilleures valeurs sont surlignées.</p></div><label class="cmp-only"><input type="checkbox" id="cmpDiff"> N’afficher que les différences</label></div>
+  <div class="cmp-wrap"><table class="cmp" id="cmpT"></table></div>
+  <p class="cmp-note"><svg><use href="#i-info"/></svg><span>Prix livré = prix catalogue + livraison + installation si incluse, pour une adresse en France métropolitaine. Les fiches techniques viennent des fabricants ; signalez une erreur depuis la fiche produit.</span></p>
+</section>
+
+<!-- ========== PARTNER ========== -->
+<section class="view" id="view-partner">
+  <nav class="crumb" aria-label="Fil d’Ariane"><a href="#accueil" data-go="home">Marketplace</a> <span>›</span> <span>Partenaires</span> <span>›</span> <b>Elite Ceram – Dental Groupe</b></nav>
+  <div class="pt-hero" style="margin-top:12px">
+    <div class="lg">EC</div>
+    <div><h1>Elite Ceram – Dental Groupe</h1><p>Distributeur généraliste · Montreuil (93) · partenaire Evidentall depuis mars 2026</p>
+      <div class="facts"><span><svg><use href="#i-truck"/></svg>Port offert dès la 1ʳᵉ boîte</span><span><svg><use href="#i-check"/></svg>Expédie sous 48 h ouvrées</span><span><svg><use href="#i-check"/></svg>Retours sous 30 jours</span><span><svg><use href="#i-check"/></svg>Facture dans votre espace</span></div></div>
+    <div class="acts"><button class="btn p" data-go="cat">Voir ses 5 221 produits <svg><use href="#i-arrow"/></svg></button><button class="btn o" data-toast="Prototype : messagerie intégrée">Poser une question</button></div>
+  </div>
+  <div class="pt-kpis">
+    <div class="pt-k"><small>Délai constaté</small><b>1,8 j</b><span>médiane sur 90 jours · 412 colis</span></div>
+    <div class="pt-k"><small>Commandes conformes</small><b>98,6 %</b><span>sans réclamation</span></div>
+    <div class="pt-k"><small>Avis cabinets</small><b>4,7<span class="stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></b><span>127 avis vérifiés après livraison</span></div>
+    <div class="pt-k"><small>Meilleur prix livré</small><b>31 %</b><span>des références comparables</span></div>
+  </div>
+  <div class="pt-cond">
+    <div><b>Livraison</b>Port offert sans minimum · Express 24 h : 9,90 € HT · Colissimo / Chronopost</div>
+    <div><b>Paiement</b>Carte, SEPA, virement à 30 jours pour les cabinets vérifiés</div>
+    <div><b>Service</b>Hotline 9 h–18 h · retours 30 jours · SAV matériel sur site en Île-de-France</div>
+  </div>
+  <div class="hsec"><div class="sec-h"><h2>Ses catégories</h2></div>
+    <div class="pt-cats"><button type="button" data-go="cat">Consommables &amp; hygiène <span>1 240</span></button><button type="button" data-toast="Prototype">Chirurgie &amp; implantologie <span>860</span></button><button type="button" data-toast="Prototype">Endodontie <span>712</span></button><button type="button" data-toast="Prototype">Prothèse &amp; laboratoire <span>1 105</span></button><button type="button" data-toast="Prototype">Stérilisation <span>398</span></button><button type="button" data-go="compare">Équipement <span>906</span></button></div></div>
+  <div class="hsec"><div class="sec-h"><h2>Ses meilleurs prix du moment</h2><span class="hint">Références où Elite Ceram est le moins cher livré</span></div>
+    <div class="re-row">
+      <div class="re-c"><div class="tp"><span class="th"><svg><use href="#i-glove"/></svg></span><b>Gants nitrile · boîte de 100</b></div><div class="meta"><span class="money" data-v="3.02">3,02 €</span> livré · <span class="delta">le moins cher des 6</span></div><button class="btn p" data-go="sheet">Voir l’offre <svg><use href="#i-arrow"/></svg></button></div>
+      <div class="re-c"><div class="tp"><span class="th"><svg><use href="#i-box"/></svg></span><b>Fil de suture PGCL 4-0 · boîte de 12</b></div><div class="meta"><span class="money" data-v="36.00">36,00 €</span> port offert · <span class="delta">le moins cher des 2</span></div><button class="btn g" data-toast="Prototype">Voir l’offre <svg><use href="#i-arrow"/></svg></button></div>
+      <div class="re-c"><div class="tp"><span class="th"><svg><use href="#i-box"/></svg></span><b>Papier à articuler 200 µ</b></div><div class="meta"><span class="money" data-v="5.55">5,55 €</span> livré · <span class="delta">le moins cher des 6</span></div><button class="btn g" data-toast="Prototype">Voir l’offre <svg><use href="#i-arrow"/></svg></button></div>
+    </div></div>
+</section>
+
+<!-- ========== RESULTS ========== -->
+<section class="view" id="view-results">
+  <nav class="crumb" aria-label="Fil d’Ariane"><a href="#accueil" data-go="home">Marketplace</a> <span>›</span> <a href="#categorie-consommables" data-go="cat">Consommables &amp; hygiène</a> <span>›</span> <b>Recherche « gants nitrile »</b></nav>
+
+  <div class="rh">
+    <h1>Gants nitrile <small>3 produits · 6 partenaires comparés · prix mis à jour ce matin</small></h1>
+    <div class="seg-wrap">
+      <span>Afficher les prix</span>
+      <div class="seg" id="seg" role="group" aria-label="Affichage HT ou TTC">
+        <button type="button" data-tax="ht" aria-pressed="true">HT</button>
+        <button type="button" data-tax="ttc" aria-pressed="false">TTC</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="radar">
+    <div>
+      <div class="t">Fourchette du marché · boîte de 100 gants nitrile</div>
+      <h2>Entre <span class="money" data-v="2.56">2,56 €</span> et <span class="money" data-v="3.43">3,43 €</span> selon le partenaire</h2>
+      <div class="rng">
+        <i style="left:0;right:0"></i>
+        <b style="left:0%">2,56 €</b><em style="left:0%"></em>
+        <b style="left:53%">3,02 € livré</b><em style="left:53%;border-color:var(--a)"></em>
+        <b style="left:100%">3,43 €</b><em style="left:100%"></em>
+      </div>
+      <div class="rng-l"><span>le moins cher</span><span>le plus cher</span></div>
+      <p class="note">Le prix affiché ne fait pas tout : avec les frais de port, le partenaire le moins cher au catalogue n’est pas forcément le moins cher chez vous. On vous montre les deux.</p>
+    </div>
+    <div class="k">
+      <span class="pill good"><svg width="12" height="12"><use href="#i-down"/></svg> −17 % vs moyenne 6 mois</span>
+      <b>−0,87 €</b>
+      <span>d’écart par boîte entre le plus cher et le moins cher</span>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <article class="card rv">
+      <div class="img">
+        <span class="tag">6 partenaires</span>
+        <button class="fav" aria-label="Ajouter aux favoris" data-fav><svg><use href="#i-heart"/></svg></button>
+        <svg><use href="#i-glove"/></svg>
+      </div>
+      <div class="bd">
+        <h3>Gants d’examen nitrile non poudrés · boîte de 100</h3>
+        <div class="meta"><i>Bleu</i><i>S · M · L · XL</i><i><svg><use href="#i-check"/></svg>Sans latex</i></div>
+        <div class="pt"><span class="av"><span>DG</span><span>DA</span><span>EC</span><span>+3</span></span> à partir de</div>
+        <div class="pr"><b class="money" data-v="2.56">2,56 €</b><span class="u">/ boîte</span><span class="tax">HT</span></div>
+        <div class="act">
+          <button class="btn p" data-open-sheet>Comparer les 6 offres <svg><use href="#i-arrow"/></svg></button>
+        </div>
+      </div>
+    </article>
+
+    <article class="card rv">
+      <div class="img">
+        <span class="tag alt">4 partenaires</span>
+        <button class="fav" aria-label="Ajouter aux favoris" data-fav><svg><use href="#i-heart"/></svg></button>
+        <svg><use href="#i-glove-dark"/></svg>
+      </div>
+      <div class="bd">
+        <h3>Gants nitrile noirs renforcés · boîte de 100</h3>
+        <div class="meta"><i>Noir</i><i>S · M · L</i><i><svg><use href="#i-check"/></svg>Sans latex</i></div>
+        <div class="pt"><span class="av"><span>DA</span><span>EC</span><span>DS</span><span>+1</span></span> à partir de</div>
+        <div class="pr"><b class="money" data-v="3.15">3,15 €</b><span class="u">/ boîte</span><span class="tax">HT</span></div>
+        <div class="act">
+          <button class="btn g" data-toast="Bientôt : fiche des gants noirs">Comparer les 4 offres <svg><use href="#i-arrow"/></svg></button>
+        </div>
+      </div>
+    </article>
+
+    <article class="card rv">
+      <div class="img">
+        <span class="tag alt">2 partenaires</span>
+        <button class="fav" aria-label="Ajouter aux favoris" data-fav><svg><use href="#i-heart"/></svg></button>
+        <svg><use href="#i-glove-long"/></svg>
+      </div>
+      <div class="bd">
+        <h3>Gants nitrile manchette longue 30 cm · boîte de 50</h3>
+        <div class="meta"><i>Bleu</i><i>M · L</i><i><svg><use href="#i-check"/></svg>Sans latex</i></div>
+        <div class="pt"><span class="av"><span>EC</span><span>DS</span></span> à partir de</div>
+        <div class="pr"><b class="money" data-v="6.90">6,90 €</b><span class="u">/ boîte</span><span class="tax">HT</span></div>
+        <div class="act">
+          <button class="btn g" data-toast="Bientôt : fiche des gants manchette longue">Comparer les 2 offres <svg><use href="#i-arrow"/></svg></button>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ========== OFFER SHEET ========== -->
+<section class="view" id="view-sheet">
+  <button class="back" data-back><svg><use href="#i-back"/></svg> Retour aux gants nitrile</button>
+
+  <div class="sheet">
+    <div>
+      <div class="hero">
+        <div class="img"><svg><use href="#i-glove"/></svg></div>
+        <div>
+          <h1>Gants d’examen nitrile non poudrés · boîte de 100</h1>
+          <p class="sub">Référence suivie par Evidentall depuis 6 mois · 6 partenaires proposent ce produit</p>
+          <div class="chips">
+            <span class="chip">Taille :</span>
+            <button class="chip" data-size>S</button><button class="chip sel" data-size>M</button><button class="chip" data-size>L</button><button class="chip" data-size>XL</button>
+          </div>
+          <div class="chips"><span class="chip">Nitrile</span><span class="chip">Sans poudre</span><span class="chip">Sans latex</span><span class="chip">CE · EN 455</span><span class="chip">Bleu</span></div>
+          <div class="row">
+            <button class="btn o" data-toast="Produit suivi : vous serez prévenu(e) si le prix bouge."><svg><use href="#i-bell"/></svg> Suivre ce produit</button>
+            <button class="btn o" data-fav><svg><use href="#i-heart"/></svg> Favori</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-h">
+          <h2>6 offres pour ce produit</h2>
+          <div class="sort" role="group" aria-label="Trier">
+            <button type="button" aria-pressed="true" data-sort="livre">Prix livré</button>
+            <button type="button" aria-pressed="false" data-sort="cat">Prix catalogue</button>
+          </div>
+        </div>
+
+        <div class="offers" id="offers">
+
+          <div class="of best" data-pcat="3.02" data-liv="3.02">
+            <div class="lg c">EC</div>
+            <div class="who"><b><button type="button" data-go="partner" style="font:inherit;font-weight:700;color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--a)">Elite Ceram</button></b><span><i><svg><use href="#i-truck"/></svg>Port offert</i><i>Livré sous 48 h</i><i>S · M · L</i></span></div>
+            <div class="pz"><b class="money" data-v="3.02">3,02 €</b><small>livré · <span class="money" data-v="3.02">3,02 €</span> catalogue</small><span class="d z">Le moins cher chez vous</span></div>
+            <button class="btn" data-cart="Elite Ceram" data-pid="gants-jet-100" data-pname="Gants d’examen nitrile non poudrés · boîte de 100" data-unit="3.02">Ajouter <svg><use href="#i-cart"/></svg></button>
+          </div>
+
+          <div class="of" data-pcat="2.75" data-liv="3.25">
+            <div class="lg b">DA</div>
+            <div class="who"><b>Docteur AI</b><span><i><svg><use href="#i-truck"/></svg>Port 4,90 € · offert dès 60 €</i><i>Livré sous 72 h</i><i>S · M · L · XL</i></span></div>
+            <div class="pz"><b class="money" data-v="3.25">3,25 €</b><small>livré · <span class="money" data-v="2.75">2,75 €</span> catalogue</small><span class="d">+ 0,23 € / boîte</span></div>
+            <button class="btn g" data-cart="Docteur AI" data-pid="gants-jet-100" data-pname="Gants d’examen nitrile non poudrés · boîte de 100" data-unit="2.75">Ajouter <svg><use href="#i-cart"/></svg></button>
+          </div>
+
+          <div class="of" data-pcat="2.98" data-liv="3.38">
+            <div class="lg a">DP</div>
+            <div class="who"><b>Dentalpro</b><span><i><svg><use href="#i-truck"/></svg>Port 3,90 €</i><i>Livré sous 48 h</i><i>M · L</i></span></div>
+            <div class="pz"><b class="money" data-v="3.38">3,38 €</b><small>livré · <span class="money" data-v="2.98">2,98 €</span> catalogue</small><span class="d">+ 0,36 € / boîte</span></div>
+            <button class="btn g" data-cart="Dentalpro" data-pid="gants-jet-100" data-pname="Gants d’examen nitrile non poudrés · boîte de 100" data-unit="2.98">Ajouter <svg><use href="#i-cart"/></svg></button>
+          </div>
+
+          <div class="of" data-pcat="3.43" data-liv="3.43">
+            <div class="lg">DS</div>
+            <div class="who"><b>Docteur Strong</b><span><i><svg><use href="#i-truck"/></svg>Port offert</i><i>Livré sous 24 h</i><i>S · M · L · XL</i></span></div>
+            <div class="pz"><b class="money" data-v="3.43">3,43 €</b><small>livré · <span class="money" data-v="3.43">3,43 €</span> catalogue</small><span class="d">+ 0,41 € / boîte</span></div>
+            <button class="btn g" data-cart="Docteur Strong" data-pid="gants-jet-100" data-pname="Gants d’examen nitrile non poudrés · boîte de 100" data-unit="3.43">Ajouter <svg><use href="#i-cart"/></svg></button>
+          </div>
+
+          <div class="of" data-pcat="3.10" data-liv="3.60">
+            <div class="lg b">MD</div>
+            <div class="who"><b>Médi-Dent</b><span><i><svg><use href="#i-truck"/></svg>Port 4,90 €</i><i>Livré sous 72 h</i><i>M · L</i></span></div>
+            <div class="pz"><b class="money" data-v="3.60">3,60 €</b><small>livré · <span class="money" data-v="3.10">3,10 €</span> catalogue</small><span class="d">+ 0,58 € / boîte</span></div>
+            <button class="btn g" data-cart="Médi-Dent" data-pid="gants-jet-100" data-pname="Gants d’examen nitrile non poudrés · boîte de 100" data-unit="3.10">Ajouter <svg><use href="#i-cart"/></svg></button>
+          </div>
+
+          <div class="of" data-pcat="2.56" data-liv="9.46">
+            <div class="lg a">DG</div>
+            <div class="who"><b>Dental Good Deal</b><span><i><svg><use href="#i-truck"/></svg>Port 6,90 € · offert dès 150 €</i><i>Livré sous 5 j</i><i>M · L</i></span></div>
+            <div class="pz"><b class="money" data-v="9.46">9,46 €</b><small>livré (1 boîte) · <span class="money" data-v="2.56">2,56 €</span> catalogue</small><span class="d">Intéressant dès 150 € de commande</span></div>
+            <button class="btn g" data-cart="Dental Good Deal" data-pid="gants-jet-100" data-pname="Gants d’examen nitrile non poudrés · boîte de 100" data-unit="2.56">Ajouter <svg><use href="#i-cart"/></svg></button>
+          </div>
+
+        </div>
+
+        <p class="why"><svg><use href="#i-info"/></svg><span>Le prix livré est calculé pour une boîte, taille M, livrée en France métropolitaine. Les partenaires ne paient pas pour apparaître en premier : <button type="button" data-toast="Le classement suit uniquement le prix livré, puis le délai.">comment est fait ce classement ?</button></span></p>
+      </div>
+    </div>
+
+    <aside class="side">
+      <div class="box best-box">
+        <div class="t">Meilleur prix livré · 1 boîte, taille M</div>
+        <div class="big"><b class="money" data-v="3.02">3,02 €</b><span>HT · chez Elite Ceram</span></div>
+        <p>Port offert, livré sous 48 h. Le catalogue le moins cher (Dental Good Deal) revient à <span class="money" data-v="9.46">9,46 €</span> pour une boîte seule.</p>
+        <button class="btn" data-cart="Elite Ceram" data-pid="gants-jet-100" data-pname="Gants d’examen nitrile non poudrés · boîte de 100" data-unit="3.02">Ajouter au panier <svg><use href="#i-cart"/></svg></button>
+        <div class="sv"><svg><use href="#i-check"/></svg> Vous économisez <span class="money" data-v="0.41">0,41 €</span> par boîte vs l’offre la plus chère</div>
+      </div>
+
+      <div class="box">
+        <div class="t">Prix sur 6 mois · meilleur prix livré</div>
+        <div class="chart">
+          <svg viewBox="0 0 320 120" aria-label="Évolution du prix sur six mois">
+            <defs><linearGradient id="gf" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0077fd" stop-opacity=".22"/><stop offset="1" stop-color="#0077fd" stop-opacity="0"/></linearGradient></defs>
+            <g stroke="#e3e9f1" stroke-dasharray="3 4"><line x1="0" y1="20" x2="320" y2="20"/><line x1="0" y1="55" x2="320" y2="55"/><line x1="0" y1="90" x2="320" y2="90"/></g>
+            <path d="M10 48 L62 42 L114 60 L166 36 L218 72 L270 80 L310 86 L310 120 L10 120 Z" fill="url(#gf)"/>
+            <path d="M10 48 L62 42 L114 60 L166 36 L218 72 L270 80 L310 86" fill="none" stroke="#0077fd" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+            <line x1="10" y1="62" x2="310" y2="62" stroke="#50c3ff" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <circle cx="310" cy="86" r="5" fill="#fff" stroke="#0077fd" stroke-width="3"/>
+            <g font-family="Montserrat,sans-serif" font-size="10" fill="#6b7786"><text x="10" y="112">mai</text><text x="114" y="112">juil.</text><text x="218" y="112">sept.</text><text x="285" y="112">oct.</text></g>
+            <text x="14" y="58" font-family="Montserrat,sans-serif" font-size="9" fill="#50c3ff" font-weight="700">moyenne 3,64 €</text>
+          </svg>
+        </div>
+        <div class="verdict">
+          <div class="bl"><svg><use href="#i-down"/></svg></div>
+          <div><b>Prix bas : −17 % sous la moyenne</b>C’est un bon moment pour commander. Le plus bas observé : <span class="money" data-v="2.98">2,98 €</span> en juin.</div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="t">Alerte prix</div>
+        <p style="font-size:13px;color:var(--ink2)">Prévenez-moi quand le prix livré passe sous :</p>
+        <form class="alert" onsubmit="return false" id="alertForm">
+          <label class="f"><span class="sr">Seuil</span><input type="text" inputmode="decimal" value="2,90" aria-label="Seuil d’alerte en euros"><span>€ HT</span></label>
+          <button class="btn p" type="submit"><svg><use href="#i-bell"/></svg> Activer</button>
+        </form>
+        <p class="ok" id="alertOk">Alerte activée. On vous écrit dès que ça baisse.</p>
+      </div>
+
+      <div class="box">
+        <div class="re">
+          <div class="ic"><svg><use href="#i-redo"/></svg></div>
+          <div><b>Vous recommandez ce produit toutes les 5 semaines</b><span>Dernière commande : 24 sept. · 10 boîtes chez Docteur AI</span></div>
+        </div>
+        <button class="btn g w" style="margin-top:12px" data-cart="Elite Ceram" data-pid="gants-jet-100" data-pname="Gants d’examen nitrile non poudrés · boîte de 100" data-unit="3.02" data-qty="10">Recommander 10 boîtes au meilleur prix <svg><use href="#i-arrow"/></svg></button>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ========== CART (step 1) ========== -->
+<section class="view" id="view-cart">
+  <button class="back" data-back><svg><use href="#i-back"/></svg> Continuer mes achats</button>
+  <div class="steps" aria-label="Étapes de commande">
+    <span class="stp on" data-step="1"><i>1</i><span>Panier</span></span><span class="sep"></span>
+    <span class="stp" data-step="2"><i>2</i><span>Livraison</span></span><span class="sep"></span>
+    <span class="stp" data-step="3"><i>3</i><span>Paiement</span></span>
+  </div>
+  <div class="ck">
+    <div>
+      <h1>Votre panier</h1>
+      <p class="sub" id="cartSub">—</p>
+      <div id="cartColis"></div>
+    </div>
+    <aside class="rec"><div class="box">
+      <div class="t">Récapitulatif</div>
+      <div id="recap1"></div>
+      <button class="btn p" data-go="ship">Choisir la livraison <svg><use href="#i-arrow"/></svg></button>
+      <p class="fine">Aucun compte requis pour continuer. Vous paierez à l’étape 3, après avoir vu le total livré.</p>
+      <div class="trust"><i><svg><use href="#i-check"/></svg>Paiement sécurisé</i><i><svg><use href="#i-check"/></svg>Factures par fournisseur</i><i><svg><use href="#i-check"/></svg>Données hébergées en France</i></div>
+    </div></aside>
+  </div>
+</section>
+
+<!-- ========== SHIPPING (step 2) ========== -->
+<section class="view" id="view-ship">
+  <button class="back" data-go="cart"><svg><use href="#i-back"/></svg> Retour au panier</button>
+  <div class="steps" aria-label="Étapes de commande">
+    <span class="stp done"><i><svg><use href="#i-check"/></svg></i><span>Panier</span></span><span class="sep done"></span>
+    <span class="stp on"><i>2</i><span>Livraison</span></span><span class="sep"></span>
+    <span class="stp"><i>3</i><span>Paiement</span></span>
+  </div>
+  <div class="ck">
+    <div>
+      <h1>Livraison</h1>
+      <p class="sub">Une seule adresse pour tous vos colis. Chaque fournisseur expédie de son côté.</p>
+      <div class="addr">
+        <h3>Adresse du cabinet <button type="button" data-edit-addr>Modifier</button></h3>
+        <div class="who" id="addrView">
+          <div class="ic"><svg><use href="#i-home"/></svg></div>
+          <div><b>Cabinet dentaire des Lilas · Dr Claire Martin</b><span>12 rue de la République<br>93260 Les Lilas<br>01 48 00 00 00 · contact@cabinet-lilas.fr</span></div>
+        </div>
+        <form class="frm" id="addrForm" hidden onsubmit="return false">
+          <div class="fld full"><label for="f-cab">Cabinet</label><input id="f-cab" value="Cabinet dentaire des Lilas"></div>
+          <div class="fld"><label for="f-nom">Nom</label><input id="f-nom" value="Dr Claire Martin"></div>
+          <div class="fld"><label for="f-tel">Téléphone</label><input id="f-tel" value="01 48 00 00 00" inputmode="tel"></div>
+          <div class="fld full"><label for="f-adr">Adresse</label><input id="f-adr" value="12 rue de la République"></div>
+          <div class="fld"><label for="f-cp">Code postal</label><input id="f-cp" value="93260" inputmode="numeric"></div>
+          <div class="fld"><label for="f-ville">Ville</label><input id="f-ville" value="Les Lilas"></div>
+          <div class="fld full"><label for="f-note">Consignes de livraison (facultatif)</label><textarea id="f-note" rows="2" placeholder="Code porte, horaires d’ouverture, étage…"></textarea></div>
+          <div class="full"><button class="btn p" type="button" data-save-addr>Enregistrer l’adresse</button></div>
+        </form>
+      </div>
+      <div id="shipOpts"></div>
+    </div>
+    <aside class="rec"><div class="box">
+      <div class="t">Récapitulatif</div>
+      <div id="recap2"></div>
+      <button class="btn p" data-go="pay">Continuer vers le paiement <svg><use href="#i-arrow"/></svg></button>
+      <p class="fine">Les délais sont donnés par chaque fournisseur à partir de la validation du paiement.</p>
+    </div></aside>
+  </div>
+</section>
+
+<!-- ========== PAYMENT (step 3) ========== -->
+<section class="view" id="view-pay">
+  <button class="back" data-go="ship"><svg><use href="#i-back"/></svg> Retour à la livraison</button>
+  <div class="steps" aria-label="Étapes de commande">
+    <span class="stp done"><i><svg><use href="#i-check"/></svg></i><span>Panier</span></span><span class="sep done"></span>
+    <span class="stp done"><i><svg><use href="#i-check"/></svg></i><span>Livraison</span></span><span class="sep done"></span>
+    <span class="stp on"><i>3</i><span>Paiement</span></span>
+  </div>
+  <div class="ck">
+    <div>
+      <h1>Paiement</h1>
+      <p class="sub">Un seul paiement, réparti entre les fournisseurs. Une facture par fournisseur.</p>
+      <div class="addr">
+        <h3>Mode de paiement</h3>
+        <div class="opts" id="payOpts">
+          <label class="card-opt sel"><input type="radio" name="pay" value="cb" checked><div><b>Carte bancaire</b><span>Débit immédiat · Visa, Mastercard, CB</span></div><span class="pr">Sans frais</span></label>
+          <label class="card-opt"><input type="radio" name="pay" value="sepa"><div><b>Prélèvement SEPA</b><span>Mandat signé une fois, réutilisable pour vos réassorts</span></div><span class="pr">Sans frais</span></label>
+          <label class="card-opt"><input type="radio" name="pay" value="vir"><div><b>Virement à 30 jours</b><span>Réservé aux cabinets vérifiés · expédition après validation</span></div><span class="pr">Sur dossier</span></label>
+        </div>
+        <p class="fine" style="font-size:12px;color:var(--mute)">Prototype : aucune donnée de carte n’est saisie ici. En production, le formulaire du prestataire de paiement s’affiche à cet endroit.</p>
+      </div>
+      <div class="addr">
+        <h3>Vérifiez votre commande</h3>
+        <div id="recapLines"></div>
+        <label class="cgv"><input type="checkbox" id="cgv"><span>J’accepte les <a href="#" onclick="return false">conditions générales de vente</a> d’Evidentall et les conditions de chaque fournisseur. Je recevrai une facture par fournisseur.</span></label>
+        <p class="err" id="cgvErr">Merci de cocher les conditions pour commander.</p>
+      </div>
+    </div>
+    <aside class="rec"><div class="box">
+      <div class="t">Total à payer</div>
+      <div id="recap3"></div>
+      <button class="btn p" id="payBtn">Commander et payer <span id="payAmt"></span></button>
+      <p class="fine"><b>Rien n’est débité</b> tant que vous n’avez pas cliqué. Vous recevez immédiatement la confirmation et les numéros de commande.</p>
+    </div></aside>
+  </div>
+</section>
+
+<!-- ========== DONE ========== -->
+<section class="view" id="view-done">
+  <div class="dn">
+    <div class="big"><svg><use href="#i-check"/></svg></div>
+    <h1>Commande confirmée. Merci !</h1>
+    <p>Vos fournisseurs ont reçu la commande. Vous recevrez un e-mail par colis avec le suivi, et chaque facture sera disponible dans votre espace.</p>
+    <div class="orders" id="doneOrders"></div>
+    <div class="acct">
+      <div><b>Suivez vos colis et recommandez en un clic</b><span>Créez votre mot de passe maintenant : votre panier, votre adresse et vos factures sont déjà enregistrés.</span></div>
+      <button class="btn" data-toast="Prototype : création de mot de passe">Créer mon mot de passe <svg><use href="#i-arrow"/></svg></button>
+    </div>
+    <div class="acts"><button class="btn g" data-go="results">Retour au marketplace</button><button class="btn o" data-toast="Prototype : suivi de commande">Suivre mes commandes</button></div>
+  </div>
+</section>
+
+</main>
+
+<!-- mini-panier -->
+<div class="mc-bg" id="mcBg"></div>
+<aside class="mc" id="mc" aria-label="Mini-panier" aria-hidden="true">
+  <div class="mc-h"><b>Panier <span id="mcCount" class="mute"></span></b><button type="button" id="mcClose" aria-label="Fermer"><svg><use href="#i-x"/></svg></button></div>
+  <div class="mc-b" id="mcBody"></div>
+  <div class="mc-f">
+    <div class="row"><span>Sous-total <span class="taxlbl">HT</span></span><b id="mcSub">0,00 €</b></div>
+    <button class="btn p" data-go="cart">Voir le panier et la livraison <svg><use href="#i-arrow"/></svg></button>
+    <button class="btn g" id="mcCont">Continuer mes achats</button>
+  </div>
+</aside>
+
+
+<div class="wl-bg" id="wlBg"></div>
+<aside class="wl" id="wl" aria-label="Bienvenue sur le marketplace" aria-hidden="true">
+  <div class="wl-h">
+    <div class="eyebrow">Marketplace Evidentall</div>
+    <h2>Comparez, commandez, recevez. Un seul panier pour 8 partenaires.</h2>
+    <p>Tout est inclus pour les cabinets : pas d’abonnement, pas de commission sur vos achats.</p>
+    <button type="button" id="wlClose" aria-label="Fermer"><svg><use href="#i-x"/></svg></button>
+  </div>
+  <div class="wl-b">
+    <div class="wl-step"><i>1</i><div><b>Cherchez une référence</b><span>Par produit, marque ou catégorie. Les variantes (tailles, couleurs) sont regroupées sur une seule fiche.</span></div></div>
+    <div class="wl-step"><i>2</i><div><b>Comparez le prix livré</b><span>Catalogue + port + délai, pour une boîte comme pour dix. Le classement ne dépend d’aucun partenaire.</span></div></div>
+    <div class="wl-step"><i>3</i><div><b>Commandez en une fois</b><span>Un panier, un paiement, une facture par fournisseur. Le compte se crée après la première commande.</span></div></div>
+    <div class="wl-sup">Vous êtes fournisseur ou laboratoire ? <a href="#" onclick="return false">Rejoindre les partenaires →</a></div>
+  </div>
+  <div class="wl-f">
+    <button class="btn p" id="wlGo">Commencer à comparer <svg><use href="#i-arrow"/></svg></button>
+    <small>Ce message ne s’affichera plus sur cet appareil.</small>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="d"><svg><use href="#i-check"/></svg></span><span id="toastTxt"></span></div>
+
+<script>
+(function(){
+  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+  const fmt=v=>v.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}).replace(/\u202f|\u00a0/g,' ')+' €';
+
+  /* HT / TTC */
+  let tax='ht';
+  try{tax=localStorage.getItem('evi-tax')||'ht'}catch(e){}
+  const seg=$('#seg');
+  function applyTax(){
+    seg.classList.toggle('ttc',tax==='ttc');
+    $$('#seg button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tax===tax)));
+    $$('.money').forEach(el=>{const v=parseFloat(el.dataset.v);el.textContent=fmt(tax==='ttc'?v*1.2:v)});
+    $$('.tax').forEach(el=>el.textContent=tax.toUpperCase());
+    $$('.best-box .big span').forEach(el=>el.textContent=tax.toUpperCase()+' · chez Elite Ceram');
+    $$('.alert .f span').forEach(el=>el.textContent='€ '+tax.toUpperCase());
+    try{localStorage.setItem('evi-tax',tax)}catch(e){}
+  }
+  seg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;tax=b.dataset.tax;applyTax();if(window.__renderAll)window.__renderAll();if(window.__renderLists)window.__renderLists()});
+  applyTax();
+
+  /* views */
+  const HASH={'view-home':'accueil','view-results':'recherche','view-sheet':'produit-gants-nitrile','view-cat':'categorie-consommables','view-cart':'panier','view-ship':'livraison','view-pay':'paiement','view-done':'confirmation','view-lists':'mes-listes','view-compare':'comparer-autoclaves','view-partner':'partenaire-elite-ceram'};
+  const show=(id,noHash)=>{$$('.view').forEach(v=>v.classList.toggle('on',v.id===id));window.scrollTo({top:0,behavior:'smooth'});if(!noHash&&location.hash!=='#'+HASH[id]){try{history.pushState(null,'','#'+HASH[id])}catch(e){location.hash=HASH[id]}}};
+  const byHash=()=>{const h=location.hash.slice(1);const id=Object.keys(HASH).find(k=>HASH[k]===h)||'view-home';show(id,true)};
+  window.addEventListener('hashchange',byHash);window.addEventListener('popstate',byHash);
+  $$('[data-open-sheet]').forEach(b=>b.addEventListener('click',()=>show('view-sheet')));
+  $$('[data-back]').forEach(b=>b.addEventListener('click',()=>show('view-results')));
+
+  /* toast */
+  let tt;
+  function toast(msg){$('#toastTxt').textContent=msg;$('#toast').classList.add('on');clearTimeout(tt);tt=setTimeout(()=>$('#toast').classList.remove('on'),2400)}
+  $$('[data-toast]').forEach(b=>b.addEventListener('click',()=>toast(b.dataset.toast)));
+
+  /* ---------- cart state (v2) ---------- */
+  const SUP={
+    'Elite Ceram':{k:'EC',cls:'c',port:0,franco:0,delay:'48 h',days:2,express:{price:9.90,delay:'24 h',days:1}},
+    'Docteur AI':{k:'DA',cls:'b',port:4.90,franco:60,delay:'72 h',days:3},
+    'Dentalpro':{k:'DP',cls:'a',port:3.90,franco:0,delay:'48 h',days:2},
+    'Docteur Strong':{k:'DS',cls:'',port:0,franco:0,delay:'24 h',days:1},
+    'Médi-Dent':{k:'MD',cls:'b',port:4.90,franco:0,delay:'72 h',days:3},
+    'Dental Good Deal':{k:'DG',cls:'a',port:6.90,franco:150,delay:'5 j',days:5},
+    'GACD':{k:'GA',cls:'a',port:5.90,franco:120,delay:'72 h',days:3},
+    'Megadental':{k:'MG',cls:'b',port:6.90,franco:99,delay:'72 h',days:3},
+    'Medicom':{k:'ME',cls:'c',port:4.90,franco:80,delay:'48 h',days:2}
+  };
+  const TVA=.2;
+  let cart=[
+    {pid:'gants-jet-100',name:'Gants d’examen nitrile non poudrés · boîte de 100',sup:'Elite Ceram',unit:3.02,qty:10,size:'M'},
+    {pid:'masque-3p',name:'Masque chirurgical 3 plis type IIR · boîte de 50',sup:'Docteur AI',unit:1.66,qty:2,size:null}
+  ];
+  const ship={};  // sup -> 'std'|'exp'
+  const r2=v=>Math.round(v*100)/100;
+  const disp=v=>fmt(tax==='ttc'?v*(1+TVA):v);
+  const groups=()=>{const g={};cart.forEach(l=>{(g[l.sup]=g[l.sup]||[]).push(l)});return g};
+  const subHT=lines=>r2(lines.reduce((a,l)=>a+l.unit*l.qty,0));
+  const portHT=(sup,lines)=>{const s=SUP[sup];const st=subHT(lines);if(ship[sup]==='exp'&&s.express)return s.express.price;return (s.franco&&st>=s.franco)||s.port===0?0:s.port};
+  const totals=()=>{const g=groups();let items=0,port=0;Object.entries(g).forEach(([s,l])=>{items+=subHT(l);port+=portHT(s,l)});const ht=r2(items+port);return{items:r2(items),port:r2(port),ht,tva:r2(ht*TVA),ttc:r2(ht*(1+TVA)),n:cart.reduce((a,l)=>a+l.qty,0),g}};
+  const dateFr=days=>{const d=new Date();d.setDate(d.getDate()+days+(d.getDay()>=5?2:0));return d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})};
+
+  function bump(){const t=totals();const el=$('#ncart');el.textContent=t.n;el.classList.toggle('on',t.n>0);$('#mcCount').textContent=t.n?'· '+t.n+' article'+(t.n>1?'s':''):''}
+  function lineHTML(l,i){return `<div class="line" data-i="${i}"><div class="th"><svg><use href="#${l.pid==='masque-3p'?'i-box':'i-glove'}"/></svg></div><div><div class="nm">${l.name}</div><div class="sp">${l.size?'Taille '+l.size+' · ':''}${disp(l.unit)} <span class="taxlbl">${tax.toUpperCase()}</span> / boîte</div><div class="ctl"><span class="qty"><button type="button" data-q="-1" aria-label="Moins">−</button><span>${l.qty}</span><button type="button" data-q="1" aria-label="Plus">+</button></span><button type="button" class="rm" data-rm>Retirer</button></div></div><div class="pr">${disp(l.unit*l.qty)}</div></div>`}
+  function renderMini(added){const b=$('#mcBody');b.innerHTML=(added?`<div class="mc-added"><svg><use href="#i-check"/></svg>${added}</div>`:'')+(cart.length?cart.map((l,i)=>lineHTML(l,i)).join(''):'<div class="empty">Votre panier est vide.</div>');$('#mcSub').textContent=disp(totals().items);$$('.taxlbl').forEach(e=>e.textContent=tax.toUpperCase())}
+  function openMini(added){renderMini(added);$('#mc').classList.add('on');$('#mcBg').classList.add('on');$('#mc').setAttribute('aria-hidden','false')}
+  function closeMini(){$('#mc').classList.remove('on');$('#mcBg').classList.remove('on');$('#mc').setAttribute('aria-hidden','true')}
+  $('#mcClose').addEventListener('click',closeMini);$('#mcBg').addEventListener('click',closeMini);$('#mcCont').addEventListener('click',closeMini);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMini()});
+
+  function recapHTML(step){const t=totals();const nS=Object.keys(t.g).length;return `<div class="row"><span>Articles (${t.n})</span><span>${disp(t.items)}</span></div><div class="row"><span>Livraison · ${nS} colis</span><span>${t.port?disp(t.port):'Offerte'}</span></div>${tax==='ht'?`<div class="row"><span>TVA 20 %</span><span>${fmt(t.tva)}</span></div>`:''}<div class="row tot"><span>Total TTC<small>${fmt(t.ht)} HT</small></span><span>${fmt(t.ttc)}</span></div>`}
+  function colisHTML(sup,lines,withOpts){const s=SUP[sup];const st=subHT(lines);const p=portHT(sup,lines);let nudge='';if(s.franco&&st<s.franco)nudge=`<span class="nudge"><svg><use href="#i-info"/></svg>Ajoutez ${fmt(r2(s.franco-st))} HT chez ${sup} pour le port offert</span>`;else if(p===0)nudge=`<span class="nudge ok"><svg><use href="#i-check"/></svg>Port offert</span>`;return `<div class="colis" data-sup="${sup}"><div class="colis-h"><div class="lg ${s.cls}">${s.k}</div><div><b>${sup}</b><span><i><svg><use href="#i-truck"/></svg>${p?'Port '+disp(p):'Port offert'}</i><i>Livré sous ${ship[sup]==='exp'&&s.express?s.express.delay:s.delay} · ${dateFr(ship[sup]==='exp'&&s.express?s.express.days:s.days)}</i></span></div><div class="tot">Colis <b>${disp(r2(st+p))}</b> <span class="taxlbl">${tax.toUpperCase()}</span></div></div><div class="colis-b">${lines.map(l=>lineHTML(l,cart.indexOf(l))).join('')}</div><div class="colis-f"><span>Facturé par ${sup} · ${lines.length} référence${lines.length>1?'s':''}</span>${nudge}</div></div>`}
+  function renderCart(){const t=totals();$('#cartSub').textContent=t.n?`${t.n} article${t.n>1?'s':''} · ${Object.keys(t.g).length} fournisseur${Object.keys(t.g).length>1?'s':''} · ${Object.keys(t.g).length} colis`:'Votre panier est vide';$('#cartColis').innerHTML=t.n?Object.entries(t.g).map(([s,l])=>colisHTML(s,l)).join(''):'<div class="empty">Votre panier est vide.<br><button class="btn p" data-go="results">Voir les produits</button></div>';$('#recap1').innerHTML=recapHTML(1);$$('.taxlbl').forEach(e=>e.textContent=tax.toUpperCase())}
+  function renderShip(){const t=totals();$('#shipOpts').innerHTML=Object.entries(t.g).map(([sup,l])=>{const s=SUP[sup];const st=subHT(l);const std=(s.franco&&st>=s.franco)||s.port===0?0:s.port;const sel=ship[sup]||'std';return `<div class="addr" data-sup="${sup}"><h3>Colis ${sup} · ${l.length} référence${l.length>1?'s':''}</h3><div class="opts"><label class="card-opt ${sel==='std'?'sel':''}"><input type="radio" name="ship-${s.k}" value="std" ${sel==='std'?'checked':''}><div><b>Standard · sous ${s.delay}</b><span>Livraison estimée ${dateFr(s.days)}</span></div><span class="pr">${std?disp(std):'Offert'}</span></label>${s.express?`<label class="card-opt ${sel==='exp'?'sel':''}"><input type="radio" name="ship-${s.k}" value="exp" ${sel==='exp'?'checked':''}><div><b>Express · sous ${s.express.delay}</b><span>Livraison estimée ${dateFr(s.express.days)}</span></div><span class="pr">${disp(s.express.price)}</span></label>`:''}</div></div>`}).join('');$('#recap2').innerHTML=recapHTML(2)}
+  function renderPay(){const t=totals();$('#recapLines').innerHTML=Object.entries(t.g).map(([sup,l])=>{const s=SUP[sup];const p=portHT(sup,l);return `<div class="recap-l"><span><b>${sup}</b> · ${l.map(x=>x.qty+' × '+x.name.split(' ·')[0]).join(', ')}</span><b>${disp(r2(subHT(l)+p))}</b><span class="d">${p?'Port '+disp(p):'Port offert'} · livraison estimée ${dateFr(ship[sup]==='exp'&&s.express?s.express.days:s.days)} · ${$('#addrView b').textContent}</span></div>`}).join('');$('#recap3').innerHTML=recapHTML(3);$('#payAmt').textContent=fmt(t.ttc)+' TTC'}
+  function renderAll(){bump();renderCart();renderShip();renderPay();renderMini()}
+
+  /* add to cart */
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-cart]');if(!b)return;const q=parseInt(b.dataset.qty||'1',10);const sup=b.dataset.cart;const pid=b.dataset.pid||'gants-jet-100';const size=$('.chip.sel[data-size]')?.textContent.trim()||'M';let l=cart.find(x=>x.pid===pid&&x.sup===sup&&x.size===size);if(l)l.qty+=q;else cart.push({pid,name:b.dataset.pname||'Produit',sup,unit:parseFloat(b.dataset.unit||'0'),qty:q,size});renderAll();openMini((q>1?q+' articles ajoutés':'Ajouté')+' · '+sup)});
+  /* qty / remove (delegated) */
+  document.addEventListener('click',e=>{const q=e.target.closest('[data-q]');const rm=e.target.closest('[data-rm]');const ln=e.target.closest('.line');if(!ln)return;const i=parseInt(ln.dataset.i,10);if(q){cart[i].qty=Math.max(1,cart[i].qty+parseInt(q.dataset.q,10));renderAll()}if(rm){const n=cart[i].name;cart.splice(i,1);renderAll();toast('Retiré : '+n.split(' ·')[0])}});
+  /* shipping option */
+  document.addEventListener('change',e=>{const r=e.target.closest('input[name^="ship-"]');if(r){const sup=r.closest('[data-sup]').dataset.sup;ship[sup]=r.value;renderShip();renderPay();renderCart()}const p=e.target.closest('input[name=pay]');if(p){$$('#payOpts .card-opt').forEach(c=>c.classList.toggle('sel',c.contains(p)))}});
+  /* address edit */
+  $('[data-edit-addr]').addEventListener('click',()=>{$('#addrForm').hidden=false;$('#addrView').hidden=true});
+  $('[data-save-addr]').addEventListener('click',()=>{$('#addrView b').textContent=$('#f-cab').value+' · '+$('#f-nom').value;$('#addrView span').innerHTML=$('#f-adr').value+'<br>'+$('#f-cp').value+' '+$('#f-ville').value+'<br>'+$('#f-tel').value+($('#f-note').value?'<br><em>'+$('#f-note').value+'</em>':'');$('#addrForm').hidden=true;$('#addrView').hidden=false;renderPay();toast('Adresse enregistrée')});
+  /* navigation in tunnel */
+  const VIEW={home:'view-home',results:'view-results',sheet:'view-sheet',cat:'view-cat',cart:'view-cart',ship:'view-ship',pay:'view-pay',done:'view-done',lists:'view-lists',compare:'view-compare',partner:'view-partner'};
+  document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(!g)return;e.preventDefault();const k=g.dataset.go;if((k==='ship'||k==='pay')&&!cart.length){toast('Votre panier est vide');return}closeMini();renderAll();show(VIEW[k])});
+  $$('[data-open-cart]').forEach(b=>b.addEventListener('click',()=>{renderAll();show('view-cart')}));
+  /* pay */
+  $('#payBtn').addEventListener('click',()=>{if(!$('#cgv').checked){$('#cgvErr').classList.add('on');$('#cgv').focus();return}$('#cgvErr').classList.remove('on');const t=totals();const n=Date.now().toString().slice(-5);$('#doneOrders').innerHTML=Object.entries(t.g).map(([sup,l],i)=>{const s=SUP[sup];return `<div class="ord"><div class="lg ${s.cls}">${s.k}</div><div><b>${sup} · n° EV-${n}-${i+1}</b><span>${l.reduce((a,x)=>a+x.qty,0)} article${l.reduce((a,x)=>a+x.qty,0)>1?'s':''} · ${fmt(r2((subHT(l)+portHT(sup,l))*(1+TVA)))} TTC · livraison estimée ${dateFr(ship[sup]==='exp'&&s.express?s.express.days:s.days)}</span></div><span class="st">Confirmée</span></div>`}).join('');cart=[];bump();show('view-done')});
+
+  /* favs */
+  let fav=0;
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-fav]');if(!b)return;const on=b.classList.toggle('on');fav+=on?1:-1;const el=$('#nfav');el.textContent=fav;el.classList.toggle('on',fav>0);toast(on?'Ajouté à vos favoris':'Retiré des favoris')});
+
+  /* ---------- v3 : data ---------- */
+  const CATS={conso:{name:'Consommables & hygiène',subs:[['gants','Gants'],['masques','Masques'],['champs','Champs & bavettes'],['aspi','Aspiration'],['gobelets','Gobelets & serviettes']]},ster:{name:'Stérilisation'},chir:{name:'Chirurgie & implantologie'},endo:{name:'Endodontie'},proth:{name:'Prothèse & laboratoire'},ortho:{name:'Orthodontie'},imag:{name:'Imagerie & numérique'},equip:{name:'Équipement & instruments'}};
+  const P=[
+    {id:'gants-jet-100',n:'Gants d’examen nitrile non poudrés · bleu',sub:'gants',brand:'Jet',mat:'Nitrile',pack:'boîte de 100',unitN:100,liv:3.02,np:6,delay:2,stock:'in',ico:'i-glove',sheet:true},
+    {id:'gants-noir',n:'Gants nitrile noirs renforcés',sub:'gants',brand:'Unigloves',mat:'Nitrile',pack:'boîte de 100',unitN:100,liv:3.15,np:4,delay:2,stock:'in',ico:'i-glove-dark'},
+    {id:'gants-long',n:'Gants nitrile manchette longue 30 cm',sub:'gants',brand:'Medicom',mat:'Nitrile',pack:'boîte de 50',unitN:50,liv:6.90,np:2,delay:3,stock:'low',ico:'i-glove-long'},
+    {id:'gants-latex',n:'Gants latex poudrés · naturel',sub:'gants',brand:'Sempercare',mat:'Latex',pack:'boîte de 100',unitN:100,liv:2.80,np:3,delay:2,stock:'in',ico:'i-glove'},
+    {id:'gants-vinyle',n:'Gants vinyle non poudrés · transparent',sub:'gants',brand:'Medicom',mat:'Vinyle',pack:'boîte de 100',unitN:100,liv:2.40,np:3,delay:3,stock:'in',ico:'i-glove'},
+    {id:'gants-steril',n:'Gants chirurgicaux stériles latex · paire',sub:'gants',brand:'Gammex',mat:'Latex',pack:'boîte de 50 paires',unitN:50,liv:24.90,np:2,delay:2,stock:'in',ico:'i-glove'},
+    {id:'gants-rose',n:'Gants nitrile roses · sans accélérateur',sub:'gants',brand:'Unigloves',mat:'Nitrile',pack:'boîte de 100',unitN:100,liv:3.45,np:1,delay:5,stock:'out',ico:'i-glove'},
+    {id:'masque-3p',n:'Masque chirurgical 3 plis type IIR · bleu',sub:'masques',brand:'Mercator',mat:'Polypropylène',pack:'boîte de 50',unitN:50,liv:1.66,np:4,delay:3,stock:'in',ico:'i-mask'},
+    {id:'masque-ffp2',n:'Masque FFP2 NR · blanc',sub:'masques',brand:'Medicom',mat:'Polypropylène',pack:'boîte de 20',unitN:20,liv:4.90,np:3,delay:2,stock:'in',ico:'i-mask'},
+    {id:'masque-visiere',n:'Masque IIR avec visière anti-projection',sub:'masques',brand:'Mercator',mat:'Polypropylène',pack:'boîte de 25',unitN:25,liv:6.20,np:2,delay:3,stock:'low',ico:'i-mask'},
+    {id:'champ-50',n:'Champ chirurgical stérile 100 × 150 cm',sub:'champs',brand:'Safe Implant',mat:'Non-tissé',pack:'carton de 50',unitN:50,liv:49.16,np:2,delay:2,stock:'in',ico:'i-box'},
+    {id:'bavette',n:'Bavettes patient 2 plis + film',sub:'champs',brand:'Medicom',mat:'Cellulose',pack:'carton de 500',unitN:500,liv:18.40,np:5,delay:2,stock:'in',ico:'i-box'},
+    {id:'canule',n:'Canules d’aspiration chirurgicale · ø 11',sub:'aspi',brand:'Jet',mat:'PVC',pack:'sachet de 100',unitN:100,liv:5.60,np:3,delay:2,stock:'in',ico:'i-box'},
+    {id:'gobelet',n:'Gobelets plastique 18 cl · bleu',sub:'gobelets',brand:'Medicom',mat:'PP',pack:'carton de 3 000',unitN:3000,liv:32.00,np:4,delay:3,stock:'in',ico:'i-box'}
+  ];
+  const BRANDS=['Jet','Unigloves','Medicom','Sempercare','Gammex','Mercator','Safe Implant'];
+  const PARTN=['Elite Ceram','Docteur AI','Dentalpro','Docteur Strong','Médi-Dent','Dental Good Deal','GACD','Megadental'];
+  const F={sub:null,brand:new Set(),mat:new Set(),stock:false,multi:false,delay:null};
+  let sort='rel',shown=9,curCat='conso';
+
+  const filtered=()=>P.filter(p=>(!F.sub||p.sub===F.sub)&&(!F.brand.size||F.brand.has(p.brand))&&(!F.mat.size||F.mat.has(p.mat))&&(!F.stock||p.stock!=='out')&&(!F.multi||p.np>=2)&&(!F.delay||p.delay<=F.delay));
+  const sorted=l=>{const c=[...l];if(sort==='liv')c.sort((a,b)=>a.liv-b.liv);if(sort==='unit')c.sort((a,b)=>a.liv/a.unitN-b.liv/b.unitN);if(sort==='delay')c.sort((a,b)=>a.delay-b.delay);if(sort==='np')c.sort((a,b)=>b.np-a.np);if(sort==='rel')c.sort((a,b)=>(a.stock==='out')-(b.stock==='out')||b.np-a.np);return c};
+  const cnt=(key,val)=>P.filter(p=>(!F.sub||p.sub===F.sub)&&(key==='brand'||!F.brand.size||F.brand.has(p.brand))&&(key==='mat'||!F.mat.size||F.mat.has(p.mat))&&(!F.stock||p.stock!=='out')&&(p[key]===val)).length;
+  const unitPrice=p=>{const u=p.liv/p.unitN;return u<0.1?(u*100).toFixed(1).replace('.',',')+' c':fmt(u)};
+
+  function cardHTML(p){const st=p.stock==='in'?'<span class="st">En stock</span>':p.stock==='low'?'<span class="st low">Stock faible</span>':'<span class="st out">Rupture</span>';const cta=p.stock==='out'?'<button class="btn" disabled>Indisponible · m’alerter</button>':p.np>1?`<button class="btn p" data-open-p="${p.id}">Comparer les ${p.np} offres <svg><use href="#i-arrow"/></svg></button>`:`<button class="btn g" data-cart="Elite Ceram" data-pid="${p.id}" data-pname="${p.n} · ${p.pack}" data-unit="${p.liv}">Ajouter <svg><use href="#i-cart"/></svg></button>`;return `<article class="pc ${p.stock==='out'?'out':''}"><div class="img">${st}<button class="fav" aria-label="Ajouter aux favoris" data-fav><svg><use href="#i-heart"/></svg></button><svg><use href="#${p.ico}"/></svg></div><div class="bd"><h3>${p.n}</h3><div class="pk"><b>${p.pack}</b> · ${p.brand} · ${p.mat}</div><div class="pr"><small>${p.np>1?'à partir de':''}</small><b>${disp(p.liv)}</b><span class="u"><span class="taxlbl">${tax.toUpperCase()}</span> livré · ${unitPrice(p)} / unité</span></div><div class="np">${p.np>1?`<span class="av">${['EC','DA','DP','DS','MD','DG'].slice(0,Math.min(p.np,3)).map(k=>'<span>'+k+'</span>').join('')}${p.np>3?'<span>+'+(p.np-3)+'</span>':''}</span>${p.np} partenaires · livré sous ${p.delay===1?'24 h':p.delay===2?'48 h':p.delay===3?'72 h':p.delay+' j'}`:'1 partenaire · livré sous '+(p.delay<=3?p.delay*24+' h':p.delay+' j')}</div>${cta}</div></article>`}
+  function facHTML(){const nb=F.brand.size+F.mat.size+(F.stock?1:0)+(F.multi?1:0)+(F.delay?1:0);$('#facN').textContent=nb?'('+nb+')':'';const opt=(key,v,label)=>{const n=cnt(key,v);const on=F[key].has(v);return `<label class="fo ${!n&&!on?'dis':''}"><input type="checkbox" data-f="${key}" value="${v}" ${on?'checked':''} ${!n&&!on?'disabled':''}><span>${label||v}</span><span class="n">${n}</span></label>`};const base=P.filter(p=>!F.sub||p.sub===F.sub);const inStock=base.filter(p=>p.stock!=='out').length,multi=base.filter(p=>p.np>=2).length,d48=base.filter(p=>p.delay<=2).length;return `<div class="grp"><h4>Disponibilité</h4><label class="fo"><input type="checkbox" data-f="stock" ${F.stock?'checked':''}><span>En stock uniquement</span><span class="n">${inStock}</span></label><label class="fo"><input type="checkbox" data-f="multi" ${F.multi?'checked':''}><span>Comparable (2 partenaires ou +)</span><span class="n">${multi}</span></label><label class="fo"><input type="checkbox" data-f="delay" ${F.delay?'checked':''}><span>Livré sous 48 h</span><span class="n">${d48}</span></label></div><div class="grp"><h4>Matière</h4>${['Nitrile','Latex','Vinyle','Polypropylène','Non-tissé','Cellulose','PVC','PP'].filter(m=>base.some(p=>p.mat===m)).map(m=>opt('mat',m)).join('')}</div><div class="grp"><h4>Marque</h4>${BRANDS.filter(b=>base.some(p=>p.brand===b)).map(b=>opt('brand',b)).join('')}</div><div class="grp"><h4>Partenaire</h4>${PARTN.slice(0,4).map(p=>`<label class="fo"><input type="checkbox" data-f="partn" value="${p}"><span>${p}</span><span class="n">${Math.max(1,Math.round(base.length*(0.3+Math.random()*0.4)))}</span></label>`).join('')}<button class="more" type="button" data-toast="Prototype : 4 partenaires de plus">+ 4 partenaires</button></div>`}
+  function chipsHTML(){const c=[];if(F.sub)c.push(['sub',F.sub,CATS.conso.subs.find(s=>s[0]===F.sub)[1]]);F.brand.forEach(b=>c.push(['brand',b,b]));F.mat.forEach(m=>c.push(['mat',m,m]));if(F.stock)c.push(['stock',1,'En stock']);if(F.multi)c.push(['multi',1,'Comparable']);if(F.delay)c.push(['delay',1,'Sous 48 h']);return c.map(([k,v,l])=>`<button type="button" data-chip="${k}" data-v="${v}">${l} <svg><use href="#i-x"/></svg></button>`).join('')+(c.length>1?'<button type="button" class="clr" data-clear-f>Tout effacer</button>':'')}
+  function renderCat(){const sub=CATS.conso.subs;$('#subCats').innerHTML=`<button type="button" data-sub="" aria-pressed="${!F.sub}">Tout <span>${P.length}</span></button>`+sub.map(([k,l])=>`<button type="button" data-sub="${k}" aria-pressed="${F.sub===k}">${l} <span>${P.filter(p=>p.sub===k).length}</span></button>`).join('');const list=sorted(filtered());$('#catCount').textContent=`${list.length} produit${list.length>1?'s':''} · ${list.filter(p=>p.np>=2).length} comparables · ${list.reduce((a,p)=>a+p.np,0)} offres`;$('#catTitle').firstChild.textContent=(F.sub?sub.find(s=>s[0]===F.sub)[1]+' ':'Consommables & hygiène ');$('#catName').textContent='Consommables & hygiène'+(F.sub?' › '+sub.find(s=>s[0]===F.sub)[1]:'');$('#facBody').innerHTML=facHTML();$('#chipsA').innerHTML=chipsHTML();$('#pgrid').innerHTML=list.length?list.slice(0,shown).map(cardHTML).join(''):'<div class="empty" style="grid-column:1/-1">Aucun produit avec ces filtres.<br><button class="btn p" data-clear-f>Retirer les filtres</button></div>';$('#moreRow').innerHTML=list.length>shown?`<button class="btn o" data-more>Afficher ${Math.min(9,list.length-shown)} produits de plus <span class="mute" style="margin-left:4px">· ${shown} / ${list.length}</span></button>`:(list.length?`<span class="mute" style="font-size:12px">${list.length} produits affichés · fin de la liste</span>`:'');$$('.taxlbl').forEach(e=>e.textContent=tax.toUpperCase());$$('.seg2 button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tax===tax)));$('.seg2').classList.toggle('ttc',tax==='ttc')}
+  document.addEventListener('change',e=>{const i=e.target.closest('[data-f]');if(!i)return;const k=i.dataset.f;if(k==='stock')F.stock=i.checked;else if(k==='multi')F.multi=i.checked;else if(k==='delay')F.delay=i.checked?2:null;else if(k==='partn')toast('Prototype : filtre partenaire');else{i.checked?F[k].add(i.value):F[k].delete(i.value)}shown=9;renderCat()});
+  document.addEventListener('click',e=>{const s=e.target.closest('[data-sub]');if(s){F.sub=s.dataset.sub||null;shown=9;renderCat();return}const ch=e.target.closest('[data-chip]');if(ch){const k=ch.dataset.chip;if(k==='sub')F.sub=null;else if(k==='stock')F.stock=false;else if(k==='multi')F.multi=false;else if(k==='delay')F.delay=null;else F[k].delete(ch.dataset.v);shown=9;renderCat();return}if(e.target.closest('[data-clear-f]')){F.sub=null;F.brand.clear();F.mat.clear();F.stock=false;F.multi=false;F.delay=null;shown=9;renderCat();return}if(e.target.closest('[data-more]')){shown+=9;renderCat();return}const op=e.target.closest('[data-open-p]');if(op){if(op.dataset.openP==='gants-jet-100')show('view-sheet');else toast('Prototype : seule la fiche gants nitrile est câblée');return}const c=e.target.closest('[data-cat]');if(c){const k=c.dataset.cat;if(k==='conso'){F.sub=null;renderCat();show('view-cat')}else if(k==='equip'){show('view-compare')}else toast('Prototype : catégorie « '+CATS[k].name+' » à venir');return}if(e.target.closest('[data-open-f]')){$('#fac').classList.add('on');$('#facBg').classList.add('on');return}if(e.target.closest('[data-close-f]')||e.target.closest('#facBg')){$('#fac').classList.remove('on');$('#facBg').classList.remove('on')}});
+  $('#sortSel').addEventListener('change',e=>{sort=e.target.value;renderCat()});
+  $('.seg2').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;tax=b.dataset.tax;applyTax();renderAll();renderCat();renderLists()});
+
+  /* ---------- search suggestions ---------- */
+  const q=$('#q'),sug=$('#sug');
+  const SUGS=[{t:'cat',l:'Gants',s:'Consommables & hygiène · 7 produits',go:()=>{F.sub='gants';renderCat();show('view-cat')}},{t:'cat',l:'Masques',s:'Consommables & hygiène · 3 produits',go:()=>{F.sub='masques';renderCat();show('view-cat')}},{t:'cat',l:'Champs & bavettes',s:'Consommables & hygiène · 2 produits',go:()=>{F.sub='champs';renderCat();show('view-cat')}},{t:'brand',l:'Jet',s:'Marque · 2 produits',go:()=>{F.sub=null;F.brand=new Set(['Jet']);renderCat();show('view-cat')}},{t:'brand',l:'Medicom',s:'Marque · 4 produits',go:()=>{F.sub=null;F.brand=new Set(['Medicom']);renderCat();show('view-cat')}},{t:'p',l:'Gants d’examen nitrile non poudrés · boîte de 100',s:'6 partenaires · dès 3,02 € livré',go:()=>show('view-sheet')},{t:'p',l:'Gants nitrile noirs renforcés',s:'4 partenaires · dès 3,15 € livré',go:()=>{F.sub='gants';renderCat();show('view-cat')}},{t:'p',l:'Masque chirurgical 3 plis type IIR',s:'4 partenaires · dès 1,66 € livré',go:()=>{F.sub='masques';renderCat();show('view-cat')}},{t:'q','l':'gants nitrile',s:'Recherche · 107 résultats',go:()=>show('view-results')}];
+  const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  let ki=-1;
+  function renderSug(){const v=norm(q.value.trim());if(v.length<2){sug.classList.remove('on');return}const m=SUGS.filter(x=>norm(x.l).includes(v)||norm(x.s).includes(v)).slice(0,7);if(!m.length){sug.innerHTML='<div class="g">Aucune suggestion · Entrée pour lancer la recherche</div>';sug.classList.add('on');return}const hi=s=>s.replace(new RegExp('('+q.value.trim().replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','i'),'<mark>$1</mark>');const grp={cat:'Catégories',brand:'Marques',p:'Produits',q:'Recherches'};let last='';sug.innerHTML=m.map((x,i)=>(x.t!==last?(last=x.t,`<div class="g">${grp[x.t]}</div>`):'')+`<button type="button" data-si="${i}" class="${i===ki?'k':''}"><svg><use href="#${x.t==='p'?'i-box':x.t==='q'?'i-search':'i-sliders'}"/></svg><span>${hi(x.l)}</span><span class="n">${x.s}</span></button>`).join('');sug._m=m;sug.classList.add('on')}
+  q.addEventListener('input',()=>{ki=-1;renderSug()});q.addEventListener('focus',renderSug);
+  q.addEventListener('keydown',e=>{if(!sug.classList.contains('on')||!sug._m)return;if(e.key==='ArrowDown'){ki=Math.min(ki+1,sug._m.length-1);renderSug();e.preventDefault()}if(e.key==='ArrowUp'){ki=Math.max(ki-1,0);renderSug();e.preventDefault()}if(e.key==='Enter'&&ki>=0){e.preventDefault();sug._m[ki].go();sug.classList.remove('on')}if(e.key==='Escape')sug.classList.remove('on')});
+  sug.addEventListener('click',e=>{const b=e.target.closest('[data-si]');if(!b)return;sug._m[+b.dataset.si].go();sug.classList.remove('on')});
+  document.addEventListener('click',e=>{if(!e.target.closest('.search'))sug.classList.remove('on')});
+
+  /* ---------- welcome once ---------- */
+  function openWl(){$('#wl').classList.add('on');$('#wlBg').classList.add('on');$('#wl').setAttribute('aria-hidden','false')}
+  function closeWl(){$('#wl').classList.remove('on');$('#wlBg').classList.remove('on');$('#wl').setAttribute('aria-hidden','true');try{localStorage.setItem('evi-welcome','1')}catch(e){}}
+  $('#wlClose').addEventListener('click',closeWl);$('#wlBg').addEventListener('click',closeWl);$('#wlGo').addEventListener('click',()=>{closeWl();q.focus()});
+  let seen=false;try{seen=!!localStorage.getItem('evi-welcome')}catch(e){}
+  if(!seen&&!location.hash)setTimeout(openWl,500);
+
+  renderCat();
+
+  /* ---------- v4 : lists & alerts ---------- */
+  const LISTS=[
+    {id:'hyg',name:'Hygiène · hebdo',note:'Commandée chaque lundi',items:[{pid:'gants-jet-100',n:'Gants nitrile non poudrés · boîte de 100',ico:'i-glove',qty:10,last:3.25,lastSup:'Docteur AI',best:3.02,sup:'Elite Ceram'},{pid:'masque-3p',n:'Masque chirurgical IIR · boîte de 50',ico:'i-mask',qty:6,last:1.66,lastSup:'Docteur AI',best:1.66,sup:'Docteur AI'},{pid:'bavette',n:'Bavettes patient 2 plis · carton de 500',ico:'i-box',qty:1,last:19.90,lastSup:'Megadental',best:18.40,sup:'Elite Ceram'},{pid:'gobelet',n:'Gobelets 18 cl · carton de 3 000',ico:'i-box',qty:1,last:30.50,lastSup:'Medicom',best:32.00,sup:'Dentalpro'}]},
+    {id:'ster',name:'Stérilisation',note:'Toutes les 6 semaines',items:[{pid:'sachets',n:'Sachets de stérilisation 90 × 230 · boîte de 200',ico:'i-box',qty:4,last:9.80,lastSup:'GACD',best:8.95,sup:'Docteur Strong'},{pid:'indic',n:'Indicateurs chimiques classe 5 · 250',ico:'i-box',qty:1,last:21.00,lastSup:'GACD',best:21.00,sup:'GACD'},{pid:'huile',n:'Huile de lubrification instruments rotatifs · 500 ml',ico:'i-box',qty:2,last:14.20,lastSup:'Megadental',best:12.90,sup:'Elite Ceram'}]},
+    {id:'chir',name:'Chirurgie',note:'À la demande',items:[{pid:'pgcl',n:'Fil de suture PGCL 4-0 · boîte de 12',ico:'i-box',qty:2,last:36.00,lastSup:'Elite Ceram',best:36.00,sup:'Elite Ceram'},{pid:'champ-50',n:'Champ chirurgical stérile 100 × 150 · carton de 50',ico:'i-box',qty:1,last:49.16,lastSup:'Elite Ceram',best:49.16,sup:'Elite Ceram'}]}
+  ];
+  let curList='hyg';
+  let ALERTS=[{pid:'gants-jet-100',n:'Gants nitrile non poudrés · boîte de 100',ico:'i-glove',seuil:2.90,cur:3.02,min:2.98,max:3.64},{pid:'pgcl',n:'Fil de suture PGCL 4-0 · boîte de 12',ico:'i-box',seuil:34.00,cur:36.00,min:33.50,max:41.20},{pid:'autoclave',n:'Autoclave classe B 18 L · W&H Lisa',ico:'i-autoclave',seuil:4200,cur:4090,min:4090,max:4890}];
+  function renderLists(){
+    $('#lnav').innerHTML=LISTS.map(l=>`<button type="button" class="lcard ${l.id===curList?'sel':''}" data-list="${l.id}"><span class="ic"><svg><use href="#i-list"/></svg></span><b>${l.name}</b><span class="n">${l.items.length} références · ${l.note}</span></button>`).join('')+`<button type="button" class="lnew" data-toast="Prototype : nouvelle liste"><svg><use href="#i-plus"/></svg> Nouvelle liste</button>`;
+    const l=LISTS.find(x=>x.id===curList);const tot=l.items.reduce((a,i)=>a+i.best*i.qty,0),last=l.items.reduce((a,i)=>a+i.last*i.qty,0),sav=r2(last-tot);
+    $('#ldet').innerHTML=`<div class="ldet-h"><div><h2>${l.name}</h2><p>${l.items.length} références · quantités habituelles · ${l.note}</p></div><div class="acts"><button class="btn o" data-toast="Prototype : partage de liste">Partager</button><button class="btn p" data-add-list="${l.id}">Tout ajouter au meilleur prix du jour <svg><use href="#i-cart"/></svg></button></div></div>
+    <div class="lsum"><div><small>Au meilleur prix livré aujourd’hui</small><b>${disp(r2(tot))}</b> <span class="mute" style="font-size:11px">${tax.toUpperCase()}</span></div><div><small>Dernière commande</small><b>${disp(r2(last))}</b></div><div><small>${sav>=0?'Vous économisez':'Hausse depuis la dernière fois'}</small><b class="${sav>=0?'good':''}">${sav>=0?'−':'+'}${disp(Math.abs(sav))}</b></div></div>
+    <div class="ll head"><span></span><span>Référence</span><span>Qté</span><span>Dernier prix payé</span><span>Meilleur prix livré</span><span></span></div>
+    ${l.items.map((i,ix)=>{const d=r2(i.best-i.last);return `<div class="ll"><div class="th"><svg><use href="#${i.ico}"/></svg></div><div class="nm"><b>${i.n}</b><span>${d<0?'Moins cher chez '+i.sup+' qu’à votre dernière commande':d>0?'Prix en hausse · meilleur chez '+i.sup:'Même prix · '+i.sup}</span></div><div class="qty"><button type="button" data-lq="-1" data-ix="${ix}" aria-label="Moins">−</button><span>${i.qty}</span><button type="button" data-lq="1" data-ix="${ix}" aria-label="Plus">+</button></div><div class="last">${disp(i.last)}<br><span style="font-size:11px">${i.lastSup}</span></div><div class="best"><b>${disp(i.best)}</b><span>${i.sup} · </span><span class="delta ${d>0?'up':''}">${d===0?'=':(d<0?'−':'+')+disp(Math.abs(d))}</span></div><button class="btn g" data-cart="${i.sup}" data-pid="${i.pid}" data-pname="${i.n}" data-unit="${i.best}" data-qty="${i.qty}">Ajouter ${i.qty}</button></div>`}).join('')}`;
+    $$('.taxlbl').forEach(e=>e.textContent=tax.toUpperCase());
+  }
+  function renderAlerts(){$('#alN').textContent='('+ALERTS.length+')';$('#alerts').innerHTML=ALERTS.length?ALERTS.map((a,ix)=>{const hit=a.cur<=a.seuil;const pos=Math.min(100,Math.max(0,(a.cur-a.min)/(a.max-a.min)*100)),sp=Math.min(100,Math.max(0,(a.seuil-a.min)/(a.max-a.min)*100));return `<div class="al"><div class="ic"><svg><use href="#i-bell"/></svg></div><div><b>${a.n}</b><span>Seuil ${fmt(a.seuil)} HT · aujourd’hui ${fmt(a.cur)} HT · ${hit?'sous votre seuil, c’est le moment':'il manque '+fmt(r2(a.cur-a.seuil))}</span><div class="gauge" style="margin-top:8px"><small><span>plus bas 6 mois ${fmt(a.min)}</span><span>plus haut ${fmt(a.max)}</span></small><div class="bar"><i style="width:${pos}%"></i><em style="left:${sp}%" title="votre seuil"></em></div></div></div><span class="st ${hit?'hit':''}">${hit?'Déclenchée':'Active'}</span><button type="button" class="rm" data-al-rm="${ix}" aria-label="Supprimer l’alerte"><svg><use href="#i-trash"/></svg></button></div>`}).join(''):'<div class="empty">Aucune alerte. Activez-en une depuis une fiche produit.</div>'}
+  document.addEventListener('click',e=>{const t=e.target.closest('[data-ltab]');if(t){$$('[data-ltab]').forEach(b=>b.setAttribute('aria-pressed',String(b===t)));$('#ltab-lists').hidden=t.dataset.ltab!=='lists';$('#ltab-alerts').hidden=t.dataset.ltab!=='alerts';return}const l=e.target.closest('[data-list]');if(l){curList=l.dataset.list;renderLists();return}const q=e.target.closest('[data-lq]');if(q){const it=LISTS.find(x=>x.id===curList).items[+q.dataset.ix];it.qty=Math.max(1,it.qty+parseInt(q.dataset.lq,10));renderLists();return}const al=e.target.closest('[data-add-list]');if(al){const li=LISTS.find(x=>x.id===al.dataset.addList);li.items.forEach(i=>{let x=cart.find(c=>c.pid===i.pid&&c.sup===i.sup);if(x)x.qty+=i.qty;else cart.push({pid:i.pid,name:i.n,sup:i.sup,unit:i.best,qty:i.qty,size:null})});renderAll();openMini(li.items.length+' références ajoutées au meilleur prix du jour');return}const rm=e.target.closest('[data-al-rm]');if(rm){ALERTS.splice(+rm.dataset.alRm,1);renderAlerts();toast('Alerte supprimée')}});
+  /* alert form on sheet → real alert */
+  $('#alertForm').addEventListener('submit',()=>{const v=parseFloat(($('#alertForm input').value||'0').replace(',','.'))||2.90;const ex=ALERTS.find(a=>a.pid==='gants-jet-100');if(ex)ex.seuil=v;else ALERTS.unshift({pid:'gants-jet-100',n:'Gants nitrile non poudrés · boîte de 100',ico:'i-glove',seuil:v,cur:3.02,min:2.98,max:3.64});renderAlerts();$('#nlist').textContent=LISTS.length+ALERTS.length});
+
+  /* ---------- v4 : equipment compare ---------- */
+  const EQ=[
+    {id:'lisa',n:'Autoclave W&H Lisa 18 L',sup:'Elite Ceram',liv:4090,delay:'10 j',inst:true,vol:18,cycles:'B, S, N',cycB:'28 min',dry:'Oui, actif',trace:'USB + Wi-Fi',water:'Réservoir double 4,8 L',noise:'52 dB',dim:'46 × 45 × 64 cm',w:'47 kg',war:'3 ans pièces & main-d’œuvre',ico:'i-autoclave'},
+    {id:'euronda',n:'Euronda E9 Next 18 L',sup:'Docteur Strong',liv:3690,delay:'7 j',inst:false,vol:18,cycles:'B, S',cycB:'33 min',dry:'Oui',trace:'USB',water:'Réservoir double 4,5 L',noise:'55 dB',dim:'46 × 45 × 61 cm',w:'45 kg',war:'2 ans',ico:'i-autoclave'},
+    {id:'melag',n:'MELAG Vacuclave 318 · 16,7 L',sup:'GACD',liv:5240,delay:'14 j',inst:true,vol:16.7,cycles:'B, S, N',cycB:'20 min',dry:'Oui, actif',trace:'USB + réseau + appli',water:'Alimentation directe',noise:'49 dB',dim:'47 × 44 × 55 cm',w:'43 kg',war:'3 ans',ico:'i-autoclave'}
+  ];
+  const ROWS=[['Prix',[['liv','Prix livré · installation comprise si ✓','price','min'],['inst','Installation & formation','bool',null],['delay','Délai de livraison','txt','minDays'],['sup','Partenaire','txt',null]]],['Capacité & cycles',[['vol','Volume de chambre','num','max'],['cycles','Cycles disponibles','txt',null],['cycB','Durée cycle B (charge standard)','txt','minMin'],['dry','Séchage','txt',null]]],['Usage quotidien',[['trace','Traçabilité','txt',null],['water','Eau','txt',null],['noise','Bruit','txt','minDb'],['dim','Dimensions L × P × H','txt',null],['w','Poids','txt',null]]],['Garantie',[['war','Garantie','txt',null]]]];
+  function bestOf(key,rule){if(!rule)return null;const vals=EQ.map(p=>{const v=p[key];if(rule==='min'||rule==='max')return +v;const n=parseFloat(String(v).replace(',','.'));return isNaN(n)?null:n});const ok=vals.filter(v=>v!==null);if(!ok.length)return null;const b=rule==='max'?Math.max(...ok):Math.min(...ok);return vals.map(v=>v===b)}
+  function renderCmp(){const diff=$('#cmpDiff').checked;let h='<thead><tr><th></th>'+EQ.map(p=>`<th><div class="prod"><div class="th"><svg><use href="#${p.ico}"/></svg><button type="button" class="x" aria-label="Retirer" data-toast="Prototype : retirer de la comparaison"><svg><use href="#i-x"/></svg></button></div><b>${p.n}</b><span>${p.sup} · classe B</span></div></th>`).join('')+'<th><div class="cmp-add">Ajouter un 4ᵉ autoclave<br><button class="btn o" type="button" data-toast="Prototype : seuls les autoclaves classe B peuvent être ajoutés">+ Choisir</button></div></th></tr></thead><tbody>';ROWS.forEach(([sec,rows])=>{const body=rows.map(([k,label,type,rule])=>{const vals=EQ.map(p=>p[k]);if(diff&&new Set(vals.map(String)).size===1)return '';const best=bestOf(k,rule);return `<tr><td>${label}</td>${EQ.map((p,i)=>{const b=best&&best[i];let v;if(type==='price')v=`${b?'<span class="tag-b" style="margin:0 0 4px;display:block">Meilleur prix livré</span>':'<span style="display:block;height:17px"></span>'}<b>${fmt(p.liv)}</b><span>HT · ${p.inst?'installation comprise':'hors installation (+ 290 €)'}</span><button class="btn ${b?'p':'g'}" data-cart="${p.sup}" data-pid="${p.id}" data-pname="${p.n}" data-unit="${p.liv}">Ajouter <svg><use href="#i-cart"/></svg></button>`;else if(type==='bool')v=p[k]?'<span class="ok">✓ Incluses</span>':'<span class="ko">— En option</span>';else if(type==='num')v=p[k]+' L';else v=p[k];return `<td class="${type==='price'?'price':''} ${b&&type!=='price'?'best':''}">${v}${b&&type!=='price'?'<span class="tag-b">Meilleur</span>':''}</td>`}).join('')}<td></td></tr>`}).join('');if(body)h+=`<tr class="sec"><td>${sec}</td><td colspan="4"></td></tr>`+body});$('#cmpT').innerHTML=h+'</tbody>'}
+  $('#cmpDiff').addEventListener('change',renderCmp);
+  window.__renderLists=renderLists;renderLists();renderAlerts();renderCmp();
+  $('#nlist').textContent=LISTS.length+ALERTS.length;
+  window.__renderAll=renderAll;renderAll();byHash();
+
+  /* sizes */
+  $$('[data-size]').forEach(b=>b.addEventListener('click',()=>{$$('[data-size]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')}));
+
+  /* sort offers */
+  $$('[data-sort]').forEach(b=>b.addEventListener('click',()=>{
+    $$('[data-sort]').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');
+    const k=b.dataset.sort==='cat'?'pcat':'liv';const box=$('#offers');
+    [...box.children].sort((a,c)=>parseFloat(a.dataset[k])-parseFloat(c.dataset[k])).forEach(el=>box.appendChild(el));
+  }));
+
+  /* alert */
+  $('#alertForm').addEventListener('submit',()=>{$('#alertOk').classList.add('on');toast('Alerte prix activée')});
+
+  /* search */
+  $('.search').addEventListener('submit',()=>{sug.classList.remove('on');const v=norm(q.value);if(v.includes('gant')){show('view-results')}else if(v.includes('masque')){F.sub='masques';renderCat();show('view-cat')}else{toast('Prototype : essayez « gants », « masques » ou une catégorie');}});
+})();
+</script>
+</body>
+</html>

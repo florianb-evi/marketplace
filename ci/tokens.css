@@ -1,0 +1,31 @@
+/* Charte Evidentall · source de vérité des couleurs.
+   Ce fichier est reconnu comme "token file" par UXKIN UI Check :
+   toute couleur utilisée ailleurs doit exister ici. */
+:root{
+  /* Marque */
+  --color-primary:#0077fd;        /* Principale : actions, liens, meilleur prix, focus */
+  --color-primary-hover:#0068e0;
+  --color-accent:#50c3ff;         /* Accompagnante : accents, badges sur marine */
+  --color-secondary:#032444;      /* Secondaire : header, textes forts, cartes sombres */
+  --gradient-navy:linear-gradient(135deg,#032444,#0a3e78);
+  --gradient-sky:linear-gradient(90deg,#50c3ff,#0077fd);
+  /* Neutres (gris froids) */
+  --color-ink:#0b1a2b;
+  --color-ink-2:#3b4a5c;
+  --color-muted:#6b7a8c;
+  --color-line:#e1e8f0;
+  --color-line-2:#edf2f7;
+  --color-tint:#eef5fd;
+  --color-bg:#f5f8fc;
+  --color-surface:#ffffff;
+  /* Partenaires (déclinaisons de la secondaire, logos texte) */
+  --color-partner-1:#0a3e78;
+  --color-partner-2:#0f5fb8;
+  --color-partner-3:#1d4e89;
+  /* Sémantique */
+  --color-warn:#b45309;  --color-warn-bg:#fff7ec; --color-warn-line:#f3d9b1; --color-warn-ink:#7a4a0b;
+  --color-error:#c62828; --color-error-bg:#fdecec; --color-error-line:#f2bcbc; --color-error-ink:#7a1f1f;
+  --color-ok:#157347;    --color-ok-bg:#e6f4ec;
+  /* Ombre unique */
+  --shadow-card:0 1px 2px rgba(3,36,68,.05),0 12px 32px -16px rgba(3,36,68,.18);
+}

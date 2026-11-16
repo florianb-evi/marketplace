@@ -1,0 +1,675 @@
+<title>Audit Marketplace Evidentall</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: a long-form audit report. Left margin keeps a sticky section index on wide screens; body column ~72ch. Evidence cards with severity stripes; one dark "verdict" band. */
+:root{
+  --bg:#f6f8fb;--paper:#ffffff;--ink:#0b1a2b;--ink2:#3b4a5c;--mute:#6a7a8c;--line:#dde5ee;
+  --p:#0077fd;--a:#50c3ff;--navy:#032444;--navy-fg:#ffffff;
+  --sev1:#c62828;--sev1-bg:#fdecec;--sev2:#b45309;--sev2-bg:#fff4e5;--sev3:#1f6fb2;--sev3-bg:#e8f2fd;--ok:#157347;--ok-bg:#e6f4ec;
+  --font:Montserrat,"Segoe UI",system-ui,sans-serif;
+  --r:12px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1624;--paper:#111f31;--ink:#eef3f8;--ink2:#c4d0dd;--mute:#8d9cb0;--line:#223449;--navy:#06172b;--sev1:#ff8a80;--sev1-bg:#3a1414;--sev2:#ffb74d;--sev2-bg:#3a2a10;--sev3:#7fc1ff;--sev3-bg:#0f2a45;--ok:#7bd3a0;--ok-bg:#0f2f22;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1624;--paper:#111f31;--ink:#eef3f8;--ink2:#c4d0dd;--mute:#8d9cb0;--line:#223449;--navy:#06172b;--sev1:#ff8a80;--sev1-bg:#3a1414;--sev2:#ffb74d;--sev2-bg:#3a2a10;--sev3:#7fc1ff;--sev3-bg:#0f2a45;--ok:#7bd3a0;--ok-bg:#0f2f22;color-scheme:dark}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-block:0 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--p)}
+h1,h2,h3,h4{text-wrap:balance;line-height:1.2;margin:0}
+p{margin:0}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--p)}
+.mute{color:var(--mute)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:var(--sev3-bg);padding:1px 5px;border-radius:5px}
+.num{font-variant-numeric:tabular-nums}
+
+/* hero */
+.hero{padding-block:48px 36px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px;align-items:end}
+.hero h1{font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-.02em;margin-top:10px}
+.hero .lead{margin-top:14px;font-size:17px;color:var(--ink2);max-width:62ch}
+.meta{display:grid;gap:8px;font-size:13px;color:var(--ink2);border-left:2px solid var(--p);padding-left:14px}
+.meta b{color:var(--ink);font-weight:700}
+
+/* grid with index */
+.body{display:grid;grid-template-columns:220px minmax(0,1fr);gap:40px;margin-top:36px}
+.toc{position:sticky;top:max(16px,env(safe-area-inset-top,0px));align-self:start;font-size:13px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.toc a{display:block;padding:6px 10px;border-radius:8px;color:var(--ink2);text-decoration:none;border-left:2px solid transparent}
+.toc a:hover,.toc a:focus-visible{background:var(--paper);color:var(--p);outline:none}
+.toc a.on{border-left-color:var(--p);color:var(--p);font-weight:600}
+main{min-width:0;display:grid;gap:56px}
+section{scroll-margin-top:16px;display:grid;gap:18px}
+section>h2{font-size:26px;font-weight:800;letter-spacing:-.015em}
+section>p,section>ul{max-width:72ch;color:var(--ink2)}
+ul{margin:0;padding-left:20px}
+li+li{margin-top:5px}
+
+/* score strip */
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.score{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:grid;gap:6px}
+.score .l{font-size:12px;color:var(--mute);font-weight:600}
+.score .v{font-size:26px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:baseline;gap:4px}
+.score .v small{font-size:12px;color:var(--mute);font-weight:600}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--p),var(--a))}
+.score.bad .bar i{background:var(--sev1)}
+.score.warn .bar i{background:var(--sev2)}
+
+/* verdict band */
+.band{background:var(--navy);color:var(--navy-fg);border-radius:18px;padding:28px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:28px}
+.band h3{font-size:20px;font-weight:800;color:#fff}
+.band p{color:rgba(255,255,255,.82);margin-top:10px;max-width:60ch}
+.band .eyebrow{color:var(--a)}
+.band ol{margin:0;padding-left:20px;color:rgba(255,255,255,.9);display:grid;gap:8px}
+.band ol b{color:#fff}
+
+/* journey */
+.journey{display:grid;grid-template-columns:repeat(5,1fr);gap:0;counter-reset:s}
+.step{position:relative;padding:14px 14px 14px 16px;border-top:3px solid var(--line);display:grid;gap:4px}
+.step::before{counter-increment:s;content:counter(s);position:absolute;top:-13px;left:12px;width:22px;height:22px;border-radius:50%;background:var(--paper);border:3px solid var(--line);font-size:11px;font-weight:800;display:grid;place-items:center;color:var(--ink2)}
+.step.ko{border-top-color:var(--sev1)}.step.ko::before{border-color:var(--sev1);color:var(--sev1)}
+.step.mid{border-top-color:var(--sev2)}.step.mid::before{border-color:var(--sev2);color:var(--sev2)}
+.step.ok{border-top-color:var(--ok)}.step.ok::before{border-color:var(--ok);color:var(--ok)}
+.step b{font-size:13px}
+.step span{font-size:12px;color:var(--mute)}
+
+/* findings */
+.find{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);display:grid;grid-template-columns:6px minmax(0,1fr);overflow:hidden}
+.find>i{display:block}
+.find.s1>i{background:var(--sev1)}.find.s2>i{background:var(--sev2)}.find.s3>i{background:var(--sev3)}.find.s0>i{background:var(--ok)}
+.find>div{padding:16px 18px;display:grid;gap:10px}
+.find h4{font-size:15px;font-weight:700;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tag{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;padding:3px 8px;border-radius:999px}
+.s1 .tag{background:var(--sev1-bg);color:var(--sev1)}.s2 .tag{background:var(--sev2-bg);color:var(--sev2)}.s3 .tag{background:var(--sev3-bg);color:var(--sev3)}.s0 .tag{background:var(--ok-bg);color:var(--ok)}
+.find dl{margin:0;display:grid;grid-template-columns:92px minmax(0,1fr);gap:4px 14px;font-size:14px}
+.find dt{color:var(--mute);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.06em;padding-top:3px}
+.find dd{margin:0;color:var(--ink2)}
+.find dd b{color:var(--ink)}
+
+figure{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+figure img{display:block;width:100%;height:auto;max-width:100%}
+figcaption{padding:10px 14px;font-size:13px;color:var(--ink2);border-top:1px solid var(--line)}
+.figs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+
+/* metrics table */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);font-weight:700}
+tr:last-child td{border-bottom:0}
+td.v{font-weight:700;white-space:nowrap}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700}
+.pill.bad{background:var(--sev1-bg);color:var(--sev1)}.pill.warn{background:var(--sev2-bg);color:var(--sev2)}.pill.good{background:var(--ok-bg);color:var(--ok)}.pill.info{background:var(--sev3-bg);color:var(--sev3)}
+
+/* keep/change */
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:10px}
+.box h3{font-size:15px;font-weight:800}
+.box ul{color:var(--ink2);font-size:14px}
+
+/* target wireframes */
+.wire{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:10px}
+.wire h3{font-size:14px;font-weight:800}
+.wire svg{width:100%;height:auto;display:block}
+
+/* roadmap */
+.lots{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.lot{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:10px;border-top:4px solid var(--p)}
+.lot .eyebrow{color:var(--mute)}
+.lot h3{font-size:16px;font-weight:800}
+.lot ul{font-size:14px;color:var(--ink2)}
+.lot .kpi{font-size:12px;color:var(--mute);border-top:1px dashed var(--line);padding-top:10px}
+
+.check{display:grid;gap:8px}
+.check label{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink2);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.check input{margin-top:3px;accent-color:var(--p)}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .body{grid-template-columns:1fr;gap:24px}
+  .toc{position:static}
+  .toc ol{display:flex;flex-wrap:wrap;gap:6px}
+  .toc a{border:1px solid var(--line);border-radius:999px;padding:5px 10px;background:var(--paper)}
+  .band{grid-template-columns:1fr}
+  .journey{grid-template-columns:1fr;gap:18px}
+  .step{border-top:0;border-left:3px solid var(--line);padding-left:18px}
+  .step::before{top:12px;left:-13px}
+  .step.ko{border-left-color:var(--sev1)}.step.mid{border-left-color:var(--sev2)}.step.ok{border-left-color:var(--ok)}
+  .figs,.two{grid-template-columns:1fr}
+  .find dl{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+:focus-visible{outline:2px solid var(--p);outline-offset:2px}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div>
+    <div class="eyebrow">Audit UI / UX · evidentall.fr/marketplace</div>
+    <h1>Un bon moteur de comparaison, enfermé dans un parcours qui perd l'acheteur.</h1>
+    <p class="lead">Audit complet du marketplace Evidentall, mené sur le site en production le 16 novembre 2026 : parcours réel d'achat, pages secondaires, mobile, accessibilité, performance et cohérence visuelle. Chaque constat est accompagné d'une preuve, de son impact et de la correction recommandée, puis d'un plan de refonte en quatre lots.</p>
+  </div>
+  <aside class="meta">
+    <div><b>Date</b> · 16 nov. 2026, 9 h 50 – 10 h 05</div>
+    <div><b>Environnement</b> · Chrome desktop 1568 px, émulation mobile 390 px, session connectée (cabinet)</div>
+    <div><b>Parcours testés</b> · accueil → recherche « gants nitrile » et « fauteuil » → fiche produit → comparateur → favoris → panier · filtres, catégories, partenaires, états vides</div>
+    <div><b>Non testé</b> · « Confirmer la commande » (aurait passé une vraie commande), « Mes commandes » (session expirée)</div>
+  </aside>
+</header>
+
+<div class="body">
+<nav class="toc" aria-label="Sommaire">
+  <ol>
+    <li><a href="#synthese">Synthèse</a></li>
+    <li><a href="#parcours">Parcours d'achat</a></li>
+    <li><a href="#accueil">Accueil &amp; pop-up</a></li>
+    <li><a href="#navigation">Navigation &amp; header</a></li>
+    <li><a href="#recherche">Recherche &amp; résultats</a></li>
+    <li><a href="#fiche">Fiche produit</a></li>
+    <li><a href="#comparer">Comparateur</a></li>
+    <li><a href="#panier">Panier &amp; commande</a></li>
+    <li><a href="#filtres">Filtres, catégories, favoris</a></li>
+    <li><a href="#mobile">Mobile</a></li>
+    <li><a href="#a11y">Accessibilité</a></li>
+    <li><a href="#visuel">Système visuel</a></li>
+    <li><a href="#technique">Technique &amp; perf</a></li>
+    <li><a href="#mesures">Mesures</a></li>
+    <li><a href="#cible">Cible de refonte</a></li>
+    <li><a href="#plan">Plan en 4 lots</a></li>
+    <li><a href="#checklist">Checklist</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section id="synthese">
+  <h2>Synthèse</h2>
+  <div class="scores">
+    <div class="score warn"><div class="l">Naviguer</div><div class="v num">4<small>/10</small></div><div class="bar"><i style="width:40%"></i></div></div>
+    <div class="score warn"><div class="l">Comparer</div><div class="v num">5<small>/10</small></div><div class="bar"><i style="width:50%"></i></div></div>
+    <div class="score bad"><div class="l">Acheter</div><div class="v num">2<small>/10</small></div><div class="bar"><i style="width:20%"></i></div></div>
+    <div class="score warn"><div class="l">Confiance</div><div class="v num">4<small>/10</small></div><div class="bar"><i style="width:40%"></i></div></div>
+    <div class="score bad"><div class="l">Mobile</div><div class="v num">3<small>/10</small></div><div class="bar"><i style="width:30%"></i></div></div>
+    <div class="score warn"><div class="l">Accessibilité</div><div class="v num">4<small>/10</small></div><div class="bar"><i style="width:40%"></i></div></div>
+    <div class="score"><div class="l">Performance</div><div class="v num">8<small>/10</small></div><div class="bar"><i style="width:80%"></i></div></div>
+  </div>
+  <p>Notes sur 10, fondées sur les constats ci-dessous (bloquants = −3, majeurs = −1, mineurs = −0,5). Elles servent à prioriser, pas à juger : la performance brute est très bonne, le concept de comparaison est juste, mais l'exécution du tunnel d'achat fait perdre la confiance au moment où le cabinet s'apprête à payer.</p>
+
+  <div class="band">
+    <div>
+      <div class="eyebrow">Diagnostic</div>
+      <h3>Deux produits collés l'un à l'autre, et un acheteur qui ne sait jamais dans lequel il se trouve.</h3>
+      <p>La vitrine publique (bleu marine, jaune, Montserrat) et l'application connectée (barre latérale, dégradés violets, police système) se partagent le parcours d'achat. Le visiteur cherche dans l'une, lit la fiche dans l'autre, revient dans la première pour comparer et paie dans la seconde. Chaque bascule remet à zéro ses repères : header, panier, couleurs, vocabulaire, et même le pop-up d'accueil qui réapparaît.</p>
+    </div>
+    <div>
+      <div class="eyebrow">Les 5 constats qui pèsent le plus</div>
+      <ol>
+        <li><b>Calcul HT/TTC faux dans le panier</b> : 2,56 € HT devient « Total TTC 2,56 € » avec une TVA déduite à l'envers.</li>
+        <li><b>Commande engagée sans port, délai, adresse ni paiement</b> : le bouton « Confirmer la commande » arrive avant toute information de livraison.</li>
+        <li><b>Rupture visuelle vitrine → app</b> à chaque fiche produit et au panier.</li>
+        <li><b>Prix affichés et prix réels</b> : « moins cher » ignore les frais de port et compare des références différentes.</li>
+        <li><b>Mobile</b> : 74 % des cibles tactiles sous 44 px, titres produits tronqués, bouton Accueil absent.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section id="parcours">
+  <h2>Le parcours d'achat, étape par étape</h2>
+  <p>Scénario : un assistant dentaire doit recommander des gants nitrile. Voici ce qu'il traverse réellement.</p>
+  <div class="journey">
+    <div class="step mid"><b>Arrivée</b><span>Pop-up plein écran qui s'adresse d'abord aux fournisseurs. 4 écrans à scroller avant le catalogue.</span></div>
+    <div class="step ok"><b>Recherche</b><span>Résultats rapides, classement par prix, radar du marché. Bon moment du parcours.</span></div>
+    <div class="step ko"><b>Fiche produit</b><span>Téléportation dans l'app : autre header, autre police, un seul vendeur, suggestions hors sujet.</span></div>
+    <div class="step mid"><b>Comparateur</b><span>Compare des produits sans rapport sur Ville / Type / Stock. Inutile pour des consommables.</span></div>
+    <div class="step ko"><b>Panier</b><span>TVA calculée à l'envers, « Connecté à Elite Ceram » pour un article Dental Good Deal, aucune info de livraison.</span></div>
+  </div>
+  <div class="figs">
+    <figure><img src="img/search.jpg" alt="Page de résultats « gants nitrile » : classement du moins cher au plus cher et radar prix à droite" loading="lazy"><figcaption>Le point fort : résultats classés par prix, écart affiché, radar à droite. C'est le concept à conserver et à généraliser.</figcaption></figure>
+    <figure><img src="img/compare.jpg" alt="Comparateur de prix affichant un fil de suture et un champ chirurgical côte à côte" loading="lazy"><figcaption>Le comparateur met côte à côte un fil de suture et un champ chirurgical. Les attributs (Ville, Type, Stock) ne permettent aucune décision.</figcaption></figure>
+  </div>
+</section>
+
+<section id="accueil">
+  <h2>Accueil &amp; pop-up de bienvenue</h2>
+  <div class="figs">
+    <figure><img src="img/popup.jpg" alt="Pop-up de bienvenue Marketplace Evidentall couvrant la page d'accueil" loading="lazy"><figcaption>Le pop-up s'ouvre à chaque entrée, sur la vitrine comme sur l'app, et parle d'abord aux fournisseurs.</figcaption></figure>
+    <figure><img src="img/home.jpg" alt="Page d'accueil du marketplace : hero, recherche, 8 partenaires, carrousel En vedette" loading="lazy"><figcaption>Accueil : hero + 3 chiffres + 8 partenaires + 3 carrousels avant la grille. Le catalogue commence au 4ᵉ écran.</figcaption></figure>
+  </div>
+
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Le pop-up revient à chaque visite et s'adresse à la mauvaise cible</h4>
+    <dl><dt>Preuve</dt><dd>Affiché sur <code>/marketplace</code> et de nouveau sur <code>/marketplace-dashboard</code> dans la même session. Première section : « Pour les fournisseurs médico-dentaires ». Le CTA final est « S'inscrire maintenant », alors que l'utilisateur est déjà connecté.</dd>
+    <dt>Impact</dt><dd>Un acheteur qui revient trois fois par semaine le ferme trois fois par semaine. Un acheteur nouveau se demande s'il est au bon endroit.</dd>
+    <dt>Reco</dt><dd>Le garder (vous y tenez, et il explique bien le modèle) mais <b>une seule fois par appareil</b>, <b>jamais</b> pour un utilisateur connecté, <b>acheteur d'abord</b>, et ancré à gauche sous forme de panneau latéral plutôt qu'en plein écran, avec un rappel permanent « Comment ça marche » dans le footer.</dd></dl>
+  </div></div>
+
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Le catalogue arrive au quatrième écran</h4>
+    <dl><dt>Preuve</dt><dd>Hero (46 px) + 3 KPI + bandeau 8 partenaires + « En vedette » + « Meilleurs prix en stock » + « Fraîchement ajoutés » + barre catégories, puis seulement la grille (67 300 produits, page 1/2805).</dd>
+    <dt>Impact</dt><dd>L'accueil raconte la plateforme au lieu de servir l'intention dominante : trouver un produit précis. Les trois carrousels se ressemblent et répètent les mêmes articles (les champs chirurgicaux Elite Ceram apparaissent deux fois dans « En vedette »).</dd>
+    <dt>Reco</dt><dd>Accueil réduit à : recherche dominante, <b>grille de catégories avec icônes</b>, « Vos réassorts » pour les connectés, une seule sélection éditoriale. La section « Chez plusieurs partenaires », aujourd'hui tout en bas, remonte en deuxième position : c'est la promesse même du marketplace.</dd></dl>
+  </div></div>
+
+  <div class="find s3"><i></i><div>
+    <h4><span class="tag">Mineur</span> Chiffres clés sans valeur de décision</h4>
+    <dl><dt>Preuve</dt><dd>« 67 300 produits · 8 partenaires · 1 489 marques » occupent le tiers droit du hero.</dd>
+    <dt>Reco</dt><dd>Remplacer par un chiffre utile au cabinet : « 2 340 produits comparables chez 2 partenaires ou plus » ou « économie moyenne constatée : 14 % ».</dd></dl>
+  </div></div>
+</section>
+
+<section id="navigation">
+  <h2>Navigation &amp; header</h2>
+  <div class="find s1"><i></i><div>
+    <h4><span class="tag">Bloquant</span> Deux shells visuels pour un seul parcours</h4>
+    <dl><dt>Preuve</dt><dd><code>/marketplace</code> : header marketing (Patients, Praticiens… Créer un compte) + bandeau marketplace, Montserrat, bleu marine et jaune. <code>/marketplace/products/51628</code> et <code>/marketplace/cart</code> : barre latérale d'icônes, bandeau « Visite complète · FR EN HE RU AR 中文 », police système, boutons en dégradé bleu→violet, panier flottant violet.</dd>
+    <dt>Impact</dt><dd>Perte de repères à chaque clic produit. Deux paniers visuels (badge dans la barre bleue, bulle violette en haut à droite) pour un seul état. L'utilisateur ne sait pas s'il a « quitté » le marketplace.</dd>
+    <dt>Reco</dt><dd>Un seul header de bout en bout : <b>Accueil à gauche</b>, logo, recherche centrale, favoris / comparateur / panier à droite. L'app ne reprend la main qu'après la commande (suivi, factures). Le sélecteur de langue et « Visite complète » n'ont rien à faire dans un tunnel d'achat.</dd></dl>
+  </div></div>
+
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Trois systèmes de navigation concurrents</h4>
+    <dl><dt>Preuve</dt><dd>(1) Pastilles « Tout le catalogue / Produits / Travaux / Services / En stock » sous la recherche ; (2) bandeau des 8 partenaires ; (3) 11 pastilles de catégories au-dessus de la grille ; plus (4) les mêmes dimensions dans le panneau Filtres à gauche.</dd>
+    <dt>Impact</dt><dd>Le visiteur ne sait pas par où entrer. « Travaux » et « Services » (prothèse, prestations) sont mélangés avec les consommables sans explication.</dd>
+    <dt>Reco</dt><dd>Hiérarchie unique : <b>catégories</b> comme navigation principale (grille d'entrée + méga-menu), <b>partenaires</b> comme filtre, <b>Travaux / Services</b> séparés dans un onglet dédié avec leur propre logique (devis, pas panier).</dd></dl>
+  </div></div>
+
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Aucune URL ne décrit l'état : pas de lien partageable, pas de retour arrière</h4>
+    <dl><dt>Preuve</dt><dd>Une recherche, un filtre partenaire, une catégorie, une page de pagination ne changent pas l'URL. <code>?q=fauteuil</code> dans l'adresse est ignoré. Le bouton Précédent du navigateur ramène au site marketing.</dd>
+    <dt>Impact</dt><dd>Impossible d'envoyer « regarde ces gants » à un collègue, de mettre une recherche en favori, ou de revenir aux résultats après une fiche sans tout refaire.</dd>
+    <dt>Reco</dt><dd>URLs sémantiques : <code>/marketplace/c/consommables/gants</code>, <code>/marketplace/recherche?q=gants+nitrile&amp;partenaire=gacd&amp;tri=prix</code>, <code>/marketplace/p/gants-nitrile-jet-100</code>.</dd></dl>
+  </div></div>
+
+  <div class="find s3"><i></i><div>
+    <h4><span class="tag">Mineur</span> Clic sur un partenaire ou une catégorie sans retour visible</h4>
+    <dl><dt>Preuve</dt><dd>Cliquer « GACD » encadre la vignette mais la page ne défile pas vers la grille filtrée. Cliquer une catégorie depuis le bas de page la filtre hors écran.</dd>
+    <dt>Reco</dt><dd>Toute action de filtre amène la grille dans le viewport et affiche la puce de filtre active en tête de résultats.</dd></dl>
+  </div></div>
+</section>
+
+<section id="recherche">
+  <h2>Recherche &amp; page de résultats</h2>
+  <div class="find s0"><i></i><div>
+    <h4><span class="tag">À garder</span> Le classement par prix et le radar du marché</h4>
+    <dl><dt>Preuve</dt><dd>« 107 produits · du moins cher au plus cher », bandeau « Lecture concurrents 2,56 € → 5,44 € », barre de position par offre, carte « Radar prix » avec le top 6.</dd>
+    <dt>Pourquoi</dt><dd>C'est la seule partie du site qui tient la promesse « comparez les prix ». La barre de position par ligne est une bonne idée de lecture rapide.</dd></dl>
+  </div></div>
+
+  <div class="find s1"><i></i><div>
+    <h4><span class="tag">Bloquant</span> « Moins cher » compare des choses qui ne sont pas comparables</h4>
+    <dl><dt>Preuve</dt><dd>Les lignes 3, 4 et 5 sont le même gant Jet en tailles L, M et S, comptées comme trois offres. Dental Good Deal est « moins cher » à 2,56 € sans conditionnement visible ni frais de port ; une boîte seule livrée revient bien plus cher que le 3,02 € port offert d'Elite Ceram. Recherche « fauteuil » : les trois premiers résultats sont des housses de têtière <b>en rupture</b>, badgées « Moins cher » et « Meilleur prix », alors que le filtre « Uniquement en stock » est actif.</dd>
+    <dt>Impact</dt><dd>Le cabinet choisit le « meilleur prix » et paie plus cher à l'arrivée. La confiance dans le radar, votre meilleur argument, s'effondre dès la première commande.</dd>
+    <dt>Reco</dt><dd>(1) Regrouper les variantes d'une même référence sous <b>une fiche</b> ; (2) afficher le <b>prix livré</b> à côté du prix catalogue, et trier dessus par défaut ; (3) exclure les ruptures du classement « meilleur prix » ; (4) normaliser le prix unitaire (€ / gant, € / pièce) pour comparer des conditionnements différents.</dd></dl>
+  </div></div>
+
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Tri par prix par défaut : la pertinence disparaît</h4>
+    <dl><dt>Preuve</dt><dd>« fauteuil » renvoie 132 produits classés par prix croissant : housses, protections, housses… Aucun fauteuil n'apparaît dans les 20 premiers. Pas de suggestions pendant la frappe, pas de correction orthographique, pas d'historique.</dd>
+    <dt>Reco</dt><dd>Tri par défaut = pertinence, avec « Prix livré » et « Délai » à un clic. Autocomplétion par catégories, marques et produits (« fauteuil » → Fauteuils dentaires · Housses de fauteuil · Têtières). Mémoriser les 5 dernières recherches par compte.</dd></dl>
+  </div></div>
+
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Cartes produit surchargées et incohérentes</h4>
+    <dl><dt>Preuve</dt><dd>Sur chaque carte : badge stock, cœur, balance, œil (3 icônes empilées sur la photo), nom partenaire tronqué « ELITE CERAM - DENT… », badge marque, titre sur 2 lignes tronqué, catégorie parfois présente parfois non, prix, « HT » ou « TTC », bouton Ajouter. L'icône balance passe du blanc au jaune ou au bleu marine sans légende.</dd>
+    <dt>Impact</dt><dd>Dix informations de même poids ; l'œil ne trouve ni le nom complet ni le conditionnement. Le nombre de partenaires proposant le produit, l'information clé d'un comparateur, est absente de la carte.</dd>
+    <dt>Reco</dt><dd>Carte à 5 éléments : photo, titre complet (3 lignes max, jamais tronqué au milieu d'un mot), conditionnement et unité, <b>« à partir de X € · N partenaires »</b>, un seul CTA « Comparer les N offres » ou « Ajouter » si offre unique. Favori et comparateur au survol (desktop) ou en appui long (mobile).</dd></dl>
+  </div></div>
+
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Le radar double la liste et pousse les résultats sous la ligne de flottaison sur mobile</h4>
+    <dl><dt>Preuve</dt><dd>Desktop : colonne droite de 270 px qui répète les six premières lignes. Mobile : la carte radar (≈ 430 px de haut) passe <b>avant</b> le premier résultat.</dd>
+    <dt>Reco</dt><dd>Le radar devient un bandeau compact au-dessus des résultats (fourchette, écart, verdict) ; le détail par offre vit dans la fiche produit.</dd></dl>
+  </div></div>
+
+  <div class="find s3"><i></i><div>
+    <h4><span class="tag">Mineur</span> Pagination en 2 805 pages</h4>
+    <dl><dt>Preuve</dt><dd>Grille « 67 300 produits · page 1/2805 » avec navigation 1 · 2 · … · 2805.</dd>
+    <dt>Reco</dt><dd>Personne ne pagine un catalogue entier. La grille non filtrée disparaît au profit des catégories ; dans une catégorie, « Afficher 24 de plus » + ancre d'URL.</dd></dl>
+  </div></div>
+</section>
+
+<section id="fiche">
+  <h2>Fiche produit</h2>
+  <div class="find s1"><i></i><div>
+    <h4><span class="tag">Bloquant</span> Une fiche = un vendeur ; les autres offres du même produit sont invisibles</h4>
+    <dl><dt>Preuve</dt><dd>Fiche « Gants nitrile Jet – M » (Elite Ceram, 3,02 € HT) : aucune mention des cinq autres partenaires qui vendent des gants nitrile. À la place, un encart « Ce produit n'est proposé que par ce partenaire. D'autres références sont disponibles chez plusieurs partenaires » suivi de Papier à articuler, Miroir incassable, Root ZX Mini (947,90 €), sans rapport avec des gants.</dd>
+    <dt>Impact</dt><dd>C'est l'inverse d'un comparateur : au moment de décider, l'utilisateur n'a plus que l'offre sur laquelle il a cliqué. Les suggestions hors sujet ressemblent à un bug.</dd>
+    <dt>Reco</dt><dd>Modèle « un produit, N offres » : en-tête produit (photo, titre, spécifications, variantes taille/couleur), puis <b>tableau des offres</b> partenaire · prix catalogue · port · prix livré · délai · stock · bouton Ajouter, le meilleur prix livré en tête. Les produits similaires passent en bas, filtrés par catégorie.</dd></dl>
+  </div></div>
+
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Description brute, spécifications non structurées</h4>
+    <dl><dt>Preuve</dt><dd>Un paragraphe de 180 mots contenant « Caractéristiques techniques Matière : Nitrile synthétique Finition : Non poudrés Couleur : Bleu médical Norme : EN 420 … Avantages produit ✔️ Excellente résistance … Boîte de 100 » sans retour à la ligne ni tableau. Les coches sont des emojis texte.</dd>
+    <dt>Reco</dt><dd>Parser et afficher : <b>Fiche technique</b> (tableau clé/valeur), <b>Conditionnement</b> (boîte de 100 · € / gant), <b>Normes</b> (chips EN 455, CE), <b>Documents</b> (fiche sécurité PDF). La description marketing en dessous, repliée.</dd></dl>
+  </div></div>
+
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Aucune information logistique avant l'ajout au panier</h4>
+    <dl><dt>Preuve</dt><dd>Ni frais de port, ni délai, ni minimum de commande, ni franco. Le bloc « Disponibilité : En stock » est le seul signal, sans quantité ni date.</dd>
+    <dt>Reco</dt><dd>Bloc d'achat : prix HT + TTC, « Livré en 48 h · port offert dès 60 € », quantité avec paliers de prix, stock (« 936 disponibles »), bouton Ajouter. Variantes (S/M/L/XL) sélectionnables sur la même fiche au lieu de trois fiches séparées.</dd></dl>
+  </div></div>
+
+  <div class="find s3"><i></i><div>
+    <h4><span class="tag">Mineur</span> Bloc fournisseur exposant adresse, téléphone et e-mail bruts</h4>
+    <dl><dt>Preuve</dt><dd>« 10 rue Parmentier, Montreuil · 0148057188 · dg@dental-groupe.com » en bas de fiche, avec « Contacter le fournisseur ».</dd>
+    <dt>Reco</dt><dd>Carte partenaire courte (logo, note de service, délai moyen, « 5 221 produits ») avec un lien vers sa page. Le contact direct détourne l'achat hors plateforme ; mieux vaut une messagerie intégrée.</dd></dl>
+  </div></div>
+</section>
+
+<section id="comparer">
+  <h2>Comparateur</h2>
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Il compare n'importe quoi avec n'importe quoi, sur des attributs sans valeur</h4>
+    <dl><dt>Preuve</dt><dd>Fil de suture PGCL (36 €) vs champ chirurgical (54,16 €) → « Meilleure offre : 36,00 € · 18,16 € d'écart ». Attributs : Ville, Marque, Catégorie, Type, Stock, Qté min, Prix. Le badge « Moins cher » couronne un produit qui n'a rien à voir avec l'autre.</dd>
+    <dt>Impact</dt><dd>L'outil donne une réponse fausse avec assurance. Pour des consommables, la comparaison utile est <b>entre offres du même produit</b>, pas entre produits.</dd>
+    <dt>Reco</dt><dd>Deux outils distincts : (1) la <b>fiche à N offres</b> couvre 90 % des cas ; (2) le comparateur côte à côte est réservé au <b>matériel</b> (fauteuils, radios, stérilisateurs, turbines) avec des attributs techniques réels et n'accepte que des produits de la même catégorie.</dd></dl>
+  </div></div>
+  <div class="find s3"><i></i><div>
+    <h4><span class="tag">Mineur</span> Barre de comparaison persistante en bas d'écran</h4>
+    <dl><dt>Preuve</dt><dd>Visible sur toutes les pages, même la fiche et l'accueil, hauteur 60 px, 2/4 slots. Sur mobile elle masque le dernier résultat.</dd>
+    <dt>Reco</dt><dd>N'apparaître qu'à partir de 2 produits de la même catégorie, repliable, et disparaître sur la fiche et le panier.</dd></dl>
+  </div></div>
+</section>
+
+<section id="panier">
+  <h2>Panier &amp; commande</h2>
+  <div class="find s1"><i></i><div>
+    <h4><span class="tag">Bloquant</span> Le calcul HT / TTC est faux</h4>
+    <dl><dt>Preuve</dt><dd>Article affiché <b>2,56 € HT</b> sur la liste. Panier : « Sous-total (HT) 2,13 € · TVA (20 %) 0,43 € · <b>Total (TTC) 2,56 €</b> ». Le prix HT a été traité comme un TTC et la TVA « extraite » au lieu d'être ajoutée. Le bon total est 3,07 € TTC.</dd>
+    <dt>Impact</dt><dd>Facture fausse de 20 %, litige fournisseur, et perte de confiance immédiate pour un acheteur professionnel qui vérifie toujours la TVA.</dd>
+    <dt>Reco</dt><dd>Source de vérité unique : prix stockés HT, TVA par produit (5,5 % / 20 %), affichage HT et TTC partout avec un interrupteur global mémorisé. Test automatique sur le tunnel : ligne × quantité + port = total HT ; total HT × (1 + TVA) = total TTC.</dd></dl>
+  </div></div>
+
+  <div class="find s1"><i></i><div>
+    <h4><span class="tag">Bloquant</span> « Confirmer la commande » sans port, délai, adresse ni paiement</h4>
+    <dl><dt>Preuve</dt><dd>Page panier : bloc article, résumé (sous-total, TVA, total), encart « ✓ Connecté à ELITE CERAM – DENTAL GROUPE » (l'article est de Dental Good Deal), bouton violet « Confirmer la Commande ». Rien d'autre.</dd>
+    <dt>Impact</dt><dd>L'utilisateur engage une commande dont il ne connaît ni le coût réel ni la date de livraison ni l'adresse utilisée. Le message « Connecté à … » contredit le panier.</dd>
+    <dt>Reco</dt><dd>Tunnel en 3 étapes visibles : <b>Panier</b> (groupé par fournisseur, port et délai par colis, total par colis et global) → <b>Livraison</b> (adresse du cabinet, créneau) → <b>Paiement &amp; récapitulatif</b> (mode de paiement, conditions du fournisseur, bouton « Commander et payer X € TTC »). Compte créé en fin de tunnel pour un nouveau venu, pas avant.</dd></dl>
+  </div></div>
+
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Aucune aide au réassort</h4>
+    <dl><dt>Preuve</dt><dd>Pas de « Commander à nouveau », pas de « Vos habituels », pas d'alerte prix, pas de liste de courses. Les favoris sont stockés « sur cet appareil » et non sur le compte.</dd>
+    <dt>Impact</dt><dd>Le cas d'usage n°1 d'un cabinet (recommander les mêmes 30 références chaque mois) n'a aucun raccourci. Le gain de temps promis n'existe pas.</dd>
+    <dt>Reco</dt><dd>Listes par compte (« Stérilisation », « Chirurgie »), réassort en un clic au meilleur prix livré du jour, alertes prix par e-mail, historique « Vous recommandez tous les 5 semaines ».</dd></dl>
+  </div></div>
+
+  <div class="find s3"><i></i><div>
+    <h4><span class="tag">Mineur</span> Ajout au panier silencieux</h4>
+    <dl><dt>Preuve</dt><dd>Le badge du panier change mais aucun toast ni mini-panier ne confirme quoi a été ajouté, à quel prix, ni ne propose « Voir le panier ».</dd>
+    <dt>Reco</dt><dd>Mini-panier latéral à l'ajout : article, quantité, sous-total, « Continuer » / « Voir le panier ».</dd></dl>
+  </div></div>
+</section>
+
+<section id="filtres">
+  <h2>Filtres, catégories, favoris</h2>
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Le filtre « Marque » est une liste déroulante de 1 489 entrées</h4>
+    <dl><dt>Preuve</dt><dd>Select natif sans champ de recherche, de 3B SCIENTIFIC à … avec doublons (« 3TECH » et « 3Tech ») et des marques sans produit en stock.</dd>
+    <dt>Reco</dt><dd>Facette avec recherche, compte de produits par marque, les 8 plus fréquentes visibles puis « Voir plus ». Dédoublonner les marques à l'import.</dd></dl>
+  </div></div>
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Catégories vides ou incohérentes</h4>
+    <dl><dt>Preuve</dt><dd>« Consommables &amp; Hygiène » avec « Uniquement en stock » → <b>0 produit</b>, alors que des gants, masques et champs sont en stock ailleurs dans la grille. Les catégories affichées sur les cartes (« Cabinet », « Chirurgie », « Destockage Matériel Dentaire », « Hygiène et stérilisation dentaire > LES CASSETTES ») viennent des taxonomies de chaque fournisseur, non unifiées.</dd>
+    <dt>Impact</dt><dd>La navigation par catégories, pourtant la plus naturelle pour un cabinet, est inutilisable tant que la taxonomie n'est pas unifiée.</dd>
+    <dt>Reco</dt><dd>Taxonomie Evidentall à 2 niveaux (12 familles × 6–10 sous-familles), mapping des catégories fournisseurs vers cette taxonomie, et aucune catégorie affichée tant qu'elle n'a pas de produit.</dd></dl>
+  </div></div>
+  <div class="find s3"><i></i><div>
+    <h4><span class="tag">Mineur</span> Filtres redondants et sans compteurs</h4>
+    <dl><dt>Preuve</dt><dd>Panneau gauche : Partenaire (déjà dans le bandeau), Type (déjà dans les pastilles), Prix min/max sans histogramme, « Uniquement en stock » activé par défaut sans le dire, Marque, Catégorie (déjà dans la barre). Aucun compteur par option.</dd>
+    <dt>Reco</dt><dd>Facettes avec compteurs, ordre par utilité (Catégorie, Marque, Partenaire, Prix, Délai, Stock), puces des filtres actifs en tête de résultats, « Effacer » visible.</dd></dl>
+  </div></div>
+  <div class="find s3"><i></i><div>
+    <h4><span class="tag">Mineur</span> Favoris « sur cet appareil »</h4>
+    <dl><dt>Preuve</dt><dd>Pop-up Favoris : « 1 produit enregistré sur cet appareil ». Perdu au changement de poste ou de navigateur.</dd>
+    <dt>Reco</dt><dd>Favoris et listes liés au compte cabinet, partagés entre les membres du cabinet.</dd></dl>
+  </div></div>
+</section>
+
+<section id="mobile">
+  <h2>Mobile (390 px)</h2>
+  <figure><img src="img/mobile.jpg" alt="Deux vues mobiles du marketplace : accueil et résultats de recherche gants nitrile" loading="lazy"><figcaption>Gauche : accueil mobile, carrousel horizontal de cartes avec trois icônes empilées. Droite : résultats « gants nitrile », titres tronqués (« Gants d'examen… »), barre de comparaison fixe en bas.</figcaption></figure>
+  <div class="find s1"><i></i><div>
+    <h4><span class="tag">Bloquant</span> 74 % des cibles tactiles sous 44 px</h4>
+    <dl><dt>Preuve</dt><dd>Mesure sur la page de résultats mobile : <b>107 cibles sur 144</b> font moins de 44 × 44 px (icônes cœur/balance/œil, pastilles, puces de filtre, liens partenaires). 121 textes visibles sous 12 px.</dd>
+    <dt>Impact</dt><dd>Erreurs de tap, ajouts au comparateur involontaires, lecture difficile des prix et des conditionnements.</dd>
+    <dt>Reco</dt><dd>Minimum 44 px pour toute cible, 13 px pour tout texte ; actions secondaires regroupées derrière un menu « ⋯ » ou en appui long.</dd></dl>
+  </div></div>
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Les titres produits sont illisibles</h4>
+    <dl><dt>Preuve</dt><dd>En liste mobile : « Gants d'examen… », « Gants nitrile ble… », « Gants nitrile mé… ». Le nom du partenaire aussi : « DENTAL GOOD DE… ».</dd>
+    <dt>Reco</dt><dd>Titre sur 2–3 lignes complètes, partenaire sur sa propre ligne, prix à droite sur deux lignes (catalogue / livré).</dd></dl>
+  </div></div>
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Le bouton Accueil disparaît, le radar passe avant les résultats</h4>
+    <dl><dt>Preuve</dt><dd>Aucun élément « Accueil » visible dans le DOM mobile. La carte radar occupe le premier écran de résultats ; les produits commencent 430 px plus bas. Les filtres sont derrière un bouton « Filtres » sans indication du nombre de filtres actifs.</dd>
+    <dt>Reco</dt><dd>Accueil dans le header mobile (icône maison à gauche), radar compacté en une ligne, bouton Filtres avec compteur et tiroir plein écran.</dd></dl>
+  </div></div>
+  <div class="find s3"><i></i><div>
+    <h4><span class="tag">Mineur</span> Carrousels horizontaux à cartes partielles</h4>
+    <dl><dt>Preuve</dt><dd>Accueil mobile : cartes de 220 px dans un scroll horizontal, la deuxième carte coupée au tiers, sans snap.</dd>
+    <dt>Reco</dt><dd>Scroll-snap, cartes à 85 % de la largeur, ou liste verticale de 3 + « Voir tout ».</dd></dl>
+  </div></div>
+</section>
+
+<section id="a11y">
+  <h2>Accessibilité</h2>
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Structure de page incomplète</h4>
+    <dl><dt>Preuve</dt><dd>Aucun élément <code>&lt;main&gt;</code>. 1 <code>&lt;nav&gt;</code> pour quatre systèmes de navigation. 8 images sans attribut <code>alt</code>. Hiérarchie H2 → H3 correcte sur les carrousels, mais la grille principale n'a pas de titre.</dd>
+    <dt>Reco</dt><dd>Landmarks <code>header / nav / main / aside (filtres) / footer</code>, un H1 par page décrivant la recherche ou la catégorie, <code>alt</code> = nom du produit.</dd></dl>
+  </div></div>
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Contrastes insuffisants sur les informations clés</h4>
+    <dl><dt>Preuve</dt><dd>Mentions « HT » / « TTC » en gris clair 11 px sous le prix ; libellés « Moins cher / Plus élevé » sous les barres en gris sur blanc ; texte secondaire du radar en blanc 60 % sur bleu marine ; badge jaune « Plus que 1 » avec texte bleu marine 10 px.</dd>
+    <dt>Reco</dt><dd>Ratio 4,5:1 minimum pour tout texte ; HT/TTC en 13 px semi-gras ; les informations fiscales ne sont jamais le texte le plus faible de la carte.</dd></dl>
+  </div></div>
+  <div class="find s3"><i></i><div>
+    <h4><span class="tag">Mineur</span> États et retours</h4>
+    <dl><dt>Preuve</dt><dd>Le focus clavier est stylé (bon point), mais les boutons icônes sans texte dépendent de <code>aria-label</code> corrects (« Comparer le prix » pour la balance : ambigu). Les modales (pop-up, favoris, comparateur) se ferment à Échap (bon point) mais ne rendent pas le focus à l'élément déclencheur. Aucune zone <code>aria-live</code> pour annoncer « ajouté au panier ».</dd>
+    <dt>Reco</dt><dd>Libellés explicites (« Ajouter au comparateur »), retour de focus, <code>role="status"</code> pour les confirmations.</dd></dl>
+  </div></div>
+</section>
+
+<section id="visuel">
+  <h2>Système visuel</h2>
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Hors charte sur l'essentiel</h4>
+    <dl><dt>Preuve</dt><dd>Couleurs relevées sur la vitrine : accent principal <code>#fdc800</code> (jaune, 68 occurrences), bleu marine <code>#07304b</code> (hors charte, 2 006 occurrences), vert <code>#0f9f6e</code> (stock), rouge (deltas, rupture), gris <code>#e7e5e4</code> (teinte chaude). Côté app : dégradé <code>#2563eb → #7c3aed</code> (bleu → violet), orange et vert pour les icônes du pop-up. Le bleu charte <code>#0077fd</code> n'apparaît que dans le hero et le logo.</dd>
+    <dt>Impact</dt><dd>Le marketplace ne ressemble pas au reste d'Evidentall. Le jaune fonctionne comme couleur de marque alors qu'il devrait être, au plus, un signal d'alerte.</dd>
+    <dt>Reco</dt><dd>Palette : <code>#0077fd</code> actions, <code>#50c3ff</code> accents et états actifs, <code>#032444</code> surfaces sombres et textes forts, gris froids. Sémantique limitée à trois signaux : disponible, attention (stock faible), indisponible. Aucun dégradé violet.</dd></dl>
+  </div></div>
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Deux typographies, trois échelles</h4>
+    <dl><dt>Preuve</dt><dd>Montserrat sur la vitrine ; <code>ui-sans-serif</code> (Segoe UI sous Windows) sur la fiche, le panier et le pop-up ; Times New Roman détecté sur un élément non stylé. Les tailles de prix vont de 14 px (radar) à 22 px (carte) à 24 px (fiche) sans règle.</dd>
+    <dt>Reco</dt><dd>Montserrat partout, échelle unique : 11 (méta), 13 (secondaire), 15 (corps), 17 (titre carte), 22 (prix), 28 (titre page), 36 (hero). Chiffres tabulaires pour tous les prix.</dd></dl>
+  </div></div>
+  <div class="find s3"><i></i><div>
+    <h4><span class="tag">Mineur</span> Badges de nature différente, forme identique</h4>
+    <dl><dt>Preuve</dt><dd>« En stock » (état), « Plus que 1 » (urgence), « SAFE IMPLANT » (marque), « DENTAL COOP » (partenaire), « Nouveau » (fraîcheur), « MOINS CHER » (classement) : même pastille, même poids, couleurs arbitraires.</dd>
+    <dt>Reco</dt><dd>Un seul badge par carte, réservé à l'état (stock / délai). La marque et le partenaire sont du texte. Le classement se lit par la position, pas par un badge.</dd></dl>
+  </div></div>
+</section>
+
+<section id="technique">
+  <h2>Technique &amp; performance</h2>
+  <div class="find s0"><i></i><div>
+    <h4><span class="tag">Bon</span> Chargement rapide</h4>
+    <dl><dt>Preuve</dt><dd>DOMContentLoaded ≈ 410 ms, load ≈ 420 ms, 250 ressources, images servies à la demande. La recherche répond en moins de 2 s avec squelettes de chargement.</dd>
+    <dt>À préserver</dt><dd>Les squelettes et la réactivité sont un acquis : la refonte ne doit pas alourdir le bundle.</dd></dl>
+  </div></div>
+  <div class="find s2"><i></i><div>
+    <h4><span class="tag">Majeur</span> Page d'accueil à 3 441 nœuds DOM et 428 boutons</h4>
+    <dl><dt>Preuve</dt><dd>Trois carrousels + grille de 24 + section « Chez plusieurs partenaires » rendus simultanément, chacun avec ses 4 à 5 boutons par carte.</dd>
+    <dt>Reco</dt><dd>Rendre les carrousels à la demande, limiter la home à une sélection, virtualiser la grille catégorie.</dd></dl>
+  </div></div>
+  <div class="find s3"><i></i><div>
+    <h4><span class="tag">Mineur</span> Données produit hétérogènes</h4>
+    <dl><dt>Preuve</dt><dd>Titres en MAJUSCULES chez certains partenaires (« BOITES A PROTHÈSE COLOR »), références en préfixe (« 786-9173Recon Pyjamas »), catégories fournisseur brutes, conditionnements absents ou dans le titre (« Pack de 10 », « Boîte de 100 »).</dd>
+    <dt>Reco</dt><dd>Pipeline de normalisation à l'import : casse, référence séparée, conditionnement extrait, unité, TVA, catégorie mappée. C'est le prérequis de « un produit, N offres ».</dd></dl>
+  </div></div>
+</section>
+
+<section id="mesures">
+  <h2>Mesures relevées</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Indicateur</th><th>Valeur</th><th>Repère</th><th>Lecture</th></tr></thead>
+    <tbody>
+      <tr><td>Temps DOMContentLoaded (accueil)</td><td class="v num">≈ 410 ms</td><td>&lt; 1 500 ms</td><td><span class="pill good">Bon</span></td></tr>
+      <tr><td>Nœuds DOM (accueil)</td><td class="v num">3 441</td><td>&lt; 1 500</td><td><span class="pill warn">Lourd</span></td></tr>
+      <tr><td>Boutons sur l'accueil</td><td class="v num">428</td><td>&lt; 80</td><td><span class="pill bad">Excessif</span></td></tr>
+      <tr><td>Cibles &lt; 40 px (desktop, accueil)</td><td class="v num">366</td><td>0</td><td><span class="pill bad">Critique</span></td></tr>
+      <tr><td>Cibles &lt; 44 px (mobile, résultats)</td><td class="v num">107 / 144</td><td>0</td><td><span class="pill bad">Critique</span></td></tr>
+      <tr><td>Textes &lt; 12 px (mobile, résultats)</td><td class="v num">121</td><td>0</td><td><span class="pill bad">Critique</span></td></tr>
+      <tr><td>Images sans <code>alt</code></td><td class="v num">8 / 81</td><td>0</td><td><span class="pill warn">À corriger</span></td></tr>
+      <tr><td>Élément <code>&lt;main&gt;</code></td><td class="v num">0</td><td>1</td><td><span class="pill warn">Manquant</span></td></tr>
+      <tr><td>Styles <code>:focus-visible</code></td><td class="v num">présents</td><td>présents</td><td><span class="pill good">Bon</span></td></tr>
+      <tr><td>Écrans avant le catalogue (desktop)</td><td class="v num">4</td><td>1</td><td><span class="pill warn">Trop</span></td></tr>
+      <tr><td>Marques dans le filtre</td><td class="v num">1 489</td><td>facette</td><td><span class="pill warn">Inutilisable</span></td></tr>
+      <tr><td>Pages de pagination</td><td class="v num">2 805</td><td>—</td><td><span class="pill info">À supprimer</span></td></tr>
+      <tr><td>Écart calcul TTC panier</td><td class="v num">−16,6 %</td><td>0</td><td><span class="pill bad">Bug</span></td></tr>
+      <tr><td>Shells visuels sur le parcours</td><td class="v num">2</td><td>1</td><td><span class="pill bad">Bloquant</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="cible">
+  <h2>Cible de refonte</h2>
+  <div class="two">
+    <div class="box"><h3>Ce qu'on garde</h3>
+      <ul>
+        <li>Le <b>classement par prix avec écart</b> et le concept de radar, recentrés sur le prix livré.</li>
+        <li>La section <b>« Chez plusieurs partenaires »</b> : elle devient le cœur du produit.</li>
+        <li>Le bouton <b>Accueil</b>, déplacé à gauche et présent sur mobile.</li>
+        <li>La triade favoris / comparateur / panier, avec un vrai rôle pour chacun.</li>
+        <li>Le pop-up de bienvenue, une fois, acheteur d'abord.</li>
+        <li>La vitesse et les squelettes de chargement.</li>
+      </ul>
+    </div>
+    <div class="box"><h3>Ce qu'on change</h3>
+      <ul>
+        <li>Un seul shell en charte de la recherche jusqu'au paiement.</li>
+        <li>Un produit = une fiche, N offres ; variantes dans la fiche.</li>
+        <li>Prix livré, délai, port, minimum : partout, avant l'ajout.</li>
+        <li>HT / TTC : interrupteur unique, calculs justes.</li>
+        <li>Catégories unifiées comme navigation principale ; filtres à facettes.</li>
+        <li>Tunnel panier → livraison → paiement, compte en fin de parcours.</li>
+        <li>Réassort : listes, « commander à nouveau », alertes prix.</li>
+        <li>Mobile : 44 px, titres complets, radar compact, Accueil présent.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="wire"><h3>Carte produit cible</h3>
+      <svg viewBox="0 0 320 200" role="img" aria-label="Schéma d'une carte produit : photo, titre complet, conditionnement, prix à partir de, nombre de partenaires, un bouton">
+        <rect x="1" y="1" width="318" height="198" rx="14" fill="var(--paper)" stroke="var(--line)"/>
+        <rect x="14" y="14" width="96" height="96" rx="10" fill="var(--sev3-bg)"/>
+        <rect x="124" y="18" width="170" height="10" rx="5" fill="var(--ink)"/>
+        <rect x="124" y="34" width="130" height="10" rx="5" fill="var(--ink)"/>
+        <rect x="124" y="56" width="110" height="8" rx="4" fill="var(--mute)"/>
+        <text x="124" y="92" font-family="Montserrat,sans-serif" font-size="9" font-weight="700" fill="var(--mute)">À PARTIR DE</text>
+        <text x="124" y="112" font-family="Montserrat,sans-serif" font-size="20" font-weight="800" fill="var(--ink)">2,56 €</text>
+        <text x="196" y="112" font-family="Montserrat,sans-serif" font-size="9" fill="var(--mute)">HT · boîte de 100</text>
+        <circle cx="132" cy="134" r="7" fill="var(--navy)"/><circle cx="142" cy="134" r="7" fill="var(--p)"/><circle cx="152" cy="134" r="7" fill="var(--a)"/>
+        <text x="166" y="138" font-family="Montserrat,sans-serif" font-size="10" fill="var(--ink2)">6 partenaires</text>
+        <rect x="14" y="156" width="292" height="30" rx="9" fill="var(--p)"/>
+        <text x="160" y="175" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="11" font-weight="700" fill="#fff">Comparer les 6 offres →</text>
+      </svg>
+    </div>
+    <div class="wire"><h3>Fiche à N offres</h3>
+      <svg viewBox="0 0 320 200" role="img" aria-label="Schéma d'une fiche produit : en-tête produit puis tableau des offres triées par prix livré, meilleur prix en tête">
+        <rect x="1" y="1" width="318" height="198" rx="14" fill="var(--paper)" stroke="var(--line)"/>
+        <rect x="14" y="14" width="56" height="56" rx="8" fill="var(--sev3-bg)"/>
+        <rect x="80" y="18" width="180" height="10" rx="5" fill="var(--ink)"/>
+        <rect x="80" y="34" width="60" height="14" rx="7" fill="var(--sev3-bg)"/><rect x="146" y="34" width="60" height="14" rx="7" fill="var(--navy)"/><rect x="212" y="34" width="60" height="14" rx="7" fill="var(--sev3-bg)"/>
+        <rect x="80" y="56" width="120" height="7" rx="3" fill="var(--mute)"/>
+        <g font-family="Montserrat,sans-serif" font-size="8" fill="var(--mute)" font-weight="700"><text x="14" y="90">PARTENAIRE</text><text x="130" y="90">CATALOGUE</text><text x="196" y="90">LIVRÉ</text><text x="250" y="90">DÉLAI</text></g>
+        <rect x="10" y="98" width="300" height="26" rx="8" fill="none" stroke="var(--p)" stroke-width="1.5"/>
+        <g font-family="Montserrat,sans-serif" font-size="9.5" fill="var(--ink)"><text x="16" y="115" font-weight="700">Elite Ceram</text><text x="130" y="115">3,02 €</text><text x="196" y="115" font-weight="800">3,02 €</text><text x="250" y="115">48 h</text></g>
+        <g font-family="Montserrat,sans-serif" font-size="9.5" fill="var(--ink2)"><text x="16" y="143">Docteur AI</text><text x="130" y="143">2,75 €</text><text x="196" y="143">3,25 €</text><text x="250" y="143">72 h</text></g>
+        <g font-family="Montserrat,sans-serif" font-size="9.5" fill="var(--ink2)"><text x="16" y="165">Dental Good Deal</text><text x="130" y="165">2,56 €</text><text x="196" y="165">9,46 €</text><text x="250" y="165">5 j</text></g>
+        <line x1="10" y1="130" x2="310" y2="130" stroke="var(--line)"/><line x1="10" y1="152" x2="310" y2="152" stroke="var(--line)"/>
+        <text x="14" y="188" font-family="Montserrat,sans-serif" font-size="8" fill="var(--mute)">Prix livré pour 1 boîte, taille M, France métropolitaine. Tri par prix livré.</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="wire"><h3>Architecture cible</h3>
+    <svg viewBox="0 0 640 170" role="img" aria-label="Arborescence cible : Accueil, Catégories, Recherche, Fiche produit à N offres, Panier, Livraison, Paiement, Compte">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5 0 10z" fill="var(--mute)"/></marker></defs>
+      <g font-family="Montserrat,sans-serif" font-size="11" font-weight="700" text-anchor="middle">
+        <rect x="8" y="60" width="92" height="40" rx="10" fill="var(--navy)"/><text x="54" y="84" fill="#fff">Accueil</text>
+        <rect x="130" y="16" width="100" height="40" rx="10" fill="var(--paper)" stroke="var(--line)"/><text x="180" y="40" fill="var(--ink)">Catégories</text>
+        <rect x="130" y="104" width="100" height="40" rx="10" fill="var(--paper)" stroke="var(--line)"/><text x="180" y="128" fill="var(--ink)">Recherche</text>
+        <rect x="262" y="60" width="118" height="40" rx="10" fill="var(--p)"/><text x="321" y="78" fill="#fff">Fiche produit</text><text x="321" y="92" fill="#fff" font-size="9" font-weight="600">1 produit · N offres</text>
+        <rect x="410" y="60" width="72" height="40" rx="10" fill="var(--paper)" stroke="var(--line)"/><text x="446" y="84" fill="var(--ink)">Panier</text>
+        <rect x="492" y="60" width="72" height="40" rx="10" fill="var(--paper)" stroke="var(--line)"/><text x="528" y="84" fill="var(--ink)">Livraison</text>
+        <rect x="574" y="60" width="60" height="40" rx="10" fill="var(--paper)" stroke="var(--line)"/><text x="604" y="84" fill="var(--ink)">Payer</text>
+        <rect x="410" y="118" width="224" height="34" rx="10" fill="var(--sev3-bg)"/><text x="522" y="139" fill="var(--sev3)" font-size="10">Compte · commandes · listes · alertes (après l'achat)</text>
+      </g>
+      <g stroke="var(--mute)" stroke-width="1.5" fill="none" marker-end="url(#ar)">
+        <path d="M100 74 C116 74 116 36 130 36"/><path d="M100 86 C116 86 116 124 130 124"/>
+        <path d="M230 36 C246 36 246 80 262 80"/><path d="M230 124 C246 124 246 80 262 80"/>
+        <path d="M380 80 L410 80"/><path d="M482 80 L492 80"/><path d="M564 80 L574 80"/>
+        <path d="M604 100 L604 118"/>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<section id="plan">
+  <h2>Plan de refonte en 4 lots</h2>
+  <p>Chaque lot est livrable et testable seul, sur quelques produits d'abord, comme convenu. Le prototype v1 (gants nitrile) couvre déjà une partie du lot 1.</p>
+  <div class="lots">
+    <div class="lot"><div class="eyebrow">Lot 1 · Fondations</div><h3>Un shell, une fiche, un prix juste</h3>
+      <ul><li>Header unique en charte (Accueil à gauche), appliqué à la vitrine, la fiche et le panier.</li><li>Fiche « 1 produit, N offres » sur 3 familles pilotes (gants, masques, fils de suture).</li><li>Prix livré + interrupteur HT/TTC global ; correction du calcul TVA.</li><li>Carte produit à 5 éléments.</li></ul>
+      <div class="kpi">Succès : zéro écart HT/TTC ; taux de clic « Comparer les offres » &gt; 30 % sur les familles pilotes.</div></div>
+    <div class="lot"><div class="eyebrow">Lot 2 · Acheter</div><h3>Tunnel en trois étapes</h3>
+      <ul><li>Panier groupé par fournisseur : port, délai, total par colis.</li><li>Livraison (adresse cabinet) puis paiement et récapitulatif.</li><li>Mini-panier à l'ajout ; compte créé en fin de tunnel.</li><li>Confirmation de commande et suivi dans l'app.</li></ul>
+      <div class="kpi">Succès : abandon panier &lt; 40 % ; 0 ticket « montant différent de l'écran ».</div></div>
+    <div class="lot"><div class="eyebrow">Lot 3 · Naviguer</div><h3>Catégories et recherche</h3>
+      <ul><li>Taxonomie Evidentall unifiée, mapping fournisseurs.</li><li>Accueil recentré : recherche, catégories, « Chez plusieurs partenaires », réassorts.</li><li>Autocomplétion, tri par pertinence, facettes avec compteurs, URLs partageables.</li><li>Mobile : 44 px, titres complets, radar compact, tiroir filtres.</li></ul>
+      <div class="kpi">Succès : 1 écran avant le catalogue ; 0 catégorie vide ; 100 % des cibles mobiles ≥ 44 px.</div></div>
+    <div class="lot"><div class="eyebrow">Lot 4 · Fidéliser</div><h3>Réassort et matériel</h3>
+      <ul><li>Listes par cabinet, « commander à nouveau » au meilleur prix livré, alertes prix.</li><li>Comparateur côte à côte réservé au matériel, attributs techniques.</li><li>Historique de prix sur 6 mois par produit.</li><li>Page partenaire (délais, service, catalogue).</li></ul>
+      <div class="kpi">Succès : 50 % des commandes passent par une liste ou un réassort ; fréquence d'achat + 20 %.</div></div>
+  </div>
+</section>
+
+<section id="checklist">
+  <h2>Checklist de validation avant mise en ligne</h2>
+  <p>À cocher sur chaque lot, desktop et mobile. Cette liste est à vous : les cases sont mémorisées dans ce navigateur uniquement.</p>
+  <div class="check" id="checks">
+    <label><input type="checkbox" id="c1"> Un seul header, en charte, de la recherche au paiement ; Accueil visible à gauche sur desktop et mobile.</label>
+    <label><input type="checkbox" id="c2"> Tout prix affiche HT et TTC selon l'interrupteur ; total panier = Σ(lignes) + port, TVA par produit, vérifié par test automatique.</label>
+    <label><input type="checkbox" id="c3"> Toute fiche montre toutes les offres du produit, triées par prix livré ; les variantes sont dans la fiche.</label>
+    <label><input type="checkbox" id="c4"> Port, délai, minimum et franco visibles avant l'ajout au panier.</label>
+    <label><input type="checkbox" id="c5"> Aucun produit en rupture dans le classement « meilleur prix ».</label>
+    <label><input type="checkbox" id="c6"> Recherche : tri pertinence par défaut, autocomplétion, URL partageable, bouton Précédent fonctionnel.</label>
+    <label><input type="checkbox" id="c7"> Aucune catégorie vide ; taxonomie unifiée sur les cartes.</label>
+    <label><input type="checkbox" id="c8"> Mobile : toutes les cibles ≥ 44 px, tous les textes ≥ 13 px, aucun titre tronqué, pas de scroll horizontal.</label>
+    <label><input type="checkbox" id="c9"> Landmarks main/nav/aside, alt sur toutes les images, contrastes ≥ 4,5:1, focus rendu après fermeture des modales.</label>
+    <label><input type="checkbox" id="c10"> Pop-up de bienvenue : une fois par appareil, jamais pour un connecté.</label>
+    <label><input type="checkbox" id="c11"> Palette limitée à #0077fd / #50c3ff / #032444 + gris ; aucun dégradé violet ; Montserrat partout.</label>
+    <label><input type="checkbox" id="c12"> Ajout au panier confirmé par un mini-panier ; favoris et listes liés au compte.</label>
+  </div>
+</section>
+
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+  // sticky index highlight
+  const links=[...document.querySelectorAll('.toc a')];const map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('on'));const a=map.get(e.target.id);if(a)a.classList.add('on')}})},{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('main section').forEach(s=>io.observe(s));
+  // checklist memory (per viewer)
+  const K='evi-audit-checks';let st={};try{st=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
+  document.querySelectorAll('#checks input').forEach(i=>{i.checked=!!st[i.id];i.addEventListener('change',()=>{st[i.id]=i.checked;try{localStorage.setItem(K,JSON.stringify(st))}catch(e){}})});
+})();
+</script>

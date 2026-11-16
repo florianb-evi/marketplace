@@ -1,0 +1,414 @@
+<title>Spécification Marketplace Evidentall</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: developer spec. Sticky section index on wide screens, body ~72ch, token swatches, component inventory tables, rule boxes with worked examples. */
+:root{
+  --bg:#f6f8fb;--paper:#fff;--ink:#0b1a2b;--ink2:#3b4a5c;--mute:#6a7a8c;--line:#dde5ee;
+  --p:#0077fd;--a:#50c3ff;--navy:#032444;--tint:#eef5fd;
+  --warn:#b45309;--warn-bg:#fff4e5;--ok:#157347;--ok-bg:#e6f4ec;
+  --font:Montserrat,"Segoe UI",system-ui,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,monospace;--r:12px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1624;--paper:#111f31;--ink:#eef3f8;--ink2:#c4d0dd;--mute:#8d9cb0;--line:#223449;--navy:#06172b;--tint:#0f2a45;--warn:#ffb74d;--warn-bg:#3a2a10;--ok:#7bd3a0;--ok-bg:#0f2f22;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1624;--paper:#111f31;--ink:#eef3f8;--ink2:#c4d0dd;--mute:#8d9cb0;--line:#223449;--navy:#06172b;--tint:#0f2a45;--warn:#ffb74d;--warn-bg:#3a2a10;--ok:#7bd3a0;--ok-bg:#0f2f22;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-block:0 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--p)}
+h1,h2,h3,h4{text-wrap:balance;line-height:1.2;margin:0}
+p{margin:0}
+code{font-family:var(--mono);font-size:.88em;background:var(--tint);padding:1px 5px;border-radius:5px}
+pre{font-family:var(--mono);font-size:12.5px;line-height:1.55;background:var(--navy);color:#e6f0fb;padding:14px 16px;border-radius:var(--r);overflow-x:auto;margin:0}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--p)}
+.mute{color:var(--mute)}
+.hero{padding-block:48px 36px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px;align-items:end}
+.hero h1{font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-.02em;margin-top:10px}
+.hero .lead{margin-top:14px;font-size:17px;color:var(--ink2);max-width:62ch}
+.meta{display:grid;gap:8px;font-size:13px;color:var(--ink2);border-left:2px solid var(--p);padding-left:14px}
+.meta b{color:var(--ink)}
+.body{display:grid;grid-template-columns:220px minmax(0,1fr);gap:40px;margin-top:36px}
+.toc{position:sticky;top:max(16px,env(safe-area-inset-top,0px));align-self:start;font-size:13px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.toc a{display:block;padding:6px 10px;border-radius:8px;color:var(--ink2);text-decoration:none;border-left:2px solid transparent}
+.toc a:hover,.toc a:focus-visible{background:var(--paper);color:var(--p);outline:none}
+.toc a.on{border-left-color:var(--p);color:var(--p);font-weight:600}
+main{min-width:0;display:grid;gap:56px}
+section{scroll-margin-top:16px;display:grid;gap:18px}
+section>h2{font-size:26px;font-weight:800;letter-spacing:-.015em}
+section>p,section>ul,section>ol{max-width:72ch;color:var(--ink2)}
+ul,ol{margin:0;padding-left:20px}li+li{margin-top:5px}
+h3{font-size:17px;font-weight:800;margin-top:6px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.sw{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.swatch{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--paper)}
+.swatch i{display:block;height:64px}
+.swatch div{padding:10px 12px;font-size:12.5px}
+.swatch b{display:block;font-size:13px}
+.swatch code{background:none;padding:0;color:var(--mute)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);font-weight:700;background:var(--tint)}
+tr:last-child td{border-bottom:0}
+td code{white-space:nowrap}
+.rule{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--p);border-radius:var(--r);padding:14px 18px;display:grid;gap:8px}
+.rule h4{font-size:15px;font-weight:800}
+.rule p{font-size:14px;color:var(--ink2)}
+.ex{background:var(--tint);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--ink2)}
+.ex b{color:var(--ink)}
+.type{display:grid;gap:4px}
+.type div{display:flex;align-items:baseline;gap:14px;border-bottom:1px dashed var(--line);padding:6px 0}
+.type small{width:110px;flex:none;font-family:var(--mono);font-size:11.5px;color:var(--mute)}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:var(--tint);color:var(--p)}
+.pill.w{background:var(--warn-bg);color:var(--warn)}.pill.g{background:var(--ok-bg);color:var(--ok)}
+.lots{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.lot{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--p);border-radius:var(--r);padding:16px;display:grid;gap:8px}
+.lot h3{font-size:15px;margin:0}
+.lot ul{font-size:13.5px;color:var(--ink2)}
+.lot .kpi{font-size:12px;color:var(--mute);border-top:1px dashed var(--line);padding-top:8px}
+.steps{counter-reset:s;display:grid;gap:10px}
+.step{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.step::before{counter-increment:s;content:counter(s);width:30px;height:30px;border-radius:9px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
+.step b{display:block}.step span{font-size:13.5px;color:var(--ink2)}
+.check label{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink2);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px}
+.check input{margin-top:3px;accent-color:var(--p)}
+:focus-visible{outline:2px solid var(--p);outline-offset:2px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+@media (max-width:900px){.hero{grid-template-columns:1fr}.body{grid-template-columns:1fr;gap:24px}.toc{position:static}.toc ol{display:flex;flex-wrap:wrap;gap:6px}.toc a{border:1px solid var(--line);border-radius:999px;padding:5px 10px;background:var(--paper)}.grid2,.grid3{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div>
+    <div class="eyebrow">Spécification produit &amp; technique · Marketplace Evidentall</div>
+    <h1>Un produit, N offres, le vrai prix livré. Tout ce qu'il faut pour le construire.</h1>
+    <p class="lead">Cette spécification traduit l'audit et le prototype v6 en éléments actionnables pour l'équipe : principes, design system, inventaire des composants, modèle de données, règles de calcul, parcours et URLs, accessibilité, prérequis données, protocole de tests utilisateurs et plan de mise en ligne.</p>
+  </div>
+  <aside class="meta">
+    <div><b>Version</b> · 1.0 · 16 nov. 2026</div>
+    <div><b>Références</b> · Audit UI/UX (page publiée) · prototype <code>marketplace-proto-v6.html</code> · écran de référence <code>marketplace-reference-v5.html</code></div>
+    <div><b>Périmètre</b> · expérience acheteur (cabinets, praticiens, assistants). Côté fournisseur : §12.</div>
+    <div><b>Statut</b> · à valider par produit, design et tech avant le lot 1</div>
+  </aside>
+</header>
+
+<div class="body">
+<nav class="toc" aria-label="Sommaire"><ol>
+  <li><a href="#principes">1. Principes</a></li>
+  <li><a href="#tokens">2. Design system</a></li>
+  <li><a href="#logo">3. Logo &amp; marque</a></li>
+  <li><a href="#composants">4. Composants</a></li>
+  <li><a href="#donnees">5. Modèle de données</a></li>
+  <li><a href="#regles">6. Règles de calcul</a></li>
+  <li><a href="#parcours">7. Parcours &amp; URLs</a></li>
+  <li><a href="#etats">8. États &amp; erreurs</a></li>
+  <li><a href="#a11y">9. Accessibilité</a></li>
+  <li><a href="#prerequis">10. Prérequis données</a></li>
+  <li><a href="#tests">11. Tests utilisateurs</a></li>
+  <li><a href="#plan">12. Plan &amp; KPIs</a></li>
+  <li><a href="#fournisseur">13. Côté fournisseur</a></li>
+  <li><a href="#dod">14. Definition of done</a></li>
+</ol></nav>
+
+<main>
+
+<section id="principes">
+  <h2>1. Principes produit</h2>
+  <p>Cinq règles qui tranchent les arbitrages. Quand une maquette ou une décision technique hésite, on revient ici.</p>
+  <div class="grid2">
+    <div class="rule"><h4>Un produit, N offres</h4><p>Une référence (gants nitrile Jet, boîte de 100) a une seule fiche. Les tailles et couleurs sont des variantes de cette fiche. Chaque partenaire est une offre sur la fiche, jamais une fiche à part.</p></div>
+    <div class="rule"><h4>Le prix affiché est le prix livré, pour la quantité demandée</h4><p>Catalogue × quantité − remise de palier + port, pour l'adresse du cabinet. Le prix catalogue seul n'apparaît qu'en détail. Le classement se fait sur ce total.</p></div>
+    <div class="rule"><h4>Trois réponses avant la liste</h4><p>Le moins cher livré · Notre recommandation · Le plus rapide. Chacune avec une phrase de justification. La liste complète vient ensuite pour qui veut vérifier.</p></div>
+    <div class="rule"><h4>Une seule interface, une seule langue</h4><p>Même header, même police, même palette de la recherche au paiement. Vocabulaire du cabinet : « boîtes », « livré jeudi », « port offert ». Jamais « SKU », « marketplace-dashboard », « MOQ ».</p></div>
+    <div class="rule"><h4>Rien ne se décide dans le dos de l'acheteur</h4><p>La règle de classement est écrite sous la liste. Un prix qui change, un stock qui baisse, un délai qui glisse : on le dit avant le paiement, avec une action pour le résoudre.</p></div>
+    <div class="rule"><h4>Le compte vient après l'achat</h4><p>On peut comparer et remplir un panier sans compte. Le mot de passe se crée à la confirmation, quand l'acheteur a une raison de revenir (suivi, factures, listes).</p></div>
+  </div>
+</section>
+
+<section id="tokens">
+  <h2>2. Design system</h2>
+  <h3>Couleurs</h3>
+  <p>Trois couleurs de marque, des gris froids, trois signaux sémantiques. Aucun jaune, aucun violet, aucun dégradé hors bleu→marine ou bleu→ciel.</p>
+  <div class="sw">
+    <div class="swatch"><i style="background:#0077fd"></i><div><b>Principale</b><code>--p #0077fd</code><br>actions, liens, meilleur prix, focus</div></div>
+    <div class="swatch"><i style="background:#50c3ff"></i><div><b>Accompagnante</b><code>--a #50c3ff</code><br>accents, badges sur fond marine, lignes de moyenne</div></div>
+    <div class="swatch"><i style="background:#032444"></i><div><b>Secondaire</b><code>--s #032444</code><br>header, cartes « recommandation », textes forts</div></div>
+    <div class="swatch"><i style="background:linear-gradient(135deg,#032444,#0a3e78)"></i><div><b>Dégradé marine</b><code>#032444 → #0a3e78</code><br>hero, carte recommandation, confirmation</div></div>
+    <div class="swatch"><i style="background:#0b1a2b"></i><div><b>Encre</b><code>--ink #0b1a2b</code><br>texte principal</div></div>
+    <div class="swatch"><i style="background:#3b4a5c"></i><div><b>Encre 2</b><code>--ink2 #3b4a5c</code><br>texte secondaire (≥ 4,5:1 sur blanc)</div></div>
+    <div class="swatch"><i style="background:#6b7a8c"></i><div><b>Muet</b><code>--mute #6b7a8c</code><br>métadonnées ≥ 13 px uniquement</div></div>
+    <div class="swatch"><i style="background:#e1e8f0"></i><div><b>Ligne</b><code>--line #e1e8f0</code><br>bordures, séparateurs</div></div>
+    <div class="swatch"><i style="background:#eef5fd"></i><div><b>Teinte</b><code>--tint #eef5fd</code><br>fonds de puces, boutons secondaires</div></div>
+    <div class="swatch"><i style="background:#f5f8fc"></i><div><b>Fond</b><code>--bg #f5f8fc</code><br>fond de page</div></div>
+    <div class="swatch"><i style="background:#b45309"></i><div><b>Attention</b><code>#b45309 / #fff7ec</code><br>stock faible, prix modifié</div></div>
+    <div class="swatch"><i style="background:#c62828"></i><div><b>Erreur</b><code>#c62828 / #fdecec</code><br>paiement refusé, champ invalide</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3 style="margin-top:0">Typographie · Montserrat</h3>
+      <div class="type">
+        <div><small>display 36/1.15 800</small><span style="font-size:22px;font-weight:800">Le bon produit, au bon prix livré.</span></div>
+        <div><small>h1 28/1.2 800</small><span style="font-size:20px;font-weight:800">Gants nitrile · 6 offres</span></div>
+        <div><small>h2 18/1.25 800</small><span style="font-size:17px;font-weight:800">Les 6 offres, pour 10 boîtes</span></div>
+        <div><small>prix 22/1 800 tnum</small><span style="font-size:20px;font-weight:800;font-variant-numeric:tabular-nums">29,50 €</span></div>
+        <div><small>titre carte 15/1.35 700</small><span style="font-size:15px;font-weight:700">Masque chirurgical 3 plis type IIR</span></div>
+        <div><small>corps 14/1.5 400-600</small><span>Port offert · livré mer. 18 nov.</span></div>
+        <div><small>secondaire 13/1.5 500</small><span style="font-size:13px;color:var(--ink2)">palier 10+ · cat. 3,02 €</span></div>
+        <div><small>méta 11/1.4 700 caps</small><span style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--mute)">Le moins cher livré</span></div>
+      </div>
+      <p style="font-size:13px;color:var(--mute);margin-top:10px">Minimum 13 px pour tout texte lu, 11 px seulement pour les libellés en capitales espacées. Chiffres tabulaires (<code>font-variant-numeric: tabular-nums</code>) sur tous les prix et quantités.</p>
+    </div>
+    <div class="card"><h3 style="margin-top:0">Espacements, rayons, ombres</h3>
+      <div class="tbl"><table style="min-width:0">
+        <tr><th>Token</th><th>Valeur</th><th>Usage</th></tr>
+        <tr><td><code>--sp-1…6</code></td><td>4 · 8 · 12 · 16 · 24 · 32</td><td>échelle unique, pas de valeurs hors échelle</td></tr>
+        <tr><td><code>--r</code></td><td>10 px</td><td>boutons, puces, champs</td></tr>
+        <tr><td><code>--r2</code></td><td>14–20 px</td><td>cartes, panneaux, tableaux</td></tr>
+        <tr><td><code>--sh</code></td><td>0 1px 2px rgba(3,36,68,.05), 0 12px 32px −16px rgba(3,36,68,.18)</td><td>une seule ombre, sur les cartes qui flottent</td></tr>
+        <tr><td>hauteurs</td><td>36 · 40 · 44 · 50</td><td>puce · bouton secondaire · bouton / champ · CTA principal</td></tr>
+        <tr><td>cible tactile</td><td>≥ 44 × 44 px</td><td>obligatoire, y compris icônes</td></tr>
+        <tr><td>mouvement</td><td>150–250 ms, FLIP 450 ms</td><td><code>cubic-bezier(.2,.7,.2,1)</code>, désactivé en <code>prefers-reduced-motion</code></td></tr>
+      </table></div>
+    </div>
+  </div>
+  <h3>Iconographie</h3>
+  <p>Sprite SVG unique, traits 2 px, coins arrondis, 24 × 24, couleur héritée. Icônes métier dessinées sur la même grille (gant, masque, suture, sachet, autoclave, dent). Jamais d'emoji, jamais de pictos de bibliothèques mélangées. Une icône sans texte porte toujours un <code>aria-label</code>.</p>
+</section>
+
+<section id="logo">
+  <h2>3. Logo &amp; marque</h2>
+  <div class="grid2">
+    <div class="card"><h3 style="margin-top:0">Deux fichiers, une règle</h3>
+      <ul style="font-size:14px">
+        <li><b>Logo blanc</b> (<code>logo-evidentall-blanc-sans-baseline.svg</code>) sur fond marine : header, panneau de bienvenue, cartes « recommandation », e-mails transactionnels.</li>
+        <li><b>Logo bleu</b> (<code>logo-evidentall-bleu-sans-baseline.svg</code>) sur fond blanc : factures, PDF de devis, favicon étendu, pages d'erreur.</li>
+        <li><b>La baseline « Le pilotage intelligent » n'apparaît pas dans l'interface.</b> Elle est réservée au site vitrine (hero, intro animée) et aux supports de communication. Dans l'outil, l'utilisateur sait déjà où il est.</li>
+        <li>Hauteur minimale 22 px (header mobile), 26 px (header desktop). Zone de protection = hauteur du « e ». Jamais déformé, jamais recoloré, jamais sur photo.</li>
+        <li>Le mot « Marketplace » à côté du logo est du texte (11 px, capitales espacées, blanc 60 %), pas une partie du logo.</li>
+      </ul>
+    </div>
+    <div class="card"><h3 style="margin-top:0">Ton</h3>
+      <ul style="font-size:14px">
+        <li>Phrases courtes, voix active, vouvoiement. « Livré jeudi », pas « Délai de livraison estimé : J+3 ».</li>
+        <li>On explique les chiffres : « 2,56 € au catalogue, mais 32,50 € livré pour 10 ». Un nombre seul est une occasion manquée.</li>
+        <li>Les erreurs disent quoi faire : « Plus que 8 en stock. Réduire à 8 · Prendre le reste chez Docteur Strong ».</li>
+        <li>Pas de superlatifs marketing dans l'outil (« incroyable », « exclusif »). La preuve suffit : « 98,6 % de commandes conformes ».</li>
+        <li>Chiffres à la française : <code>1 099,00 €</code>, espaces fines insécables, virgule décimale.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="composants">
+  <h2>4. Inventaire des composants</h2>
+  <p>Chaque composant est présent dans le prototype v6 ; le nom indiqué est celui du sélecteur CSS à reprendre. États à implémenter : repos, survol, focus visible, actif/sélectionné, désactivé, chargement, erreur.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Composant</th><th>Sélecteur proto</th><th>Rôle</th><th>Points d'attention</th></tr></thead>
+    <tbody>
+      <tr><td>Header</td><td><code>.top</code></td><td>Accueil (gauche) · logo · recherche · listes / favoris / panier</td><td>Identique sur toutes les pages. Badge panier = nombre d'articles. Mobile : recherche passe en 2ᵉ ligne.</td></tr>
+      <tr><td>Recherche avec suggestions</td><td><code>.search .sug</code></td><td>Catégories, marques, produits, recherches récentes</td><td>Débounce 150 ms, 7 suggestions max, navigation clavier ↑↓ Entrée Échap, <code>role=listbox</code>.</td></tr>
+      <tr><td>Panneau de bienvenue</td><td><code>.wl</code></td><td>Explique le modèle en 3 étapes</td><td>Ancré à gauche, une fois par appareil (<code>localStorage</code>), jamais si connecté ni en lien profond.</td></tr>
+      <tr><td>Pastille d'intention</td><td><code>.ichip</code></td><td>Variante · quantité · adresse</td><td>Éditable en place ; la quantité est reliée au rail.</td></tr>
+      <tr><td>Rail de quantité</td><td><code>.qrail</code></td><td>Curseur + champ + −/+ et phrase de palier</td><td>Chaque changement recalcule et réordonne (FLIP). Bornes par produit (<code>max</code>).</td></tr>
+      <tr><td>Cartes réponses</td><td><code>.answers .ans</code></td><td>Moins cher · Recommandation · Plus rapide</td><td>Si recommandation = moins cher, la 1ʳᵉ carte devient « prix catalogue le plus bas » (pédagogique). Mobile : carrousel snap, recommandation en premier.</td></tr>
+      <tr><td>Tableau des offres</td><td><code>.otbl .orow</code></td><td>Une ligne par partenaire</td><td>Tri total / délai, meilleure ligne surlignée, détail du prix dépliable, mobile en cartes empilées.</td></tr>
+      <tr><td>Détail du prix</td><td><code>.odet</code></td><td>Catalogue × q · remise · port · total · paliers</td><td>Toujours cohérent au centime avec la ligne.</td></tr>
+      <tr><td>Carte produit (catégorie)</td><td><code>.pc</code></td><td>5 éléments : état, titre, conditionnement, prix dès, N partenaires + CTA</td><td>Un seul badge (stock). Favori au survol / appui long. Titre jamais tronqué au milieu d'un mot.</td></tr>
+      <tr><td>Facettes</td><td><code>.fac .fo</code></td><td>Filtres avec compteurs recalculés</td><td>Option à 0 grisée. Mobile : tiroir plein écran avec compteur de filtres actifs et bouton « Voir les résultats ».</td></tr>
+      <tr><td>Puces de filtres actifs</td><td><code>.chips-a</code></td><td>Rappel + suppression unitaire</td><td>« Tout effacer » dès 2 filtres.</td></tr>
+      <tr><td>Mini-panier</td><td><code>.mc</code></td><td>Confirmation d'ajout, quantités, sous-total</td><td>Tiroir droit, Échap ferme, focus rendu au déclencheur.</td></tr>
+      <tr><td>Colis (panier)</td><td><code>.colis</code></td><td>Groupe par fournisseur : port, délai, total colis</td><td>Nudge franco (« Ajoutez 56,68 € HT… »). Lignes avec avertissements.</td></tr>
+      <tr><td>Avertissement de ligne</td><td><code>.warnbox</code></td><td>Prix modifié · stock insuffisant</td><td>Toujours avec 2 actions. Bloque le paiement tant que non résolu.</td></tr>
+      <tr><td>Erreur bloquante</td><td><code>.errbox</code></td><td>Paiement indisponible, panier changé</td><td><code>role=alert</code>, focus déplacé dessus, lien vers la correction.</td></tr>
+      <tr><td>Étapes du tunnel</td><td><code>.steps .stp</code></td><td>Panier → Livraison → Paiement</td><td>Étapes faites cliquables, étape courante non cliquable.</td></tr>
+      <tr><td>Option carte</td><td><code>.card-opt</code></td><td>Mode de livraison, de paiement</td><td>Radio natif, carte entière cliquable, prix à droite.</td></tr>
+      <tr><td>Liste de réassort</td><td><code>.ldet .ll</code></td><td>Références, quantité habituelle, dernier prix vs meilleur prix du jour</td><td>« Tout ajouter au meilleur prix » crée des lignes par fournisseur.</td></tr>
+      <tr><td>Alerte prix</td><td><code>.al</code></td><td>Seuil, prix du jour, jauge 6 mois</td><td>Liée au compte cabinet, pas à l'appareil.</td></tr>
+      <tr><td>Timeline commande</td><td><code>.tl</code></td><td>Confirmée · Préparée · Expédiée · Livrée</td><td>Retard = texte explicite + geste commercial.</td></tr>
+      <tr><td>Comparateur matériel</td><td><code>.cmp</code></td><td>Côte à côte, même sous-catégorie uniquement</td><td>Meilleures valeurs surlignées, « différences seulement ».</td></tr>
+      <tr><td>Schéma dentaire</td><td><code>.teeth</code></td><td>Sélection des dents (FDI)</td><td>Boutons ≥ 30 px, <code>aria-pressed</code>, numérotation FDI avec rappel maxillaire / mandibule.</td></tr>
+      <tr><td>Toast</td><td><code>.toast</code></td><td>Confirmation courte</td><td><code>role=status aria-live=polite</code>, 2,4 s, jamais pour une erreur.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="donnees">
+  <h2>5. Modèle de données</h2>
+  <p>Le minimum pour que « 1 produit, N offres » et le prix livré tiennent. Les noms sont indicatifs ; les champs marqués <span class="pill">requis</span> conditionnent l'affichage.</p>
+  <div class="grid2">
+    <div class="card"><h3 style="margin-top:0">Product</h3><pre>id, slug
+name            <span class="pill">requis</span>  « Gants d'examen nitrile non poudrés »
+category_id     <span class="pill">requis</span>  taxonomie Evidentall (2 niveaux)
+brand_id
+pack_label      <span class="pill">requis</span>  « boîte de 100 »
+pack_qty        <span class="pill">requis</span>  100   → prix unitaire
+unit_label      « gant »
+specs[]         {label, value}  Nitrile, Non poudré, EN 455
+variants[]      Variant
+images[]
+price_history[] {date, best_delivered_ht}</pre></div>
+    <div class="card"><h3 style="margin-top:0">Variant · Offer · PriceTier</h3><pre>Variant { id, product_id, axis:"taille", value:"M" }
+
+Offer {
+  id, product_id, variant_id?, partner_id
+  partner_sku, catalog_price_ht  <span class="pill">requis</span>
+  vat_rate                       <span class="pill">requis</span>  0.20 | 0.055
+  tiers[] PriceTier { min_qty, unit_price_ht }
+  stock_qty, stock_status        in | low | out
+  lead_time_days                 <span class="pill">requis</span>
+  updated_at
+}</pre></div>
+    <div class="card"><h3 style="margin-top:0">Partner · ShippingRule</h3><pre>Partner {
+  id, name, logo, city
+  reliability_rate      % commandes conformes 90 j
+  median_lead_days      constaté sur 90 j
+  rating, rating_count  avis vérifiés post-livraison
+  payment_methods[]     cb | sepa | transfer30
+  returns_days
+}
+ShippingRule {
+  partner_id, zone        FR-metro | Corse | DOM
+  base_price_ht           4.90
+  free_from_ht            60   (null = jamais)
+  express { price_ht, lead_days }?
+}</pre></div>
+    <div class="card"><h3 style="margin-top:0">Cart · Order · Quote · List · Alert</h3><pre>Cart { lines[] CartLine, address_id }
+CartLine { offer_id, qty, unit_price_ht_at_add,
+           flags: price_changed | stock_short }
+Order  { id "EV-xxxxx-n", partner_id, lines[],
+         subtotal_ht, shipping_ht, vat, total_ttc,
+         status: confirmed|prepared|shipped|delivered,
+         eta, tracking_url, invoice_url }
+Quote  { id "DV-xxxx", work_type, teeth[] FDI, shade,
+         deadline, files[], lab_ids[], answers[] }
+List   { id, account_id, name, items[] {product_id, usual_qty} }
+Alert  { account_id, product_id, threshold_ht, active }</pre></div>
+  </div>
+  <p>Une commande multi-fournisseurs = un <code>Checkout</code> parent qui génère un <code>Order</code> par partenaire, chacun avec sa facture. Le paiement est unique côté acheteur et réparti côté plateforme.</p>
+</section>
+
+<section id="regles">
+  <h2>6. Règles de calcul</h2>
+  <div class="rule"><h4>R1 · Prix unitaire pour une quantité</h4><p>Le palier applicable est le plus grand <code>min_qty ≤ q</code>. Sans palier : prix catalogue.</p><div class="ex"><b>Elite Ceram</b>, catalogue 3,02 €, paliers 10 → 2,95 €, 30 → 2,85 €. Pour q = 25 : 2,95 €. Pour q = 30 : 2,85 €.</div></div>
+  <div class="rule"><h4>R2 · Port</h4><p><code>sous_total_ht = unit × q</code>. Port = 0 si <code>base_price = 0</code> ou si <code>free_from</code> est défini et <code>sous_total_ht ≥ free_from</code>. Sinon <code>base_price</code>. Le port se calcule par fournisseur sur l'ensemble du colis, pas par ligne.</p><div class="ex"><b>Docteur AI</b>, port 4,90 € offert dès 60 €. 20 masques × 1,58 € = 31,60 € → port 4,90 €. Avec 10 boîtes de gants en plus (27,50 €) le colis passe à 59,10 € : le nudge affiche « Ajoutez 0,90 € HT pour le port offert ».</div></div>
+  <div class="rule"><h4>R3 · Total livré et prix par unité</h4><p><code>total_livre_ht = sous_total_ht + port_ht</code> ; <code>par_unite = total_livre_ht / q</code>. C'est <b>ce total</b> qui classe les offres, jamais le catalogue.</p><div class="ex"><b>Dental Good Deal</b>, catalogue 2,56 €, port 6,90 € offert dès 150 €. q = 10 → 25,60 + 6,90 = <b>32,50 €</b> (3,25 €/boîte), contre 29,50 € chez Elite Ceram. q = 40 → 2,35 × 40 = 94,00 + 6,90 = 100,90 € : il devient 2ᵉ.</div></div>
+  <div class="rule"><h4>R4 · HT / TTC</h4><p>Tout est stocké et calculé en HT. TTC = HT × (1 + <code>vat_rate</code> du produit), appliqué ligne par ligne puis sommé (pas sur le total global, les taux peuvent différer). L'interrupteur HT/TTC est global, mémorisé par compte, et le total TTC est toujours affiché au moment de payer. Arrondi au centime à chaque étape (<code>round half up</code>).</p><div class="ex">Bug actuel à corriger : un prix HT de 2,56 € affiché « Total TTC 2,56 € » avec TVA 0,43 € extraite. Correct : 2,56 € HT → 3,07 € TTC. <b>Test automatisé obligatoire</b> sur ce cas.</div></div>
+  <div class="rule"><h4>R5 · Classement et exclusions</h4><p>Tri par défaut : <code>total_livre_ht</code> croissant, puis <code>lead_time_days</code> croissant, puis <code>reliability_rate</code> décroissant. Les offres en rupture ne participent ni au « moins cher » ni aux trois réponses ; elles restent visibles en fin de liste, grisées, avec « m'alerter ». Une offre sans délai renseigné est classée après celles qui en ont un.</p></div>
+  <div class="rule"><h4>R6 · Score de recommandation</h4><p>Sur les offres disponibles : <code>score = 0,60 × prix_norm + 0,25 × (délai − 1) / 4 + 0,15 × (100 − fiabilité) / 7 + 0,10 si stock faible</code>, où <code>prix_norm = (total − min) / (max − min)</code>. Le score le plus bas gagne. Les pondérations sont des paramètres produit, pas du code en dur, et la phrase de justification est générée à partir des deux premiers facteurs qui ont fait la différence.</p><div class="ex">q = 10 : Elite Ceram 29,50 € · 48 h · 98,6 % → score 0,04. Docteur Strong 32,00 € · 24 h · 99,1 % → 0,25. Recommandation = Elite Ceram, phrase : « Le moins cher, livré en 48 h, 98,6 % de commandes conformes ».</div></div>
+  <div class="rule"><h4>R7 · Prix unitaire normalisé</h4><p>Pour comparer des conditionnements différents dans une catégorie : <code>prix_par_unite = total_livre_ht / (q × pack_qty)</code>, affiché « 3,0 c / gant ». Le tri « prix unitaire » de la page catégorie utilise cette valeur à q = 1.</p></div>
+  <div class="rule"><h4>R8 · Date de livraison</h4><p>Date = aujourd'hui + <code>lead_time_days</code> en jours ouvrés (sans samedi, dimanche, jours fériés), si commande avant l'heure limite du partenaire (champ <code>cutoff_time</code>, défaut 14 h). Afficher le jour en toutes lettres (« jeu. 19 nov. »), jamais seulement « J+3 ».</p></div>
+  <div class="rule"><h4>R9 · Regroupement des variantes</h4><p>À l'import, deux lignes partenaire appartiennent au même produit si elles partagent marque + référence fabricant normalisée (ou GTIN) + conditionnement, et ne diffèrent que par un axe de variante connu (taille, couleur, décimale, longueur). Les tailles ne sont jamais des produits distincts côté acheteur.</p></div>
+</section>
+
+<section id="parcours">
+  <h2>7. Parcours &amp; URLs</h2>
+  <p>Toute vue a une URL stable, partageable, compatible avec le bouton Précédent. Le prototype utilise des ancres ; en production, des chemins.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Vue</th><th>URL cible</th><th>Proto v6</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Accueil</td><td><code>/marketplace</code></td><td><code>#accueil</code></td><td>Recherche, catégories, réassorts, « Chez plusieurs partenaires »</td></tr>
+      <tr><td>Catégorie</td><td><code>/marketplace/c/consommables/gants?marque=jet&amp;tri=livre</code></td><td><code>#categorie-conso</code></td><td>Filtres dans la query string, ordre stable</td></tr>
+      <tr><td>Recherche</td><td><code>/marketplace/recherche?q=gants+nitrile</code></td><td>→ catégorie ou fiche</td><td>Une requête qui matche une fiche unique y redirige</td></tr>
+      <tr><td>Fiche produit</td><td><code>/marketplace/p/gants-nitrile-jet-100?q=25&amp;v=M</code></td><td><code>#produit-gants-jet-100</code></td><td>Quantité et variante dans l'URL : un lien envoyé reproduit la comparaison</td></tr>
+      <tr><td>Comparateur matériel</td><td><code>/marketplace/comparer?ids=a,b,c</code></td><td><code>#comparer-autoclaves</code></td><td>Même sous-catégorie obligatoire</td></tr>
+      <tr><td>Partenaire</td><td><code>/marketplace/partenaires/elite-ceram</code></td><td><code>#partenaire-elite-ceram</code></td><td></td></tr>
+      <tr><td>Panier · Livraison · Paiement</td><td><code>/marketplace/panier</code> · <code>/livraison</code> · <code>/paiement</code></td><td><code>#panier</code> · <code>#livraison</code> · <code>#paiement</code></td><td>Retour autorisé vers les étapes faites</td></tr>
+      <tr><td>Confirmation</td><td><code>/marketplace/commande/EV-48211</code></td><td><code>#confirmation</code></td><td>Un parent, N commandes fournisseur</td></tr>
+      <tr><td>Listes · alertes · commandes · devis</td><td><code>/marketplace/mon-cabinet/{listes|alertes|commandes|devis}</code></td><td><code>#mes-listes</code></td><td>Liées au compte cabinet, partagées entre membres</td></tr>
+      <tr><td>Devis travaux</td><td><code>/marketplace/devis/nouveau</code></td><td><code>#devis-travaux</code></td><td>Hors panier</td></tr>
+    </tbody>
+  </table></div>
+  <p>Règles : le site vitrine renvoie vers <code>/marketplace</code> ; <code>/marketplace-dashboard</code>, <code>/marketplace/products/{id}</code> et <code>/marketplace/cart</code> (actuels) redirigent en 301 vers les nouvelles URLs ; aucune page du tunnel n'affiche le shell de l'application (barre latérale, sélecteur de langue, « Visite complète »).</p>
+</section>
+
+<section id="etats">
+  <h2>8. États &amp; erreurs à couvrir</h2>
+  <div class="grid3">
+    <div class="card"><h3 style="margin-top:0">Avant l'achat</h3><ul style="font-size:13.5px"><li>Recherche sans résultat : suggestions de catégories proches, pas « 0 résultat ».</li><li>Catégorie vide : ne jamais l'afficher (filtrage à la génération).</li><li>Produit avec une seule offre : pas de « trois réponses », bloc d'achat direct.</li><li>Toutes les offres en rupture : fiche visible, « m'alerter » en CTA principal.</li><li>Prix non disponible pour l'adresse (DOM) : « Devis de port sur demande ».</li></ul></div>
+    <div class="card"><h3 style="margin-top:0">Panier &amp; paiement</h3><ul style="font-size:13.5px"><li>Prix modifié depuis l'ajout → avertissement de ligne, 2 actions, paiement bloqué.</li><li>Stock insuffisant → réduire ou répartir chez un autre partenaire.</li><li>Offre retirée → ligne barrée, alternative proposée.</li><li>Paiement refusé → message précis du prestataire, panier conservé.</li><li>Virement indisponible (cabinet non vérifié) → alternatives, panier mémorisé.</li><li>Session expirée en cours de tunnel → panier restauré au retour.</li></ul></div>
+    <div class="card"><h3 style="margin-top:0">Après l'achat</h3><ul style="font-size:13.5px"><li>Commande partielle (un fournisseur sur deux confirme) → statut par colis, remboursement automatique du colis annulé.</li><li>Retard → timeline explicite, geste commercial, pas de silence.</li><li>Litige / retour → formulaire par colis, suivi dans Commandes.</li><li>Facture manquante → « à venir à l'expédition », jamais un lien mort.</li></ul></div>
+  </div>
+</section>
+
+<section id="a11y">
+  <h2>9. Accessibilité &amp; responsive</h2>
+  <div class="grid2">
+    <div class="card"><h3 style="margin-top:0">Obligations (WCAG 2.2 AA)</h3><ul style="font-size:14px"><li>Landmarks : <code>header</code>, <code>nav</code>, <code>main</code>, <code>aside</code> (filtres), <code>footer</code>. Un H1 par vue.</li><li>Contraste ≥ 4,5:1 pour tout texte, ≥ 3:1 pour les icônes porteuses de sens. Les mentions HT/TTC ne sont jamais le texte le plus faible.</li><li>Cibles ≥ 44 × 44 px, espacées de 8 px.</li><li>Focus visible 2 px bleu, jamais supprimé. Après fermeture d'un tiroir ou d'une modale, le focus revient au déclencheur.</li><li>Images produit : <code>alt</code> = nom du produit. Icônes décoratives <code>aria-hidden</code>.</li><li>Tri, filtres, tiroirs utilisables au clavier ; suggestions en <code>role=listbox</code>.</li><li>Confirmations en <code>aria-live=polite</code>, erreurs en <code>role=alert</code> avec déplacement du focus.</li><li><code>prefers-reduced-motion</code> : aucune animation de réordonnancement, états finaux immédiats.</li></ul></div>
+    <div class="card"><h3 style="margin-top:0">Points de rupture</h3><ul style="font-size:14px"><li><b>≥ 1100 px</b> : rail droit 320 px, tableau des offres en 6 colonnes, 3 cartes réponses.</li><li><b>860–1100 px</b> : rail sous la liste en 2 colonnes, catégories 2 colonnes.</li><li><b>&lt; 860 px</b> : header 2 lignes, réponses en carrousel snap (recommandation en premier), offres en cartes empilées avec tri par pastilles, filtres en tiroir plein écran, panier avec total par colis en tête.</li><li>Aucun défilement horizontal du corps de page ; seuls tableaux de comparaison matériel et schéma dentaire défilent dans leur conteneur.</li><li>Tester sur iOS Safari et Android Chrome réels, pas seulement en émulation.</li></ul></div>
+  </div>
+</section>
+
+<section id="prerequis">
+  <h2>10. Prérequis données</h2>
+  <p>Sans ces quatre chantiers, l'interface ne peut pas tenir ses promesses. Ils sont à lancer en parallèle du lot 1.</p>
+  <div class="steps">
+    <div class="step"><div><b>Taxonomie Evidentall</b><span>12 familles × 6–10 sous-familles, codes stables. Table de mapping des catégories de chaque fournisseur (« Hygiène et stérilisation dentaire &gt; LES CASSETTES » → <code>sterilisation/cassettes</code>). Toute catégorie sans produit en stock est masquée.</span></div></div>
+    <div class="step"><div><b>Normalisation à l'import</b><span>Casse des titres (pas de MAJUSCULES), référence fabricant extraite du titre, conditionnement et quantité par pack extraits (« Boîte de 100 » → <code>pack_qty = 100</code>), unité, taux de TVA par produit, marque dédoublonnée (3TECH / 3Tech).</span></div></div>
+    <div class="step"><div><b>Regroupement produit</b><span>Clé de rapprochement : GTIN si présent, sinon marque + référence normalisée + conditionnement. Les variantes (taille, couleur) rattachées à la fiche parente. Objectif : ≥ 80 % des références des 8 partenaires rattachées automatiquement, le reste en file de validation.</span></div></div>
+    <div class="step"><div><b>Conditions commerciales structurées</b><span>Par partenaire : grille de port par zone, franco, express, délai d'expédition, heure limite, paliers de prix par offre, moyens de paiement, retours. Fournies par API ou fichier mensuel, versionnées (un prix a une date de début et de fin).</span></div></div>
+    <div class="step"><div><b>Historique et fiabilité</b><span>Journal des meilleurs prix livrés par produit (quotidien), délais constatés et taux de conformité par partenaire (90 jours glissants), alimentés par les commandes réelles.</span></div></div>
+  </div>
+</section>
+
+<section id="tests">
+  <h2>11. Protocole de tests utilisateurs</h2>
+  <div class="grid2">
+    <div class="card"><h3 style="margin-top:0">Qui, quand, comment</h3><ul style="font-size:14px"><li>6 participants : 3 assistant·es dentaires (passent les commandes), 2 praticiens, 1 gestionnaire de centre. Clients et non-clients.</li><li>45 min en visio, écran partagé, pensée à voix haute, sur le prototype v6 puis sur le site actuel (ordre alterné).</li><li>Avant le lot 1, puis à chaque lot. Un facilitateur, un observateur qui note.</li></ul></div>
+    <div class="card"><h3 style="margin-top:0">Tâches et critères de réussite</h3><ol style="font-size:14px"><li><b>« Vous devez recommander vos gants habituels, 10 boîtes. Faites-le. »</b> Réussite : commande au meilleur prix livré en &lt; 90 s, sans aide. Observer : comprend-il « livré » vs « catalogue » ?</li><li><b>« Combien vous coûteraient 25 boîtes, et chez qui ? »</b> Réussite : trouve le curseur, lit la bonne réponse, explique pourquoi le classement a changé.</li><li><b>« Commandez des masques et des gants chez deux fournisseurs différents. »</b> Réussite : comprend qu'il y a deux colis, deux factures, un paiement ; pas de surprise au total.</li><li><b>« Le stock est insuffisant sur une ligne. Que faites-vous ? »</b> Réussite : choisit une des deux actions sans hésiter.</li><li><b>« Demandez un devis pour une couronne sur la 36. »</b> Réussite : trouve l'entrée, sélectionne la dent, envoie.</li></ol></div>
+  </div>
+  <div class="card"><h3 style="margin-top:0">Ce qu'on mesure</h3><ul style="font-size:14px"><li>Taux de réussite par tâche, temps, nombre d'erreurs, demandes d'aide.</li><li>Questions de compréhension après chaque tâche : « Pourquoi Elite Ceram est-il recommandé ? », « Que veut dire 2,95 € palier 10+ ? ».</li><li>SUS en fin de session, comparé au site actuel.</li><li>Verbatims sur la confiance : « est-ce que vous croyez ce prix ? ».</li></ul><p style="font-size:13px;color:var(--mute);margin-top:8px">Seuil pour passer au lot suivant : 5 participants sur 6 réussissent les tâches 1 à 3 sans aide, et personne ne confond prix catalogue et prix livré.</p></div>
+</section>
+
+<section id="plan">
+  <h2>12. Plan de mise en ligne &amp; KPIs</h2>
+  <p>Mesurer avant de changer : relever sur le site actuel, pendant 4 semaines, le taux d'abandon panier, le taux de clic sur le comparateur, le délai jusqu'au premier ajout, le nombre de tickets « montant différent ». Ce sont les références.</p>
+  <div class="lots">
+    <div class="lot"><span class="pill">Lot 1 · 6 semaines</span><h3>Fondations</h3><ul><li>Header unique, fiche « 1 produit, N offres » avec quantité sur 3 familles pilotes (gants, masques, sutures)</li><li>Calcul HT/TTC corrigé + tests</li><li>Prix livré, paliers, port, franco</li><li>Carte produit, suggestions de recherche</li></ul><div class="kpi">Clic « Comparer les offres » &gt; 30 % · 0 écart HT/TTC · test utilisateurs ≥ 5/6</div></div>
+    <div class="lot"><span class="pill">Lot 2 · 5 semaines</span><h3>Acheter</h3><ul><li>Panier par colis, livraison, paiement, confirmation</li><li>Avertissements prix / stock, erreurs de paiement</li><li>Mini-panier, compte en fin de tunnel</li><li>Commandes et factures</li></ul><div class="kpi">Abandon panier &lt; 40 % · 0 ticket « montant différent » · délai ajout→paiement &lt; 4 min</div></div>
+    <div class="lot"><span class="pill">Lot 3 · 6 semaines</span><h3>Naviguer</h3><ul><li>Taxonomie unifiée + mapping, pages catégorie à facettes</li><li>Accueil recentré, URLs partageables, 301 depuis l'ancien</li><li>Mobile : 44 px, tiroir filtres, cartes</li><li>Extension à toutes les familles de consommables</li></ul><div class="kpi">0 catégorie vide · 100 % des cibles mobiles ≥ 44 px · part du trafic mobile convertie ≥ desktop × 0,8</div></div>
+    <div class="lot"><span class="pill">Lot 4 · 5 semaines</span><h3>Fidéliser</h3><ul><li>Listes de réassort, alertes prix, historique</li><li>Comparateur matériel, pages partenaires</li><li>Devis travaux prothétiques</li><li>Bascule complète, retrait de l'ancien marketplace</li></ul><div class="kpi">50 % des commandes via liste ou réassort · fréquence d'achat +20 % · NPS acheteurs &gt; 40</div></div>
+  </div>
+  <p><b>Bascule progressive</b> : le nouveau marketplace vit sur <code>/marketplace</code> pour les 3 familles pilotes dès le lot 1, l'ancien reste accessible pour le reste du catalogue avec un bandeau « nouvelle version ». À chaque lot, on étend le périmètre et on redirige. L'ancien est retiré à la fin du lot 4, après deux semaines sans régression des KPIs.</p>
+</section>
+
+<section id="fournisseur">
+  <h2>13. Côté fournisseur (hors périmètre, à prévoir)</h2>
+  <p>Le prototype couvre l'acheteur. Pour que les promesses tiennent, le partenaire a besoin de :</p>
+  <ul>
+    <li>Un <b>import de catalogue</b> guidé (CSV / API) qui montre en direct le rattachement aux fiches Evidentall et signale les champs manquants (conditionnement, TVA, délai).</li>
+    <li>Une <b>grille de conditions</b> éditable : port par zone, franco, express, paliers par produit, heure limite, moyens de paiement. Avec aperçu « comment votre offre apparaît pour 10 boîtes ».</li>
+    <li>Un <b>tableau de commandes</b> : confirmer, préparer, expédier avec numéro de suivi, déposer la facture. Le délai constaté et la conformité s'en déduisent.</li>
+    <li>Une <b>boîte de réception des devis</b> (laboratoires) : demandes avec fichiers, réponse prix + délai, acceptation.</li>
+    <li>Des <b>indicateurs honnêtes</b> : position moyenne dans le classement, part des recherches où il est le moins cher, raisons de perte (prix, port, délai). C'est ce qui remplace la « place achetée ».</li>
+  </ul>
+  <p>Ce côté mérite son propre audit et son propre prototype, avec les mêmes principes : une langue claire, une action par écran, aucune surprise.</p>
+</section>
+
+<section id="dod">
+  <h2>14. Definition of done (par lot)</h2>
+  <div class="check">
+    <label><input type="checkbox"> Tous les écrans du lot existent en desktop (1440) et mobile (390), testés sur iOS Safari et Android Chrome réels.</label>
+    <label><input type="checkbox"> Les règles R1 à R9 sont couvertes par des tests automatisés avec les exemples de cette spec.</label>
+    <label><input type="checkbox"> Tous les textes sont relus par quelqu'un du métier (assistant·e ou praticien) : pas de jargon, pas de superlatif.</label>
+    <label><input type="checkbox"> Audit accessibilité automatique (axe) sans erreur critique + parcours clavier complet validé à la main.</label>
+    <label><input type="checkbox"> Aucune couleur hors tokens, aucune police hors Montserrat, logo sans baseline dans l'interface.</label>
+    <label><input type="checkbox"> Toutes les URLs du lot sont partageables, le bouton Précédent fonctionne, les anciennes URLs redirigent.</label>
+    <label><input type="checkbox"> Les états d'erreur du §8 concernés par le lot sont implémentés avec leurs actions, pas seulement un message.</label>
+    <label><input type="checkbox"> Test utilisateurs du lot passé (≥ 5/6 sur les tâches cibles) et KPIs de référence relevés avant mise en ligne.</label>
+  </div>
+</section>
+
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+  const links=[...document.querySelectorAll('.toc a')];const map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('on'));const a=map.get(e.target.id);if(a)a.classList.add('on')}})},{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('main section').forEach(s=>io.observe(s));
+  const K='evi-spec-dod';let st={};try{st=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
+  document.querySelectorAll('.check input').forEach((i,ix)=>{i.id='dod'+ix;i.checked=!!st[i.id];i.addEventListener('change',()=>{st[i.id]=i.checked;try{localStorage.setItem(K,JSON.stringify(st))}catch(e){}})});
+})();
+</script>

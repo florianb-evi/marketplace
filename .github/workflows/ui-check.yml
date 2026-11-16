@@ -1,0 +1,53 @@
+# .github/workflows/ui-check.yml
+# Audit UI/UX automatique sur chaque pull request (UXKIN UI Check).
+# Vérifie uniquement les lignes ajoutées : contrôles sans action, listes sans états
+# chargement/erreur/vide, couleurs hors tokens, bases d'accessibilité, patterns génériques.
+name: UI check
+
+on:
+  pull_request:
+    paths:
+      - "**/*.{tsx,jsx,ts,js,vue,svelte,astro,html,css,scss}"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  ui-check:
+    name: UXKIN UI Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0            # l'action compare avec la base de la PR
+
+      - name: Vérifier l'UI ajoutée
+        id: uxkin
+        uses: uxkin/ui-check@v1
+        with:
+          # On veut être prévenu dès un avertissement (a11y, couleur hors charte,
+          # lien placeholder…), pas seulement sur les erreurs.
+          fail-on: warning
+          # Code front du marketplace + prototypes HTML, pas les builds ni le legacy.
+          paths: |
+            src/**/*.{tsx,jsx,ts,js,vue,html,css,scss}
+            apps/**/*.{tsx,jsx,ts,js,vue,html,css,scss}
+            prototypes/**/*.html
+          ignore: |
+            **/legacy/**
+            **/vendor/**
+            **/*.generated.*
+          # Les fichiers de tokens (tokens.css, theme.*, colors.*) sont exemptés
+          # automatiquement du contrôle "hardcoded-color" : mettez-y la charte
+          # (#0077fd, #50c3ff, #032444, gris) et rien d'autre.
+          # Aucune vérification désactivée : le "generic-gradient" (violet→bleu)
+          # est justement un des défauts relevés dans l'audit.
+          disable: ""
+
+      - name: Résumé
+        if: always()
+        run: |
+          echo "Erreurs : ${{ steps.uxkin.outputs.errors }}"
+          echo "Avertissements : ${{ steps.uxkin.outputs.warnings }}"
+          echo "Notices : ${{ steps.uxkin.outputs.notices }}"
