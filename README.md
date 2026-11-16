@@ -6,7 +6,7 @@ Prototypes, audit, spécification et outillage qualité de la refonte du marketp
 
 | Dossier | Contenu |
 |---|---|
-| `prototypes/marketplace.html` | **Prototype complet** (v8) : accueil, rayons, fiche « 1 produit, N offres » par quantité, panier → livraison → paiement, listes de réassort, alertes, commandes, devis labo, comparateur matériel, page partenaire. Un seul fichier, aucune dépendance. |
+| `index.html` (= `prototypes/marketplace.html`) | **Le marketplace** (prototype complet) : accueil, rayons, fiche « 1 produit, N offres » par quantité, panier → livraison → paiement, listes de réassort, alertes, commandes, devis labo, comparateur matériel, page partenaire. Un seul fichier, aucune dépendance. |
 | `prototypes/comparateur-reference.html` | L'écran de référence isolé : le comparateur par quantité avec les trois réponses. |
 | `prototypes/archive/` | Les versions intermédiaires (v1 → v7), pour l'historique des décisions. |
 | `docs/audit/` | Audit UI/UX du marketplace en production (16 nov. 2026) avec captures. |
@@ -16,9 +16,9 @@ Prototypes, audit, spécification et outillage qualité de la refonte du marketp
 | `.github/workflows/ui-check.yml` | Audit UI automatique sur chaque pull request (UXKIN UI Check). |
 | `tests/` | Tests Playwright (desktop 1440 / mobile 390) : erreurs JS, débordements, parcours complets. |
 
-## Ouvrir le prototype
+## Ouvrir
 
-Ouvrir `prototypes/marketplace.html` dans un navigateur. Liens profonds utiles :
+La racine du site **est** le marketplace : `https://florianb-evi.github.io/marketplace/` (ou `index.html` en local). Présentation, audit et spec : `docs/`. Liens profonds utiles :
 
 - `#accueil` · `#categorie-conso` · `#categorie-ster` · `#categorie-chir`
 - `#produit-gants-jet-100` (déplacez la quantité de 10 à 25) · `#produit-masque-3p` · `#produit-pgcl`

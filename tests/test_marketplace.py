@@ -1,6 +1,6 @@
 import asyncio
 from playwright.async_api import async_playwright
-U='file://'+__import__('os').path.abspath('prototypes/marketplace.html')+''
+U='file://'+__import__('os').path.abspath('index.html')+''
 async def main():
     async with async_playwright() as p:
         b=await p.chromium.launch()

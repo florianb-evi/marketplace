@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evidentall · Refonte marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--p:#0077fd;--a:#50c3ff;--s:#032444;--ink:#0b1a2b;--mute:#6b7a8c;--line:#e1e8f0;--bg:#f5f8fc}
+*{box-sizing:border-box}body{margin:0;font-family:Montserrat,system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--s);color:#fff;padding:18px 24px;display:flex;align-items:center;gap:12px}
+header img{height:26px}header span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);font-weight:700}
+main{max-width:980px;margin:0 auto;padding:40px 20px 80px}
+h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:0 0 8px}p.l{color:var(--mute);margin:0 0 28px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+a.c{display:block;background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s}
+a.c:hover{transform:translateY(-2px);box-shadow:0 12px 32px -16px rgba(3,36,68,.25)}
+a.c b{display:block;font-size:16px;font-weight:800;margin-bottom:6px}a.c span{font-size:13px;color:var(--mute);line-height:1.5}
+a.c i{display:inline-block;margin-top:12px;font-style:normal;font-weight:700;color:var(--p);font-size:13px}
+a.c.main{background:var(--s);color:#fff;border:0}a.c.main span{color:rgba(255,255,255,.75)}a.c.main i{color:var(--a)}
+h2{font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:34px 0 10px}
+ul{margin:0;padding-left:18px;color:#3b4a5c;font-size:14px;line-height:1.8}code{background:#eef5fd;padding:1px 6px;border-radius:5px;font-size:.9em}
+</style>
+</head>
+<body>
+<header><img src="../assets/logo/evidentall-blanc.svg" alt="Evidentall"><span>Refonte marketplace</span></header>
+<main>
+  <h1>Marketplace Evidentall — refonte UI/UX</h1>
+  <p class="l">Prototypes cliquables, audit du site actuel et spécification pour l'équipe. Version du 16 novembre 2026.</p>
+  <div class="g">
+    <a class="c main" href="../prototypes/marketplace.html"><b>Ouvrir le prototype complet</b><span>Accueil, rayons, fiche « 1 produit, N offres » par quantité, panier → livraison → paiement, listes, alertes, commandes, devis labo, comparateur matériel.</span><i>prototypes/marketplace.html →</i></a>
+    <a class="c" href="../prototypes/comparateur-reference.html"><b>L'écran de référence</b><span>Le comparateur par quantité avec les trois réponses, isolé pour expliquer la direction en une page.</span><i>Ouvrir →</i></a>
+    <a class="c" href="audit/"><b>Audit du marketplace actuel</b><span>40 constats avec preuves, mesures, cible de refonte et plan en 4 lots.</span><i>Lire →</i></a>
+    <a class="c" href="spec/"><b>Spécification développeurs</b><span>Principes, design system, composants, modèle de données, règles R1–R9, URLs, accessibilité, tests utilisateurs.</span><i>Lire →</i></a>
+  </div>
+  <h2>Liens profonds du prototype</h2>
+  <ul>
+    <li><a href="../prototypes/marketplace.html#produit-gants-jet-100">Fiche gants nitrile</a> — déplacez la quantité de 10 à 25 boîtes</li>
+    <li><a href="../prototypes/marketplace.html#categorie-ster">Rayon stérilisation</a> · <a href="../prototypes/marketplace.html#categorie-chir">chirurgie</a> · <a href="../prototypes/marketplace.html#comparer-autoclaves">autoclaves côte à côte</a></li>
+    <li><a href="../prototypes/marketplace.html#panier">Panier avec avertissements</a> → <a href="../prototypes/marketplace.html#paiement">paiement</a> (choisir « Virement » pour voir l'erreur)</li>
+    <li><a href="../prototypes/marketplace.html#mes-listes">Listes, alertes, commandes, devis</a> · <a href="../prototypes/marketplace.html#devis-travaux">demande de devis labo</a> · <a href="../prototypes/marketplace.html#partenaire-elite-ceram">page partenaire</a></li>
+  </ul>
+  <h2>Archive</h2>
+  <ul>
+    <li><a href="../prototypes/archive/marketplace-proto-v1.html">v1</a> fiche à N offres · <a href="../prototypes/archive/marketplace-proto-v2.html">v2</a> tunnel d'achat · <a href="../prototypes/archive/marketplace-proto-v3.html">v3</a> accueil &amp; catégories · <a href="../prototypes/archive/marketplace-proto-v4.html">v4</a> listes &amp; alertes · <a href="../prototypes/archive/marketplace-proto-v6.html">v6</a> complet · <a href="../prototypes/archive/marketplace-proto-v7.html">v7</a> accueil repensé</li>
+  </ul>
+  <p class="l" style="margin-top:28px;font-size:13px">Les photos produit sont chargées depuis <code>evidentall.fr</code>. Code source et outillage qualité : <a href="https://github.com/florianb-evi/marketplace">github.com/florianb-evi/marketplace</a>.</p>
+</main>
+</body>
+</html>

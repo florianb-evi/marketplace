@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Evidentall · Marketplace — prototype v8 (photos, ergonomie marketplace)</title>
+<title>Evidentall · Marketplace — marketplace</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -681,12 +681,12 @@ svg{display:block}
 .ans .corner{position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:rgba(80,195,255,.12);pointer-events:none}
 .cp-main{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;margin-top:22px;align-items:start}
 .otbl{background:#fff;border:1px solid var(--line);border-radius:var(--r2);box-shadow:var(--sh);overflow:hidden}
-.othead{display:grid;grid-template-columns:minmax(200px,1.3fr) 110px 100px 130px 140px 120px;gap:12px;padding:10px 18px;background:#fafcfe;border-bottom:1px solid var(--line);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:700}
+.othead{display:grid;grid-template-columns:minmax(230px,1.3fr) 105px 95px 120px 130px 132px;gap:12px;padding:10px 18px;background:#fafcfe;border-bottom:1px solid var(--line);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:700}
 .othead button{display:inline-flex;align-items:center;gap:4px;text-transform:inherit;letter-spacing:inherit;font-size:inherit;font-weight:inherit;color:inherit}
 .othead button svg{width:12px;height:12px;opacity:.4}
 .othead button[aria-sort]{color:var(--p)}.othead button[aria-sort] svg{opacity:1}
 .othead .r{text-align:right;justify-content:flex-end;display:flex}
-.orow{position:relative;display:grid;grid-template-columns:minmax(200px,1.3fr) 110px 100px 130px 140px 120px;gap:12px;padding:14px 18px;border-bottom:1px solid #edf2f7;align-items:center;background:#fff;transition:background .2s;will-change:transform}
+.orow{position:relative;display:grid;grid-template-columns:minmax(230px,1.3fr) 105px 95px 120px 130px 132px;gap:12px;padding:14px 18px;border-bottom:1px solid #edf2f7;align-items:center;background:#fff;transition:background .2s;will-change:transform}
 .orow:last-child{border-bottom:0}
 .orow:hover{background:#fbfdff}
 .orow.best{background:linear-gradient(90deg,rgba(0,119,253,.06),rgba(0,119,253,0) 60%)}
@@ -694,7 +694,7 @@ svg{display:block}
 .owho{display:flex;align-items:center;gap:12px;min-width:0}
 .owho .lg{width:40px;height:40px;border-radius:11px;background:var(--s);color:#fff;display:grid;place-items:center;font-weight:800;font-size:12px;flex:none}
 .owho .lg.a{background:#0a3e78}.owho .lg.b{background:#0f5fb8}.owho .lg.c{background:#1d4e89}
-.owho b{display:block;font-size:14px;line-height:1.2}
+.owho b{display:block;font-size:14px;line-height:1.2;white-space:nowrap}
 .owho b button{font:inherit;font-weight:700;color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--a)}
 .owho span{font-size:11.5px;color:var(--mute);display:block}
 .owho span svg{display:inline;vertical-align:-2px;margin-right:3px;width:12px;height:12px}
@@ -905,6 +905,17 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
 .hm-bn .pic{width:110px;height:110px;border-radius:12px;background:#fff;overflow:hidden;padding:4px}
 @media (max-width:860px){.hm-banner{grid-template-columns:1fr}.strip .deliver small{display:none}.gal{grid-template-columns:1fr}.gal .thumbs{grid-auto-flow:column;justify-content:start}}
 @media (max-width:700px){.cp-intent .q .pic{width:44px;height:44px}}
+
+/* logos partenaires */
+.lg.logo{background:#fff!important;border:1px solid var(--line);color:transparent;padding:4px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.lg.logo img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+.lg.logo.wide{width:auto;min-width:40px;max-width:68px;padding:4px 6px}
+.ans.reco .lg.logo{border:0}
+.av span.logo{background:#fff;border:1px solid var(--line);padding:2px;width:24px;height:24px;margin-left:-6px}
+.av span.logo.wide{width:auto;max-width:40px;padding:2px 4px;border-radius:7px}
+.av span.logo img{max-width:100%;max-height:100%;object-fit:contain}
+.colis-h,.ord2-h,.ord{grid-template-columns:auto 1fr auto}
+.ord2-h .lg,.ord .lg,.colis-h .lg{min-width:40px}
 </style>
 </head>
 <body>
@@ -1447,13 +1458,13 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
   const SUP={
     'Elite Ceram':{k:'EC',cls:'c',port:0,franco:0,delay:'48 h',days:2,express:{price:9.90,delay:'24 h',days:1}},
     'Docteur AI':{k:'DA',cls:'b',port:4.90,franco:60,delay:'72 h',days:3},
-    'Dentalpro':{k:'DP',cls:'a',port:3.90,franco:0,delay:'48 h',days:2},
+    'Promodentaire':{k:'PR',cls:'a',port:3.90,franco:0,delay:'48 h',days:2},
     'Docteur Strong':{k:'DS',cls:'',port:0,franco:0,delay:'24 h',days:1},
-    'Médi-Dent':{k:'MD',cls:'b',port:4.90,franco:0,delay:'72 h',days:3},
+    'Dentalclick':{k:'DC',cls:'b',port:4.90,franco:0,delay:'72 h',days:3},
     'Dental Good Deal':{k:'DG',cls:'a',port:6.90,franco:150,delay:'5 j',days:5},
     'GACD':{k:'GA',cls:'a',port:5.90,franco:120,delay:'72 h',days:3},
     'Megadental':{k:'MG',cls:'b',port:6.90,franco:99,delay:'72 h',days:3},
-    'Medicom':{k:'ME',cls:'c',port:4.90,franco:80,delay:'48 h',days:2}
+    'Dentalclick':{k:'DC',cls:'c',port:4.90,franco:80,delay:'48 h',days:2}
   };
   const TVA=.2;
   let cart=[
@@ -1537,7 +1548,7 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
   ];
   P.forEach(p=>{if(!p.cat)p.cat='conso'});window.PICO=Object.fromEntries(P.map(p=>[p.id,p.ico]));
   const BRANDS=['Jet','Unigloves','Medicom','Sempercare','Gammex','Mercator','Safe Implant','Euronda','3M','Anios','W&H','WEGO','Swann-Morton'];
-  const PARTN=['Elite Ceram','Docteur AI','Dentalpro','Docteur Strong','Médi-Dent','Dental Good Deal','GACD','Megadental'];
+  const PARTN=['Elite Ceram','Docteur AI','Promodentaire','Docteur Strong','Dentalclick','Dental Good Deal','GACD','Megadental'];
   const F={sub:null,brand:new Set(),mat:new Set(),stock:false,multi:false,delay:null};
   let sort='rel',shown=9,curCat='conso';
 
@@ -1546,7 +1557,7 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
   const cnt=(key,val)=>P.filter(p=>p.cat===curCat&&(!F.sub||p.sub===F.sub)&&(key==='brand'||!F.brand.size||F.brand.has(p.brand))&&(key==='mat'||!F.mat.size||F.mat.has(p.mat))&&(!F.stock||p.stock!=='out')&&(p[key]===val)).length;
   const unitPrice=p=>{const u=p.liv/p.unitN;return u<0.1?(u*100).toFixed(1).replace('.',',')+' c':fmt(u)};
 
-  function cardHTML(p){const IMGS=window.IMGS||{},IMGBASE=window.IMGBASE||'';const st=p.stock==='in'?'<span class="st">En stock</span>':p.stock==='low'?'<span class="st low">Stock faible</span>':'<span class="st out">Rupture</span>';const cta=p.stock==='out'?'<button class="btn" disabled>Indisponible · m’alerter</button>':p.np>1?`<button class="btn p" data-open-p="${p.id}">Voir les ${p.np} offres <svg><use href="#i-arrow"/></svg></button>`:`<button class="btn p" data-cart="Elite Ceram" data-pid="${p.id}" data-pname="${p.n} · ${p.pack}" data-unit="${p.liv}">Ajouter au panier <svg><use href="#i-cart"/></svg></button>`;return `<article class="pc ${p.stock==='out'?'out':''}"><div class="img">${st}<button class="fav" aria-label="Ajouter aux favoris" data-fav><svg><use href="#i-heart"/></svg></button>${IMGS[p.id]?`<img class="ph" src="${IMGBASE}${IMGS[p.id]}/image" alt="${p.n}" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#${p.ico}"/></svg>`:`<svg><use href="#${p.ico}"/></svg>`}</div><div class="bd"><h3>${p.n}</h3><div class="pk"><b>${p.pack}</b> · ${p.brand} · ${p.mat}</div><div class="pr"><small>${p.np>1?'à partir de':''}</small><b>${disp(p.liv)}</b><span class="u"><span class="taxlbl">${tax.toUpperCase()}</span> livré · ${unitPrice(p)} / unité</span></div><div class="dl"><b>Livraison ${dateFr(p.delay)}</b>${p.delay<=2?'<span class="free">Port offert</span>':''}</div><div class="conf"><i>✓</i>${p.np>1?'98,6 % de commandes conformes chez le mieux classé':'97 % de commandes conformes'}</div><div class="np">${p.np>1?`<span class="av">${['EC','DA','DP','DS','MD','DG'].slice(0,Math.min(p.np,3)).map(k=>'<span>'+k+'</span>').join('')}${p.np>3?'<span>+'+(p.np-3)+'</span>':''}</span>${p.np} partenaires comparés`:'1 partenaire'}</div>${cta}</div></article>`}
+  function cardHTML(p){const IMGS=window.IMGS||{},IMGBASE=window.IMGBASE||'';const st=p.stock==='in'?'<span class="st">En stock</span>':p.stock==='low'?'<span class="st low">Stock faible</span>':'<span class="st out">Rupture</span>';const cta=p.stock==='out'?'<button class="btn" disabled>Indisponible · m’alerter</button>':p.np>1?`<button class="btn p" data-open-p="${p.id}">Voir les ${p.np} offres <svg><use href="#i-arrow"/></svg></button>`:`<button class="btn p" data-cart="Elite Ceram" data-pid="${p.id}" data-pname="${p.n} · ${p.pack}" data-unit="${p.liv}">Ajouter au panier <svg><use href="#i-cart"/></svg></button>`;return `<article class="pc ${p.stock==='out'?'out':''}"><div class="img">${st}<button class="fav" aria-label="Ajouter aux favoris" data-fav><svg><use href="#i-heart"/></svg></button>${IMGS[p.id]?`<img class="ph" src="${IMGBASE}${IMGS[p.id]}/image" alt="${p.n}" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><svg hidden><use href="#${p.ico}"/></svg>`:`<svg><use href="#${p.ico}"/></svg>`}</div><div class="bd"><h3>${p.n}</h3><div class="pk"><b>${p.pack}</b> · ${p.brand} · ${p.mat}</div><div class="pr"><small>${p.np>1?'à partir de':''}</small><b>${disp(p.liv)}</b><span class="u"><span class="taxlbl">${tax.toUpperCase()}</span> livré · ${unitPrice(p)} / unité</span></div><div class="dl"><b>Livraison ${dateFr(p.delay)}</b>${p.delay<=2?'<span class="free">Port offert</span>':''}</div><div class="conf"><i>✓</i>${p.np>1?'98,6 % de commandes conformes chez le mieux classé':'97 % de commandes conformes'}</div><div class="np">${p.np>1?`<span class="av">${['EC','DA','PR','DS','DC','DG'].slice(0,Math.min(p.np,3)).map(k=>'<span>'+k+'</span>').join('')}${p.np>3?'<span>+'+(p.np-3)+'</span>':''}</span>${p.np} partenaires comparés`:'1 partenaire'}</div>${cta}</div></article>`}
   function facHTML(){const nb=F.brand.size+F.mat.size+(F.stock?1:0)+(F.multi?1:0)+(F.delay?1:0);$('#facN').textContent=nb?'('+nb+')':'';const opt=(key,v,label)=>{const n=cnt(key,v);const on=F[key].has(v);return `<label class="fo ${!n&&!on?'dis':''}"><input type="checkbox" data-f="${key}" value="${v}" ${on?'checked':''} ${!n&&!on?'disabled':''}><span>${label||v}</span><span class="n">${n}</span></label>`};const base=P.filter(p=>p.cat===curCat&&(!F.sub||p.sub===F.sub));const inStock=base.filter(p=>p.stock!=='out').length,multi=base.filter(p=>p.np>=2).length,d48=base.filter(p=>p.delay<=2).length;return `<div class="grp"><h4>Disponibilité</h4><label class="fo"><input type="checkbox" data-f="stock" ${F.stock?'checked':''}><span>En stock uniquement</span><span class="n">${inStock}</span></label><label class="fo"><input type="checkbox" data-f="multi" ${F.multi?'checked':''}><span>Comparable (2 partenaires ou +)</span><span class="n">${multi}</span></label><label class="fo"><input type="checkbox" data-f="delay" ${F.delay?'checked':''}><span>Livré sous 48 h</span><span class="n">${d48}</span></label></div><div class="grp"><h4>Matière</h4>${[...new Set(base.map(p=>p.mat))].map(m=>opt('mat',m)).join('')}</div><div class="grp"><h4>Marque</h4>${BRANDS.filter(b=>base.some(p=>p.brand===b)).map(b=>opt('brand',b)).join('')}</div><div class="grp"><h4>Partenaire</h4>${PARTN.slice(0,4).map(p=>`<label class="fo"><input type="checkbox" data-f="partn" value="${p}"><span>${p}</span><span class="n">${Math.max(1,Math.round(base.length*(0.3+Math.random()*0.4)))}</span></label>`).join('')}<button class="more" type="button" data-toast="Prototype : 4 partenaires de plus">+ 4 partenaires</button></div>`}
   function chipsHTML(){const c=[];if(F.sub)c.push(['sub',F.sub,CATS[curCat].subs.find(s=>s[0]===F.sub)[1]]);F.brand.forEach(b=>c.push(['brand',b,b]));F.mat.forEach(m=>c.push(['mat',m,m]));if(F.stock)c.push(['stock',1,'En stock']);if(F.multi)c.push(['multi',1,'Comparable']);if(F.delay)c.push(['delay',1,'Sous 48 h']);return c.map(([k,v,l])=>`<button type="button" data-chip="${k}" data-v="${v}">${l} <svg><use href="#i-x"/></svg></button>`).join('')+(c.length>1?'<button type="button" class="clr" data-clear-f>Tout effacer</button>':'')}
   function renderCat(){window.__curCat=curCat;const C=CATS[curCat];const sub=C.subs;if(F.sub&&!sub.some(x=>x[0]===F.sub))F.sub=null;const all=P.filter(p=>p.cat===curCat);$('#subCats').innerHTML=`<button type="button" data-sub="" aria-pressed="${!F.sub}">Tout <span>${all.length}</span></button>`+sub.map(([k,l])=>`<button type="button" data-sub="${k}" aria-pressed="${F.sub===k}">${l} <span>${all.filter(p=>p.sub===k).length}</span></button>`).join('');const list=sorted(filtered());$('#catCount').textContent=`${list.length} produit${list.length>1?'s':''} · ${list.filter(p=>p.np>=2).length} comparables · ${list.reduce((a,p)=>a+p.np,0)} offres`;$('#catTitle').firstChild.textContent=(F.sub?sub.find(s=>s[0]===F.sub)[1]+' ':C.name+' ');$('#catName').textContent=C.name+(F.sub?' › '+sub.find(s=>s[0]===F.sub)[1]:'');$('#facBody').innerHTML=facHTML();$('#chipsA').innerHTML=chipsHTML();$('#pgrid').innerHTML=list.length?list.slice(0,shown).map(cardHTML).join(''):'<div class="empty" style="grid-column:1/-1">Aucun produit avec ces filtres.<br><button class="btn p" data-clear-f>Retirer les filtres</button></div>';$('#moreRow').innerHTML=list.length>shown?`<button class="btn o" data-more>Afficher ${Math.min(9,list.length-shown)} produits de plus <span class="mute" style="margin-left:4px">· ${shown} / ${list.length}</span></button>`:(list.length?`<span class="mute" style="font-size:12px">${list.length} produits affichés · fin de la liste</span>`:'');$$('.taxlbl').forEach(e=>e.textContent=tax.toUpperCase());$$('.seg2 button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tax===tax)));$('.seg2').classList.toggle('ttc',tax==='ttc')}
@@ -1580,7 +1591,7 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
 
   /* ---------- v4 : lists & alerts ---------- */
   const LISTS=[
-    {id:'hyg',name:'Hygiène · hebdo',note:'Commandée chaque lundi',items:[{pid:'gants-jet-100',n:'Gants nitrile non poudrés · boîte de 100',ico:'i-glove',qty:10,last:3.25,lastSup:'Docteur AI',best:3.02,sup:'Elite Ceram'},{pid:'masque-3p',n:'Masque chirurgical IIR · boîte de 50',ico:'i-mask',qty:6,last:1.66,lastSup:'Docteur AI',best:1.66,sup:'Docteur AI'},{pid:'bavette',n:'Bavettes patient 2 plis · carton de 500',ico:'i-box',qty:1,last:19.90,lastSup:'Megadental',best:18.40,sup:'Elite Ceram'},{pid:'gobelet',n:'Gobelets 18 cl · carton de 3 000',ico:'i-box',qty:1,last:30.50,lastSup:'Medicom',best:32.00,sup:'Dentalpro'}]},
+    {id:'hyg',name:'Hygiène · hebdo',note:'Commandée chaque lundi',items:[{pid:'gants-jet-100',n:'Gants nitrile non poudrés · boîte de 100',ico:'i-glove',qty:10,last:3.25,lastSup:'Docteur AI',best:3.02,sup:'Elite Ceram'},{pid:'masque-3p',n:'Masque chirurgical IIR · boîte de 50',ico:'i-mask',qty:6,last:1.66,lastSup:'Docteur AI',best:1.66,sup:'Docteur AI'},{pid:'bavette',n:'Bavettes patient 2 plis · carton de 500',ico:'i-box',qty:1,last:19.90,lastSup:'Megadental',best:18.40,sup:'Elite Ceram'},{pid:'gobelet',n:'Gobelets 18 cl · carton de 3 000',ico:'i-box',qty:1,last:30.50,lastSup:'Megadental',best:32.00,sup:'Promodentaire'}]},
     {id:'ster',name:'Stérilisation',note:'Toutes les 6 semaines',items:[{pid:'sachets-90',n:'Sachets de stérilisation 90 × 230 · boîte de 200',ico:'i-box',qty:4,last:9.80,lastSup:'GACD',best:8.95,sup:'Docteur Strong'},{pid:'indic-5',n:'Indicateurs chimiques classe 5 · 250',ico:'i-box',qty:1,last:21.00,lastSup:'GACD',best:21.00,sup:'GACD'},{pid:'huile-rot',n:'Huile de lubrification instruments rotatifs · 500 ml',ico:'i-box',qty:2,last:14.20,lastSup:'Megadental',best:12.90,sup:'Elite Ceram'}]},
     {id:'chir',name:'Chirurgie',note:'À la demande',items:[{pid:'pgcl',n:'Fil de suture PGCL 4-0 · boîte de 12',ico:'i-box',qty:2,last:36.00,lastSup:'Elite Ceram',best:36.00,sup:'Elite Ceram'},{pid:'champ-50',n:'Champ chirurgical stérile 100 × 150 · carton de 50',ico:'i-box',qty:1,last:49.16,lastSup:'Elite Ceram',best:49.16,sup:'Elite Ceram'}]}
   ];
@@ -1616,11 +1627,11 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
   /* ---------- v6 : comparateur générique ---------- */
   const PRODS={
     'gants-jet-100':{name:'Gants d’examen nitrile non poudrés',sub:'Boîte de 100 · bleu · sans latex · CE EN 455',cat:'conso',crumb:'Gants',unit:'boîte',units:'boîtes',unitLab:'boîtes de 100',ico:'i-glove',gallery:['gants-jet-100','gants2','gants-noir'],specs:['Nitrile','Non poudré','Ambidextre','Microtexturé','S · M · L · XL'],sizes:['S','M','L','XL'],defQ:10,max:60,alert:'2,80',hist:[3.60,3.52,3.70,3.20,3.45,3.10,2.95],avg:3.36,min:2.95,
-      offers:[{id:'ec',k:'EC',cls:'c',name:'Elite Ceram',cat:3.02,tiers:[[10,2.95],[30,2.85]],port:0,franco:0,delay:2,stock:'in',rel:98.6,sizes:'S M L'},{id:'da',k:'DA',cls:'b',name:'Docteur AI',cat:2.75,tiers:[[20,2.65]],port:4.90,franco:60,delay:3,stock:'in',rel:97.1,sizes:'S M L XL'},{id:'dp',k:'DP',cls:'a',name:'Dentalpro',cat:2.98,tiers:[],port:3.90,franco:80,delay:2,stock:'low',rel:96.4,sizes:'M L'},{id:'ds',k:'DS',cls:'',name:'Docteur Strong',cat:3.43,tiers:[[10,3.20],[30,3.05]],port:0,franco:0,delay:1,stock:'in',rel:99.1,sizes:'S M L XL'},{id:'md',k:'MD',cls:'b',name:'Médi-Dent',cat:3.10,tiers:[],port:4.90,franco:50,delay:3,stock:'in',rel:95.0,sizes:'M L'},{id:'dg',k:'DG',cls:'a',name:'Dental Good Deal',cat:2.56,tiers:[[20,2.45],[40,2.35]],port:6.90,franco:150,delay:5,stock:'in',rel:93.8,sizes:'M L'}]},
+      offers:[{id:'ec',k:'EC',cls:'c',name:'Elite Ceram',cat:3.02,tiers:[[10,2.95],[30,2.85]],port:0,franco:0,delay:2,stock:'in',rel:98.6,sizes:'S M L'},{id:'da',k:'DA',cls:'b',name:'Docteur AI',cat:2.75,tiers:[[20,2.65]],port:4.90,franco:60,delay:3,stock:'in',rel:97.1,sizes:'S M L XL'},{id:'dp',k:'PR',cls:'a',name:'Promodentaire',cat:2.98,tiers:[],port:3.90,franco:80,delay:2,stock:'low',rel:96.4,sizes:'M L'},{id:'ds',k:'DS',cls:'',name:'Docteur Strong',cat:3.43,tiers:[[10,3.20],[30,3.05]],port:0,franco:0,delay:1,stock:'in',rel:99.1,sizes:'S M L XL'},{id:'md',k:'DC',cls:'b',name:'Dentalclick',cat:3.10,tiers:[],port:4.90,franco:50,delay:3,stock:'in',rel:95.0,sizes:'M L'},{id:'dg',k:'DG',cls:'a',name:'Dental Good Deal',cat:2.56,tiers:[[20,2.45],[40,2.35]],port:6.90,franco:150,delay:5,stock:'in',rel:93.8,sizes:'M L'}]},
     'masque-3p':{name:'Masque chirurgical 3 plis type IIR',sub:'Boîte de 50 · bleu · élastiques · EN 14683',cat:'conso',crumb:'Masques',unit:'boîte',units:'boîtes',unitLab:'boîtes de 50',ico:'i-mask',gallery:['masque-3p','ffp2b','masque-visiere'],specs:['Type IIR','3 plis','Barrette nasale','EN 14683','Bleu'],sizes:null,defQ:6,max:60,alert:'1,50',hist:[1.95,1.90,1.82,1.80,1.74,1.70,1.66],avg:1.80,min:1.66,
       offers:[{id:'da',k:'DA',cls:'b',name:'Docteur AI',cat:1.66,tiers:[[12,1.58]],port:4.90,franco:60,delay:3,stock:'in',rel:97.1,sizes:''},{id:'ec',k:'EC',cls:'c',name:'Elite Ceram',cat:1.79,tiers:[[10,1.72]],port:0,franco:0,delay:2,stock:'in',rel:98.6,sizes:''},{id:'mg',k:'MG',cls:'b',name:'Megadental',cat:1.62,tiers:[[20,1.49]],port:6.90,franco:99,delay:3,stock:'in',rel:95.5,sizes:''},{id:'ds',k:'DS',cls:'',name:'Docteur Strong',cat:2.10,tiers:[],port:0,franco:0,delay:1,stock:'in',rel:99.1,sizes:''}]},
     'pgcl':{name:'Fil de suture PGCL 4-0 · aiguille 16 mm 3/8',sub:'Boîte de 12 · résorbable · WEGO',cat:'chir',crumb:'Sutures',unit:'boîte',units:'boîtes',unitLab:'boîtes de 12',ico:'i-suture',gallery:['pgcl','pga','soie'],specs:['PGCL résorbable','4-0','16 mm','3/8 cercle','75 cm'],sizes:['3-0','4-0','5-0'],defQ:2,max:24,alert:'32,00',hist:[38.0,37.5,36.0,36.0,35.5,36.0,34.5],avg:36.2,min:34.5,
-      offers:[{id:'ec',k:'EC',cls:'c',name:'Elite Ceram',cat:36.00,tiers:[[5,34.50],[10,33.00]],port:0,franco:0,delay:2,stock:'in',rel:98.6,sizes:''},{id:'ga',k:'GA',cls:'a',name:'GACD',cat:35.20,tiers:[[6,33.90]],port:5.90,franco:120,delay:3,stock:'in',rel:97.8,sizes:''},{id:'dp',k:'DP',cls:'a',name:'Dentalpro',cat:37.30,tiers:[],port:3.90,franco:80,delay:2,stock:'low',rel:96.4,sizes:''}]}
+      offers:[{id:'ec',k:'EC',cls:'c',name:'Elite Ceram',cat:36.00,tiers:[[5,34.50],[10,33.00]],port:0,franco:0,delay:2,stock:'in',rel:98.6,sizes:''},{id:'ga',k:'GA',cls:'a',name:'GACD',cat:35.20,tiers:[[6,33.90]],port:5.90,franco:120,delay:3,stock:'in',rel:97.8,sizes:''},{id:'dp',k:'PR',cls:'a',name:'Promodentaire',cat:37.30,tiers:[],port:3.90,franco:80,delay:2,stock:'low',rel:96.4,sizes:''}]}
   };
   window.PRODS=PRODS;
   document.addEventListener('click',e=>{const g=e.target.closest('[data-gal]');if(!g)return;$$('[data-gal]').forEach(b=>b.classList.toggle('on',b===g));$('#cpMain').innerHTML=g.innerHTML;$('#cpMain img')&&($('#cpMain img').hidden=false)});
@@ -1677,6 +1688,14 @@ img.ph{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
   $('[data-home-search]').addEventListener('submit',()=>{if(hq.value.trim())homeSearch(hq.value.trim());else hq.focus()});
   document.addEventListener('click',e=>{const b=e.target.closest('[data-hq]');if(b){hq.value=b.dataset.hq;homeSearch(b.dataset.hq)}});
   const _show=show;
+
+  /* ---------- logos partenaires (depuis evidentall.fr) ---------- */
+  const LOGOS={'Elite Ceram':'/uploads/4a2664ea-6ba4-4994-9a6e-6e5891986852.png','Docteur AI':'/uploads/partner-logos/docteur-ai.svg','Promodentaire':'/uploads/partner-logos/promodentaire.png','Docteur Strong':'/uploads/partner-logos/docteur-strong.svg','Dentalclick':'/uploads/partner-logos/dentalclick.svg','Dental Good Deal':'/uploads/partner-logos/dental-good-deal.png','GACD':'/uploads/partner-logos/gacd.png','Megadental':'/uploads/partner-logos/megadental.png'};
+  const K2N={EC:'Elite Ceram',DA:'Docteur AI',PR:'Promodentaire',DP:'Promodentaire',DS:'Docteur Strong',DC:'Dentalclick',MD:'Dentalclick',DG:'Dental Good Deal',GA:'GACD',MG:'Megadental'};
+  const WIDE={'Docteur AI':1,'Promodentaire':1,'Docteur Strong':1,'Megadental':1};
+  function logoize(root){(root.querySelectorAll?root.querySelectorAll('.lg:not(.logo), .av span:not(.logo)'):[]).forEach(el=>{const k=el.textContent.trim();const name=K2N[k];if(!name||!LOGOS[name])return;el.classList.add('logo');if(WIDE[name])el.classList.add('wide');el.setAttribute('title',name);el.innerHTML=`<img src="https://evidentall.fr${LOGOS[name]}" alt="${name}" loading="lazy" onerror="this.parentElement.classList.remove('logo','wide');this.replaceWith('${k}')">`})}
+  new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>{if(n.nodeType===1){logoize(n);if(n.matches&&n.matches('.lg,.av span'))logoize(n.parentElement)}}))).observe(document.body,{childList:true,subtree:true});
+  logoize(document);
   window.__renderAll=renderAll;renderAll();byHash();
 
   /* sizes */
