@@ -1678,6 +1678,31 @@ span.ofiche{cursor:pointer}
 @media (max-width:860px){.buybar{position:static;left:auto;right:auto;bottom:auto;grid-template-columns:1fr;padding:14px}.bb-th,.bb-top small{display:block}.bb-th{display:none}.bb-acts{grid-template-columns:1fr}.bb-acts .btn.o{display:flex}.pdp-step{padding:12px 14px}.pdp-l .gal{grid-template-columns:1fr}.pdp-l .gal .thumbs{grid-auto-flow:column}main.wrap{padding-bottom:86px}}
 
 @media (max-width:700px){.top-in{padding:10px 14px 12px;row-gap:10px}.top .search{height:44px}.tool .n{top:-5px;right:-5px}}
+
+/* ---------- notifications ---------- */
+.tool.notif{display:grid}
+.ntf-bg{position:fixed;inset:0;background:rgba(3,36,68,.25);z-index:58;opacity:0;pointer-events:none;transition:opacity .2s}
+.ntf-bg.on{opacity:1;pointer-events:auto}
+.ntf{position:fixed;top:78px;right:max(16px,calc((100vw - var(--maxw)) / 2 + 28px));width:min(420px,calc(100vw - 32px));background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh2);z-index:59;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .2s,transform .2s;overflow:hidden}
+.ntf.on{opacity:1;transform:none;pointer-events:auto}
+.ntf-h{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+.ntf-h b{font-size:14px}
+.ntf-h .x{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--ink2)}
+.ntf-h .x svg{width:14px;height:14px}
+.ntf-list{display:grid;max-height:min(60vh,440px);overflow:auto}
+.ntf-i{display:grid;grid-template-columns:36px minmax(0,1fr) 14px;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;font:inherit;color:var(--ink);position:relative}
+.ntf-i:hover{background:var(--soft)}
+.ntf-i .ic{width:36px;height:36px;border-radius:10px;background:var(--tint);color:var(--p);display:grid;place-items:center}
+.ntf-i .ic svg{width:17px;height:17px}
+.ntf-i .tx{display:grid;gap:2px;min-width:0}
+.ntf-i .tx b{font-size:13.5px;line-height:1.3}
+.ntf-i .tx span{font-size:12px;color:var(--mute)}
+.ntf-i .ch{width:14px;height:14px;color:var(--mute);transform:rotate(-90deg)}
+.ntf-i.new::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--p)}
+.ntf-i.new .ic{background:var(--p);color:#fff}
+.ntf-i.dim{opacity:.75}
+.ntf-f{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;font-size:12.5px}
+@media (max-width:860px){.top .cartb{display:none}.ntf{top:72px;right:8px;left:8px;width:auto}}
 </style>
 </head>
 <body>
@@ -1746,6 +1771,7 @@ span.ofiche{cursor:pointer}
       <button class="tool lbl" aria-label="Mes commandes" data-go="orders" title="Suivi, factures, commander à nouveau"><svg><use href="#i-truck"/></svg><span class="tlab">Mes commandes</span><span class="n on" id="nord">1</span></button>
       <button class="tool" aria-label="Favoris" title="Favoris"><svg><use href="#i-heart"/></svg><span class="n" id="nfav">0</span></button>
       <button class="tool lbl acct" aria-label="Mon cabinet : compte, équipe, paiement" title="Mon cabinet" data-go="account"><svg><use href="#i-user"/></svg><span class="tlab">Mon cabinet</span></button>
+      <button class="tool notif" aria-label="Notifications : colis, alertes prix, devis" title="Notifications" data-notif><svg><use href="#i-bell"/></svg><span class="n on" id="ntfN">3</span></button>
       <button class="tool lbl cartb" aria-label="Panier" data-open-cart><svg><use href="#i-cart"/></svg><span class="tlab">Panier · <b id="cartTot">0,00 €</b></span><span class="n" id="ncart">0</span></button>
     </div>
   </div>
@@ -2289,6 +2315,17 @@ span.ofiche{cursor:pointer}
 </aside>
 
 
+<div class="ntf-bg" id="ntfBg"></div>
+<section class="ntf" id="ntf" aria-label="Notifications" aria-hidden="true">
+  <header class="ntf-h"><b>Notifications</b><button type="button" class="x" data-ntf-close aria-label="Fermer"><svg><use href="#i-x"/></svg></button></header>
+  <div class="ntf-list">
+    <button type="button" class="ntf-i" data-go="orders"><span class="ic"><svg><use href="#i-truck"/></svg></span><span class="tx"><b>Votre colis Docteur AI arrive jeudi 19 nov.</b><span>6 boîtes de masques IIR · expédié hier · n° EV-48211-2</span></span><svg class="ch"><use href="#i-chev"/></svg></button>
+    <button type="button" class="ntf-i new" data-go="lists" data-tab="alerts"><span class="ic"><svg><use href="#i-bell"/></svg></span><span class="tx"><b>Prix atteint : autoclave W&amp;H Lisa à 4 090 €</b><span>110 € sous votre seuil · chez Elite Ceram · bon moment pour commander</span></span><svg class="ch"><use href="#i-chev"/></svg></button>
+    <button type="button" class="ntf-i" data-go="lists" data-tab="quotes"><span class="ic"><svg><use href="#i-doc"/></svg></span><span class="tx"><b>Devis couronne zircone : 2 réponses sur 3</b><span>Meilleure offre 96 € HT (Proto Lab) · LabDent répond sous 24 h</span></span><svg class="ch"><use href="#i-chev"/></svg></button>
+    <button type="button" class="ntf-i dim" data-go="lists"><span class="ic"><svg><use href="#i-list"/></svg></span><span class="tx"><b>Réassort « Hygiène · hebdo » prévu lundi</b><span>4 références · 90,56 € HT au meilleur prix du jour</span></span><svg class="ch"><use href="#i-chev"/></svg></button>
+  </div>
+  <footer class="ntf-f"><button type="button" class="lnk" data-go="account">Régler mes notifications</button><button type="button" class="lnk" data-ntf-read>Tout marquer comme lu</button></footer>
+</section>
 <div class="wl-bg" id="wlBg"></div>
 <aside class="wl" id="wl" aria-label="Bienvenue sur le marketplace" aria-hidden="true">
   <div class="wl-h">
@@ -2605,6 +2642,10 @@ span.ofiche{cursor:pointer}
     const h=P0.hist,mx=Math.max(...h)*1.05,mn=Math.min(...h)*0.95,pts=h.map((v,i)=>[8+i*(264/(h.length-1)),100-((v-mn)/(mx-mn))*80]);const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');const avgY=100-((P0.avg-mn)/(mx-mn))*80;$('#cpChart').innerHTML=`<svg viewBox="0 0 280 110" aria-label="Évolution du meilleur prix livré sur 6 mois"><defs><linearGradient id="gf2" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#0077fd" stop-opacity=".2"/><stop offset="1" stop-color="#0077fd" stop-opacity="0"/></linearGradient></defs><g stroke="#e8eef6"><line x1="0" y1="20" x2="280" y2="20"/><line x1="0" y1="50" x2="280" y2="50"/><line x1="0" y1="80" x2="280" y2="80"/></g><path d="${path} L${pts[pts.length-1][0].toFixed(1)} 110 L8 110Z" fill="url(#gf2)"/><path d="${path}" fill="none" stroke="#0077fd" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><line x1="8" y1="${avgY.toFixed(1)}" x2="272" y2="${avgY.toFixed(1)}" stroke="#50c3ff" stroke-width="1.5" stroke-dasharray="4 4"/><circle cx="${pts[pts.length-1][0].toFixed(1)}" cy="${pts[pts.length-1][1].toFixed(1)}" r="5" fill="#fff" stroke="#0077fd" stroke-width="3"/><g font-family="Montserrat,sans-serif" font-size="10" fill="#5b7085"><text x="8" y="108">mai</text><text x="100" y="108">juil.</text><text x="192" y="108">sept.</text><text x="248" y="108">nov.</text></g><text x="12" y="${(avgY-4).toFixed(1)}" font-family="Montserrat,sans-serif" font-size="9" fill="#50c3ff" font-weight="700">moyenne ${fmt(P0.avg)}</text></svg>`;const cur=h[h.length-1],pct=Math.round((cur-P0.avg)/P0.avg*100);$('#cpVerdict').innerHTML=`<div class="bl"><svg><use href="#${pct<0?'i-down':'i-info'}"/></svg></div><div><b>${pct<0?'Prix bas : '+pct+' % sous la moyenne':'Prix dans la moyenne'}</b>${pct<-5?'Bon moment pour commander.':'Pas d’urgence : activez une alerte.'} Plus bas observé : ${fmt(P0.min)}.</div>`;
     cpRender(false);renderFiche(P0,pid);cpApplySel();show('view-sheet',noHash);if(typeof cmpSync==='function')cmpSync()}
   window.__openProduct=openProduct;
+  (()=>{const n=$('#ntf'),bg=$('#ntfBg');const open=()=>{n.classList.add('on');bg.classList.add('on');n.setAttribute('aria-hidden','false')};const close=()=>{n.classList.remove('on');bg.classList.remove('on');n.setAttribute('aria-hidden','true')};
+    document.addEventListener('click',e=>{if(e.target.closest('[data-notif]')){n.classList.contains('on')?close():open();return}if(e.target.closest('[data-ntf-close]')||e.target===bg){close();return}if(e.target.closest('[data-ntf-read]')){$$('.ntf-i').forEach(x=>x.classList.remove('new'));const b=$('#ntfN');b.textContent='0';b.classList.remove('on');toast('Notifications marquées comme lues');return}if(e.target.closest('#ntf [data-go]'))close()});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')close()})})();
+
   function renderPick(){const box=$('#cpPick');if(!box)return;const P0=PRODS[cpPid];const c=cpCompute();if(!c.length){box.innerHTML='';return}const cheap=[...c].sort((a,b)=>a.total-b.total)[0],fast=[...c].filter(x=>x.stock!=='out').sort((a,b)=>a.delay-b.delay||a.total-b.total)[0];const sel=cpSelId||window.__cpReco||cheap.id;const ranked=[...c].sort((a,b)=>a.total-b.total);let top=ranked.slice(0,3);if(!top.some(x=>x.id===sel)){const sx=c.find(x=>x.id===sel);if(sx)top=[sx,...top.slice(0,2)]}
     box.innerHTML=top.map(x=>{const tags=[];if(x.id===cheap.id)tags.push('<i class="pkt cheap">Le moins cher</i>');if(x.id===window.__cpReco)tags.push('<i class="pkt reco">Meilleur compromis</i>');if(fast&&x.id===fast.id&&x.id!==cheap.id)tags.push('<i class="pkt fast">Le plus rapide</i>');return `<button type="button" class="opk ${x.id===sel?'sel':''}" data-csel="${x.id}" aria-pressed="${x.id===sel}"><span class="rd"></span><span class="lg">${x.k}</span><span class="pki"><b>${x.name}</b><span>${x.eqv?'Autre marque · '+(x.brand&&x.brand!=='—'?x.brand:x.pname)+' · ':''}livré ${dateFr(x.delay)} · ${x.port?'port '+D(x.port):'port offert'}${x.stock==='low'?' · stock faible':''}</span><span class="pkts">${tags.join('')}</span></span><span class="pkp"><b>${D(x.total)}</b><small>${D(x.per)} / ${P0.unit}</small></span></button>`}).join('');
     const more=$('.pick-more');if(more)more.textContent=c.length>top.length?`Voir les ${c.length} offres et comparer en détail ↓`:'Comparer en détail ↓'}
